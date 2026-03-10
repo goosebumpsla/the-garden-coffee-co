@@ -1278,6 +1278,10 @@ picture {
     min-height: 100svh;
   }
 
+  .hero__img {
+    object-position: 70% center;
+  }
+
   .hero__title {
     font-size: clamp(2.5rem, 12vw, 4rem);
   }
