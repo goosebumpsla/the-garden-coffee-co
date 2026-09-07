@@ -8,6 +8,26 @@ function initForm() {
   var successEl = document.getElementById('quoteSuccess');
   if (!form) return;
 
+  // Preserve ad and search attribution in every quote email without exposing
+  // tracking details in the visible form.
+  var searchParams = new URLSearchParams(window.location.search);
+  var attributionFields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  attributionFields.forEach(function(fieldName) {
+    var value = searchParams.get(fieldName);
+    if (!value) return;
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = fieldName;
+    input.value = value.slice(0, 180);
+    form.appendChild(input);
+  });
+
+  var pageInput = document.createElement('input');
+  pageInput.type = 'hidden';
+  pageInput.name = 'landing-page';
+  pageInput.value = window.location.href.slice(0, 500);
+  form.appendChild(pageInput);
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -61,7 +81,8 @@ function initForm() {
         // Record a qualified lead only after FormSubmit confirms delivery.
         if (typeof window.fbq === 'function') {
           var eventId = 'garden_lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
-          var eventType = form.querySelector('#event-type').value;
+          var eventTypeInput = form.querySelector('#event-type');
+          var eventType = eventTypeInput ? eventTypeInput.value : 'other';
           window.fbq('track', 'Lead', {
             content_name: 'Event Quote Request',
             content_category: eventType
@@ -79,7 +100,7 @@ function initForm() {
               eventSourceUrl: window.location.href,
               eventType: eventType,
               email: form.querySelector('#email').value,
-              phone: form.querySelector('#phone').value,
+              phone: form.querySelector('#phone') ? form.querySelector('#phone').value : '',
               fbp: getCookieValue('_fbp'),
               fbc: getCookieValue('_fbc')
             })
