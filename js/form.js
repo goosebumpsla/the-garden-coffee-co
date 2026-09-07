@@ -68,6 +68,24 @@ function initForm() {
           }, {
             eventID: eventId
           });
+
+          // Send the same event ID server-side so Meta can deduplicate it.
+          fetch('/.netlify/functions/meta-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            keepalive: true,
+            body: JSON.stringify({
+              eventId: eventId,
+              eventSourceUrl: window.location.href,
+              eventType: eventType,
+              email: form.querySelector('#email').value,
+              phone: form.querySelector('#phone').value,
+              fbp: getCookieValue('_fbp'),
+              fbc: getCookieValue('_fbc')
+            })
+          }).catch(function() {
+            // Tracking must never block a successful quote request.
+          });
         }
 
         // Animate form out
@@ -102,6 +120,18 @@ function initForm() {
       setTimeout(function() { errorMsg.remove(); }, 5000);
     });
   });
+}
+
+function getCookieValue(name) {
+  var prefix = name + '=';
+  var cookies = document.cookie ? document.cookie.split(';') : [];
+  for (var i = 0; i < cookies.length; i += 1) {
+    var cookie = cookies[i].trim();
+    if (cookie.indexOf(prefix) === 0) {
+      return decodeURIComponent(cookie.slice(prefix.length));
+    }
+  }
+  return '';
 }
 
 // ===== TESTIMONIAL CAROUSEL =====
