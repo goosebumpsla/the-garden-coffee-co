@@ -708,6 +708,122 @@ picture {
   color: var(--color-text-inverse);
 }
 
+/* ===== PLANNING GUIDES ===== */
+.guides {
+  background: var(--color-bg);
+}
+
+.guides__intro {
+  max-width: 760px;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+}
+
+.guides__eyebrow,
+.guide-card__meta {
+  display: block;
+  margin-bottom: 0.85rem;
+  color: var(--color-green);
+  font-size: var(--font-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.guides__heading {
+  margin-bottom: 1.25rem;
+}
+
+.guides__lede {
+  max-width: 650px;
+  margin: 0 auto;
+  color: var(--color-text-body);
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+.guides__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.guide-card {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.guide-card__image {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.guide-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.guide-card:hover .guide-card__image img {
+  transform: scale(1.04);
+}
+
+.guide-card__body {
+  padding: 1.75rem;
+}
+
+.guide-card__body h3 {
+  margin-bottom: 0.9rem;
+  color: var(--color-text-primary);
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2.6vw, 2rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.guide-card__body h3 a {
+  color: inherit;
+}
+
+.guide-card__body p {
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.guide-card__link {
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.guide-card__link span {
+  display: inline-block;
+  margin-left: 0.3rem;
+  transition: transform var(--transition-fast);
+}
+
+.guide-card__link:hover span {
+  transform: translateX(4px);
+}
+
+.guides__cta {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+@media (min-width: 760px) {
+  .guides__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 /* ===== GALLERY ===== */
 .gallery {
   background: var(--color-bg);

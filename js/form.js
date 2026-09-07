@@ -58,6 +58,18 @@ function initForm() {
     })
     .then(function(response) {
       if (response.ok) {
+        // Record a qualified lead only after FormSubmit confirms delivery.
+        if (typeof window.fbq === 'function') {
+          var eventId = 'garden_lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+          var eventType = form.querySelector('#event-type').value;
+          window.fbq('track', 'Lead', {
+            content_name: 'Event Quote Request',
+            content_category: eventType
+          }, {
+            eventID: eventId
+          });
+        }
+
         // Animate form out
         gsap.to(form, {
           opacity: 0,

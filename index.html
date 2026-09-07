@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>The Garden Coffee Cart Co. | Coffee Cart & Coffee Catering in Los Angeles, CA</title>
-  <meta name="description" content="The Garden Coffee Cart Co. — Elevating your event & guests' experience through custom coffee cart catering in Los Angeles, CA and surrounding areas. Mobile espresso bar for weddings, birthdays, corporate events, and private parties.">
-  <meta name="keywords" content="coffee cart Los Angeles, coffee cart for events, mobile coffee cart LA, wedding coffee cart Los Angeles, birthday coffee cart LA, corporate event coffee cart, coffee cart rental Los Angeles, mobile espresso cart LA, garden coffee cart, event coffee cart service, coffee cart catering Los Angeles, La Marzocco coffee cart">
+  <meta name="description" content="Garden-inspired coffee cart catering in Los Angeles for weddings, corporate events and private parties. Espresso, matcha and custom menus. Request a quote.">
   <link rel="canonical" href="https://thegardencoffeecart.com/">
 
   <!-- Open Graph -->
@@ -40,46 +39,55 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/style.css">
 
+  <!-- Meta Pixel -->
+  <script src="/js/meta-pixel.js"></script>
+
   <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "The Garden Coffee Cart Co.",
-    "alternateName": "The Garden Coffee Co.",
-    "description": "Los Angeles mobile coffee cart for events. The Garden Coffee Cart Co. provides a garden-inspired coffee cart for weddings, birthdays, corporate events, and private parties across LA.",
-    "url": "https://thegardencoffeecart.com",
-    "email": "contact.thegardenco@gmail.com",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Los Angeles",
-      "addressRegion": "CA",
-      "addressCountry": "US"
-    },
-    "areaServed": {
-      "@type": "City",
-      "name": "Los Angeles"
-    },
-    "priceRange": "$$",
-    "image": "https://thegardencoffeecart.com/images/og-image.jpg",
-    "sameAs": [
-      "https://instagram.com/thegardencoffee.co"
-    ],
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Coffee Cart Services",
-      "itemListElement": [
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Wedding Coffee Cart Los Angeles"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Corporate Event Coffee Cart"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Birthday Party Coffee Cart"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Private Party Coffee Cart"}},
-        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mobile Coffee Cart Rental LA"}}
-      ]
-    }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://thegardencoffeecart.com/#website",
+        "url": "https://thegardencoffeecart.com/",
+        "name": "The Garden Coffee Co.",
+        "publisher": {"@id": "https://thegardencoffeecart.com/#business"}
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://thegardencoffeecart.com/#business",
+        "name": "The Garden Coffee Co.",
+        "alternateName": "The Garden Coffee Cart Co.",
+        "description": "Garden-inspired mobile coffee cart and espresso bar catering for weddings, corporate events, birthdays and private parties in Los Angeles.",
+        "url": "https://thegardencoffeecart.com/",
+        "email": "contact.thegardenco@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Los Angeles",
+          "addressRegion": "CA",
+          "addressCountry": "US"
+        },
+        "areaServed": {"@type": "City", "name": "Los Angeles"},
+        "priceRange": "$$",
+        "image": "https://thegardencoffeecart.com/images/og-image.jpg",
+        "sameAs": ["https://instagram.com/thegardencoffee.co"],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Coffee Cart Catering Services",
+          "itemListElement": [
+            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Wedding coffee cart catering in Los Angeles"}},
+            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Corporate event coffee cart catering"}},
+            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Birthday and private party coffee cart catering"}}
+          ]
+        }
+      }
+    ]
   }
   </script>
 </head>
 <body>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1075812884821288&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
 
   <!-- ===== LOADER ===== -->
   <div class="loader" id="loader">
@@ -94,6 +102,7 @@
       <a href="#services" class="nav__link">Services</a>
       <a href="#gallery" class="nav__link">Gallery</a>
       <a href="#how-it-works" class="nav__link">How It Works</a>
+      <a href="blog/" class="nav__link">Blog</a>
       <a href="#quote" class="nav__cta">Request a Quote</a>
     </nav>
     <button class="nav__hamburger" id="hamburger" aria-label="Toggle menu">
@@ -110,6 +119,7 @@
       <a href="#gallery" class="mobile-menu__link">Gallery</a>
       <a href="#how-it-works" class="mobile-menu__link">How It Works</a>
       <a href="#testimonials" class="mobile-menu__link">Testimonials</a>
+      <a href="blog/" class="mobile-menu__link">Blog</a>
       <a href="#quote" class="mobile-menu__link mobile-menu__cta">Request a Quote</a>
     </nav>
   </div>
@@ -222,6 +232,62 @@
             <span class="service-card__label">Private Parties</span>
           </div>
         </a>
+      </div>
+    </section>
+
+    <!-- ===== PLANNING GUIDES ===== -->
+    <section class="guides section" aria-labelledby="guides-heading">
+      <div class="guides__intro">
+        <span class="guides__eyebrow">The Garden Journal</span>
+        <h2 class="guides__heading section__heading" id="guides-heading">Plan a Better Coffee Cart Experience</h2>
+        <p class="guides__lede">Practical answers for Los Angeles hosts planning weddings, company gatherings and celebrations with a mobile espresso bar.</p>
+      </div>
+      <div class="guides__grid">
+        <article class="guide-card">
+          <a href="blog/coffee-cart-catering-los-angeles-guide/" class="guide-card__image" aria-label="Read the Los Angeles coffee cart catering guide">
+            <picture>
+              <source srcset="images/gallery/IMG_5215.webp" type="image/webp">
+              <img src="images/gallery/IMG_5215.jpg" alt="Garden-inspired mobile espresso cart prepared for a Los Angeles event" width="800" height="1200" loading="lazy" decoding="async">
+            </picture>
+          </a>
+          <div class="guide-card__body">
+            <span class="guide-card__meta">Los Angeles guide</span>
+            <h3><a href="blog/coffee-cart-catering-los-angeles-guide/">Coffee Cart Catering in Los Angeles: What to Know Before You Book</a></h3>
+            <p>Guest counts, service time, menus, power, water and venue logistics—explained simply.</p>
+            <a href="blog/coffee-cart-catering-los-angeles-guide/" class="guide-card__link">Read the guide <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+        <article class="guide-card">
+          <a href="blog/wedding-coffee-cart-los-angeles/" class="guide-card__image" aria-label="Read the Los Angeles wedding coffee cart guide">
+            <picture>
+              <source srcset="images/gallery/facetune-wedding.webp" type="image/webp">
+              <img src="images/gallery/facetune-wedding.jpg" alt="Coffee cart styled for a wedding celebration in Los Angeles" width="800" height="1200" loading="lazy" decoding="async">
+            </picture>
+          </a>
+          <div class="guide-card__body">
+            <span class="guide-card__meta">Wedding planning</span>
+            <h3><a href="blog/wedding-coffee-cart-los-angeles/">How to Plan a Coffee Cart for Your Los Angeles Wedding</a></h3>
+            <p>Choose the right timing, menu and setup so the cart feels like part of the celebration.</p>
+            <a href="blog/wedding-coffee-cart-los-angeles/" class="guide-card__link">Read the guide <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+        <article class="guide-card">
+          <a href="blog/coffee-cart-cost-los-angeles/" class="guide-card__image" aria-label="Read about coffee cart catering costs in Los Angeles">
+            <picture>
+              <source srcset="images/gallery/IMG_1264.webp" type="image/webp">
+              <img src="images/gallery/IMG_1264.jpg" alt="Specialty iced coffee drinks ready for event guests" width="1200" height="800" loading="lazy" decoding="async">
+            </picture>
+          </a>
+          <div class="guide-card__body">
+            <span class="guide-card__meta">Pricing guide</span>
+            <h3><a href="blog/coffee-cart-cost-los-angeles/">How Much Does Coffee Cart Catering Cost in Los Angeles?</a></h3>
+            <p>See what changes a quote and how to compare event coffee packages fairly.</p>
+            <a href="blog/coffee-cart-cost-los-angeles/" class="guide-card__link">Read the guide <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+      </div>
+      <div class="guides__cta">
+        <a href="blog/" class="btn btn--primary"><span class="btn__text">Explore All Guides</span></a>
       </div>
     </section>
 
@@ -488,6 +554,7 @@
         <a href="#services" class="footer__link">Services</a>
         <a href="#gallery" class="footer__link">Gallery</a>
         <a href="#how-it-works" class="footer__link">How It Works</a>
+        <a href="blog/" class="footer__link">Planning Guides</a>
         <a href="#quote" class="footer__link">Request a Quote</a>
       </div>
       <div class="footer__contact">
