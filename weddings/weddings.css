@@ -166,7 +166,7 @@ h1, h2, h3 { color: var(--ink); font-family: var(--serif); font-weight: 500; }
 .w-footer div a:hover { color: #fff; }
 .w-sticky-cta { display: none; }
 
-#experience, #pricing, #faq, #quote { scroll-margin-top: 72px; }
+#experience, #packages, #faq, #quote { scroll-margin-top: 72px; }
 
 @media (max-width: 900px) {
   .w-hero { grid-template-columns: 1fr; }
