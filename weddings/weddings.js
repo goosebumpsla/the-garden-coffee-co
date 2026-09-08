@@ -70,10 +70,20 @@
 
     var reelVideos = document.querySelectorAll('.w-reel-video');
     if (reelVideos.length) {
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var visibleReels = new Set();
+      function syncReelPlayback(video) {
+        if (visibleReels.has(video) && !document.hidden && !reducedMotion.matches) {
+          video.play().catch(function() {
+            // Native controls remain available if the browser blocks autoplay.
+          });
+        } else video.pause();
+      }
       var reelObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           var video = entry.target;
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.18) {
+            visibleReels.add(video);
             var source = video.querySelector('source[data-src]');
             if (source) {
               source.src = source.dataset.src;
@@ -81,18 +91,20 @@
               video.load();
             }
           } else {
-            video.pause();
+            visibleReels.delete(video);
           }
+          syncReelPlayback(video);
         });
       }, { rootMargin: '0px', threshold: 0.18 });
 
       reelVideos.forEach(function(video) {
         video.controls = true;
-        video.addEventListener('play', function() {
-          reelVideos.forEach(function(other) { if (other !== video) other.pause(); });
-        });
+        video.muted = true;
         reelObserver.observe(video);
       });
+      function syncAllReels() { reelVideos.forEach(syncReelPlayback); }
+      document.addEventListener('visibilitychange', syncAllReels);
+      reducedMotion.addEventListener('change', syncAllReels);
     }
   }
 
