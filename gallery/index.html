@@ -22,7 +22,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="/assets/gallery-media/meet-taylor.webp" type="image/webp">
   <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/gallery/gallery.css?v=20260908-1">
+  <link rel="stylesheet" href="/gallery/gallery.css?v=20260908-2">
+  <link rel="stylesheet" href="/css/site-header.css?v=20260908-1">
   <script src="/js/meta-pixel.js"></script>
 
   <script type="application/ld+json">
@@ -45,120 +46,114 @@
     </a>
     <nav class="g-nav__links" aria-label="Gallery navigation">
       <a href="/weddings/">Weddings</a>
-      <a href="/blog/">Planning guides</a>
+      <a href="/gallery/" aria-current="page">Gallery</a>
+      <a href="/blog/">Journal</a>
       <a class="g-button g-button--small" href="/#quote" data-gallery-cta="navigation">Request a quote</a>
     </nav>
     <a class="g-nav__mobile-cta" href="/#quote" data-gallery-cta="mobile-navigation">Request a quote</a>
   </header>
 
   <main>
-    <section class="g-hero">
-      <div class="g-hero__copy">
-        <p class="g-eyebrow">Real events across Los Angeles</p>
-        <h1>Good coffee looks even better <em>in the moment.</em></h1>
-        <p>Weddings, private celebrations, yacht parties and neighborhood gatherings—each one served with a made-to-order menu and a warm welcome.</p>
-        <a class="g-text-link" href="#events">See the events <span aria-hidden="true">↓</span></a>
-      </div>
-      <figure class="g-hero__image">
-        <img src="/assets/gallery-media/meet-taylor.webp" alt="Taylor of The Garden Coffee Co. beside the styled mobile coffee cart" width="1400" height="934" fetchpriority="high">
-        <figcaption><span>Meet Taylor</span><strong>Owner &amp; barista</strong></figcaption>
-      </figure>
+    <section class="g-intro">
+      <p class="g-eyebrow">The Garden Coffee Co. · Los Angeles</p>
+      <h1>Real celebrations.<br><em>Really good coffee.</em></h1>
+      <p class="g-intro__copy">A look at the weddings, private parties and community moments we’ve had the joy of serving.</p>
+      <nav class="g-jump" aria-label="Event gallery sections">
+        <a href="#weddings">Weddings</a>
+        <a href="#private-events">Private events</a>
+        <a href="#community-events">Community &amp; brand</a>
+      </nav>
     </section>
 
-    <section class="g-events" id="events" aria-labelledby="events-heading">
-      <div class="g-events__heading">
-        <div>
-          <p class="g-eyebrow">From behind the cart</p>
-          <h2 id="events-heading">A little look at what we do.</h2>
-        </div>
-        <div class="g-filters" role="group" aria-label="Filter event gallery">
-          <button class="g-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
-          <button class="g-filter" type="button" data-filter="wedding" aria-pressed="false">Weddings</button>
-          <button class="g-filter" type="button" data-filter="private" aria-pressed="false">Yacht &amp; private</button>
-          <button class="g-filter" type="button" data-filter="community" aria-pressed="false">Brand &amp; community</button>
-        </div>
-      </div>
-
-      <div class="g-grid" aria-live="polite">
-        <article class="g-card g-card--wide" data-category="wedding">
+    <section class="g-story" id="weddings" aria-labelledby="weddings-heading">
+      <header class="g-story__heading">
+        <div><span>01</span><p class="g-eyebrow">Weddings</p></div>
+        <h2 id="weddings-heading">A beautiful pause in the celebration.</h2>
+        <p>From cocktail hour through the last dance, the cart gives guests a place to gather, choose a drink and stay awhile.</p>
+      </header>
+      <div class="g-album">
+        <figure class="g-frame">
           <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/gallery-media/garden-cocktail-hour-poster.webp" aria-label="Coffee and matcha cart at a garden wedding cocktail hour">
+            <video class="g-story-video" muted loop playsinline preload="none" poster="/assets/gallery-media/garden-cocktail-hour-poster.webp" aria-label="Coffee and matcha cart at a garden wedding cocktail hour">
               <source data-src="/assets/gallery-media/garden-cocktail-hour.mp4" type="video/mp4">
             </video>
-            <button class="g-play" type="button" aria-label="Play garden wedding cocktail hour video"><span aria-hidden="true">▶</span> Play</button>
+            <button class="g-video-toggle" type="button" aria-label="Play garden wedding cocktail hour video">Play</button>
           </div>
-          <div class="g-card__caption"><span>Wedding</span><strong>Garden cocktail hour</strong></div>
-        </article>
-
-        <article class="g-card" data-category="community">
-          <img src="/assets/gallery-media/styled-cart-evening.webp" alt="The Garden Coffee Co. cart styled with flowers at an evening event" width="1400" height="934" loading="lazy">
-          <div class="g-card__caption"><span>Community</span><strong>Styled for the evening</strong></div>
-        </article>
-
-        <article class="g-card g-card--tall" data-category="wedding">
+          <figcaption>Garden cocktail hour</figcaption>
+        </figure>
+        <figure class="g-frame">
           <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/gallery-media/wedding-evening-poster.webp" aria-label="Coffee cart moments during an evening wedding reception">
+            <video class="g-story-video" muted loop playsinline preload="none" poster="/assets/gallery-media/wedding-evening-poster.webp" aria-label="Coffee cart moments during an evening wedding reception">
               <source data-src="/assets/gallery-media/wedding-evening.mp4" type="video/mp4">
             </video>
-            <button class="g-play" type="button" aria-label="Play evening wedding reception video"><span aria-hidden="true">▶</span> Play</button>
+            <button class="g-video-toggle" type="button" aria-label="Play evening wedding reception video">Play</button>
           </div>
-          <div class="g-card__caption"><span>Wedding</span><strong>From vows to dancing</strong></div>
-        </article>
+          <figcaption>From vows to dancing</figcaption>
+        </figure>
+        <figure class="g-frame">
+          <img src="/assets/gallery-media/styled-cart-evening.webp" alt="The Garden Coffee Co. cart styled with flowers at an evening event" width="1400" height="934" loading="lazy">
+          <figcaption>Styled for the evening</figcaption>
+        </figure>
+      </div>
+      <a class="g-story__link" href="/weddings/">Explore wedding coffee service →</a>
+    </section>
 
-        <article class="g-card g-card--wide" data-category="private">
+    <section class="g-story g-story--cream" id="private-events" aria-labelledby="private-heading">
+      <header class="g-story__heading">
+        <div><span>02</span><p class="g-eyebrow">Private celebrations</p></div>
+        <h2 id="private-heading">Coffee wherever the day takes you.</h2>
+        <p>Intimate gatherings, birthday parties and celebrations on the water—each setup is shaped around the space and the people in it.</p>
+      </header>
+      <div class="g-album">
+        <figure class="g-frame">
           <img src="/assets/gallery-media/guest-service.webp" alt="Guests chatting with Taylor while she prepares drinks at a private event" width="1000" height="1500" loading="lazy">
-          <div class="g-card__caption"><span>Private event</span><strong>A natural gathering place</strong></div>
-        </article>
-
-        <article class="g-card g-card--tall" data-category="wedding">
+          <figcaption>A natural gathering place</figcaption>
+        </figure>
+        <figure class="g-frame">
           <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/social/wedding-service-poster.webp" aria-label="Garden Coffee Co. wedding service">
-              <source data-src="/assets/social/wedding-service.mp4" type="video/mp4">
-            </video>
-            <button class="g-play" type="button" aria-label="Play wedding coffee cart service video"><span aria-hidden="true">▶</span> Play</button>
-          </div>
-          <div class="g-card__caption"><span>Wedding</span><strong>Made to order</strong></div>
-        </article>
-
-        <article class="g-card" data-category="private">
-          <img src="/assets/gallery-media/yacht-guests.webp" alt="Guests enjoying iced drinks during a yacht celebration" width="1000" height="1500" loading="lazy">
-          <div class="g-card__caption"><span>Yacht event</span><strong>Coffee on the water</strong></div>
-        </article>
-
-        <article class="g-card g-card--wide" data-category="community">
-          <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/social/grand-opening-poster.webp" aria-label="Garden Coffee Co. serving a grand opening crowd">
-              <source data-src="/assets/social/grand-opening.mp4" type="video/mp4">
-            </video>
-            <button class="g-play" type="button" aria-label="Play grand opening coffee cart video"><span aria-hidden="true">▶</span> Play</button>
-          </div>
-          <div class="g-card__caption"><span>Brand event</span><strong>Made for the crowd</strong></div>
-        </article>
-
-        <article class="g-card" data-category="community">
-          <img src="/assets/gallery-media/espresso-details.webp" alt="Espresso drinks and menu details at an outdoor Garden Coffee Co. event" width="1000" height="1334" loading="lazy">
-          <div class="g-card__caption"><span>Behind the bar</span><strong>The little details</strong></div>
-        </article>
-
-        <article class="g-card g-card--tall" data-category="private">
-          <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/social/yacht-event-poster.webp" aria-label="Garden Coffee Co. serving aboard a yacht">
+            <video class="g-story-video" muted loop playsinline preload="none" poster="/assets/social/yacht-event-poster.webp" aria-label="Garden Coffee Co. serving aboard a yacht">
               <source data-src="/assets/social/yacht-event.mp4" type="video/mp4">
             </video>
-            <button class="g-play" type="button" aria-label="Play yacht coffee cart event video"><span aria-hidden="true">▶</span> Play</button>
+            <button class="g-video-toggle" type="button" aria-label="Play yacht coffee cart event video">Play</button>
           </div>
-          <div class="g-card__caption"><span>Yacht event</span><strong>Service with a view</strong></div>
-        </article>
+          <figcaption>Service with a view</figcaption>
+        </figure>
+        <figure class="g-frame">
+          <img src="/assets/gallery-media/yacht-guests.webp" alt="Guests enjoying iced drinks during a yacht celebration" width="1000" height="1500" loading="lazy">
+          <figcaption>Coffee on the water</figcaption>
+        </figure>
+      </div>
+    </section>
 
-        <article class="g-card" data-category="community">
+    <section class="g-story" id="community-events" aria-labelledby="community-heading">
+      <header class="g-story__heading">
+        <div><span>03</span><p class="g-eyebrow">Community &amp; brand</p></div>
+        <h2 id="community-heading">Made for a crowd, one cup at a time.</h2>
+        <p>Grand openings, pop-ups and company gatherings served with the same care we bring to every celebration.</p>
+      </header>
+      <div class="g-album">
+        <figure class="g-frame">
           <div class="g-media">
-            <video muted loop playsinline preload="none" poster="/assets/social/espresso-craft-poster.webp" aria-label="Espresso being prepared behind the Garden Coffee Co. cart">
+            <video class="g-story-video" muted loop playsinline preload="none" poster="/assets/social/grand-opening-poster.webp" aria-label="Garden Coffee Co. serving a grand opening crowd">
+              <source data-src="/assets/social/grand-opening.mp4" type="video/mp4">
+            </video>
+            <button class="g-video-toggle" type="button" aria-label="Play grand opening coffee cart video">Play</button>
+          </div>
+          <figcaption>Grand opening energy</figcaption>
+        </figure>
+        <figure class="g-frame">
+          <img src="/assets/gallery-media/espresso-details.webp" alt="Espresso drinks and menu details at an outdoor Garden Coffee Co. event" width="1000" height="1334" loading="lazy">
+          <figcaption>The little details</figcaption>
+        </figure>
+        <figure class="g-frame">
+          <div class="g-media">
+            <video class="g-story-video" muted loop playsinline preload="none" poster="/assets/social/espresso-craft-poster.webp" aria-label="Espresso being prepared behind the Garden Coffee Co. cart">
               <source data-src="/assets/social/espresso-craft.mp4" type="video/mp4">
             </video>
-            <button class="g-play" type="button" aria-label="Play espresso preparation video"><span aria-hidden="true">▶</span> Play</button>
+            <button class="g-video-toggle" type="button" aria-label="Play espresso preparation video">Play</button>
           </div>
-          <div class="g-card__caption"><span>Behind the bar</span><strong>The art of coffee</strong></div>
-        </article>
+          <figcaption>The art of coffee</figcaption>
+        </figure>
       </div>
       <p class="g-events__note">Every photo and video on this page comes from a real Garden Coffee Co. event.</p>
     </section>
@@ -179,6 +174,6 @@
     <div><a href="/weddings/">Weddings</a><a href="/blog/">Planning guides</a><a href="mailto:contact.thegardenco@gmail.com">Email us</a><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">Instagram</a></div>
   </footer>
 
-  <script src="/gallery/gallery.js?v=20260908-1" defer></script>
+  <script src="/gallery/gallery.js?v=20260908-2" defer></script>
 </body>
 </html>

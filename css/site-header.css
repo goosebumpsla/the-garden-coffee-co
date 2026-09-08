@@ -1,0 +1,134 @@
+/* One brand header across the homepage, weddings, gallery and journal. */
+.nav,
+.nav.nav--scrolled,
+.w-nav,
+.g-nav,
+.blog-nav {
+  position: sticky;
+  top: 0;
+  right: auto;
+  left: auto;
+  z-index: 100;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: .65rem max(1.25rem, calc((100% - 1180px) / 2));
+  border-bottom: 1px solid rgba(38, 48, 39, .14);
+  background: rgba(253, 251, 247, .96);
+  color: #263027;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nav__logo,
+.w-nav__logo,
+.g-nav__logo,
+.blog-nav__logo {
+  display: block;
+  width: clamp(160px, 17vw, 195px);
+  flex: 0 0 auto;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.nav__logo img,
+.nav.nav--scrolled .nav__logo img,
+.w-nav__logo img,
+.g-nav__logo img,
+.blog-nav__logo img {
+  width: 100%;
+  height: auto;
+  filter: none;
+}
+
+.nav__links,
+.w-nav__links,
+.g-nav__links,
+.blog-nav__links {
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  color: #3f493f;
+  font-family: "Outfit", Arial, sans-serif;
+  font-size: .82rem;
+}
+
+.w-nav__links,
+.g-nav__links,
+.blog-nav__links { display: flex; }
+
+.nav__link,
+.w-nav__links > a:not(.w-button),
+.g-nav__links > a:not(.g-button),
+.blog-nav__links > a:not(.blog-nav__cta) {
+  color: #3f493f;
+  text-decoration: none;
+}
+
+.nav__link:hover,
+.w-nav__links > a:not(.w-button):hover,
+.g-nav__links > a:not(.g-button):hover,
+.blog-nav__links > a:not(.blog-nav__cta):hover {
+  color: #758b72;
+  opacity: 1;
+}
+
+.w-nav__links [aria-current="page"],
+.g-nav__links [aria-current="page"],
+.blog-nav__links [aria-current="page"] { color: #758b72; }
+
+.nav__cta,
+.w-button.w-button--small,
+.g-button.g-button--small,
+.blog-nav__cta {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: .65rem 1.2rem;
+  border: 1px solid #4e5a47;
+  border-radius: 999px;
+  background: #4e5a47;
+  color: #fff;
+  font-family: "Outfit", Arial, sans-serif;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav.nav--scrolled .nav__cta { border-color: #4e5a47; color: #fff; }
+.nav__cta:hover,
+.nav.nav--scrolled .nav__cta:hover,
+.w-button.w-button--small:hover,
+.g-button.g-button--small:hover,
+.blog-nav__cta:hover {
+  border-color: #263027;
+  background: #263027;
+  color: #fff;
+}
+
+.nav__hamburger span,
+.nav.nav--scrolled .nav__hamburger span { background: #263027; }
+.nav__hamburger.active span { background: #fff; }
+
+@media (max-width: 900px) {
+  .w-nav__links,
+  .g-nav__links { display: none; }
+  .w-nav__mobile-cta,
+  .g-nav__mobile-cta { display: block; }
+}
+
+@media (max-width: 520px) {
+  .nav,
+  .nav.nav--scrolled,
+  .w-nav,
+  .g-nav,
+  .blog-nav { min-height: 64px; padding-block: .55rem; }
+  .nav__logo,
+  .w-nav__logo,
+  .g-nav__logo,
+  .blog-nav__logo { width: 148px; }
+}
