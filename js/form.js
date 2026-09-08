@@ -6,6 +6,18 @@
 function initForm() {
   var form = document.getElementById('quoteForm');
   var successEl = document.getElementById('quoteSuccess');
+
+  document.querySelectorAll('.booking-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (typeof window.fbq === 'function') {
+        window.fbq('trackCustom', 'BookingLinkClick', {
+          content_name: 'Coffee Cart Event Consultation',
+          page_path: window.location.pathname
+        });
+      }
+    });
+  });
+
   if (!form) return;
 
   // Preserve ad and search attribution in every quote email without exposing

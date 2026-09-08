@@ -152,6 +152,10 @@ h1, h2, h3 { color: var(--ink); font-family: var(--serif); font-weight: 500; }
 .btn--loading .btn__text { display: none; }
 .btn--loading .btn__loader { display: inline; }
 .w-form-note { margin: -.2rem 0 0; color: #7e827d; font-size: .7rem; }
+.w-booking-call { display: flex; flex-wrap: wrap; gap: .4rem .7rem; align-items: baseline; margin-top: .15rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: .82rem; }
+.w-booking-call > span { color: #7e827d; }
+.w-booking-call a { color: var(--sage-dark); font-weight: 600; text-decoration: none; }
+.w-booking-call a:hover { color: var(--ink); }
 .quote__success { display: none; padding: 3rem 1rem; text-align: center; }
 .quote__success.active { display: block; }
 .quote__success-mark { display: inline-grid; width: 52px; height: 52px; place-items: center; border: 1px solid var(--sage); border-radius: 50%; color: var(--sage); font-size: 1.4rem; }
