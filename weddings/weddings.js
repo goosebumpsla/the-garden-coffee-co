@@ -6,15 +6,43 @@
       initForm();
     }
 
-    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
-      link.addEventListener('click', function(event) {
-        var target = document.querySelector(link.getAttribute('href'));
-        if (!target) return;
-        event.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        history.replaceState(null, '', link.getAttribute('href'));
+    // Native anchors preserve browser history and never take over scrolling.
+    var heroVideo = document.querySelector('.w-hero__video');
+    var videoToggle = document.querySelector('.w-video-toggle');
+    var userPaused = false;
+    var heroInView = true;
+    var allowMotion = window.matchMedia('(min-width: 769px) and (prefers-reduced-motion: no-preference)');
+    function updateHeroPlayback() {
+      if (!heroVideo) return;
+      if (!userPaused && heroInView && !document.hidden && allowMotion.matches) {
+        heroVideo.play().catch(function() {});
+      } else heroVideo.pause();
+    }
+    if (heroVideo && videoToggle) {
+      videoToggle.addEventListener('click', function() {
+        userPaused = !heroVideo.paused;
+        updateHeroPlayback();
       });
-    });
+      ['play', 'pause'].forEach(function(eventName) {
+        heroVideo.addEventListener(eventName, function() {
+          videoToggle.textContent = heroVideo.paused ? 'Play video' : 'Pause video';
+          videoToggle.setAttribute('aria-label', heroVideo.paused ? 'Play background video' : 'Pause background video');
+        });
+      });
+      new IntersectionObserver(function(entries) {
+        heroInView = entries[0].isIntersecting;
+        updateHeroPlayback();
+      }).observe(heroVideo);
+      document.addEventListener('visibilitychange', updateHeroPlayback);
+      allowMotion.addEventListener('change', updateHeroPlayback);
+    }
+    var quote = document.getElementById('quote');
+    var stickyCta = document.querySelector('.w-sticky-cta');
+    if (quote && stickyCta) {
+      new IntersectionObserver(function(entries) {
+        stickyCta.hidden = entries[0].isIntersecting;
+      }).observe(quote);
+    }
 
     if (typeof window.fbq === 'function') {
       window.fbq('track', 'ViewContent', {
@@ -41,7 +69,7 @@
     }
 
     var reelVideos = document.querySelectorAll('.w-reel-video');
-    if (reelVideos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (reelVideos.length) {
       var reelObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           var video = entry.target;
@@ -52,14 +80,17 @@
               source.removeAttribute('data-src');
               video.load();
             }
-            video.play().catch(function() {});
           } else {
             video.pause();
           }
         });
-      }, { rootMargin: '180px 0px', threshold: 0.18 });
+      }, { rootMargin: '0px', threshold: 0.18 });
 
       reelVideos.forEach(function(video) {
+        video.controls = true;
+        video.addEventListener('play', function() {
+          reelVideos.forEach(function(other) { if (other !== video) other.pause(); });
+        });
         reelObserver.observe(video);
       });
     }
@@ -71,10 +102,4 @@
     startWeddingPage();
   }
 
-  // Re-align deep links after web fonts and images finish laying out.
-  window.addEventListener('load', function() {
-    if (!window.location.hash) return;
-    var target = document.querySelector(window.location.hash);
-    if (target) target.scrollIntoView({ block: 'start' });
-  });
 })();

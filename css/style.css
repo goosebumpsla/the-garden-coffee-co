@@ -37,9 +37,9 @@
   /* Transitions */
   --ease-out: cubic-bezier(0.25, 0, 0, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: 0.3s var(--ease-out);
-  --transition-medium: 0.6s var(--ease-out);
-  --transition-slow: 1s var(--ease-out-expo);
+  --transition-fast: 150ms ease;
+  --transition-medium: 180ms ease;
+  --transition-slow: 180ms ease;
 }
 
 /* ===== BASE ===== */
@@ -266,12 +266,14 @@ picture {
   inset: 0;
   z-index: 99;
   background: var(--color-bg-dark);
+  padding: 108px 24px 24px;
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 150ms ease, visibility 150ms ease;
 }
 
 .mobile-menu.active {
@@ -283,7 +285,9 @@ picture {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(1rem, 3vh, 2rem);
+  flex-shrink: 0;
+  margin-block: auto;
 }
 
 .mobile-menu__link {
@@ -292,8 +296,7 @@ picture {
   font-weight: 400;
   color: var(--color-text-inverse);
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: color 150ms ease;
 }
 
 .mobile-menu.active .mobile-menu__link {
@@ -301,12 +304,15 @@ picture {
   transform: translateY(0);
 }
 
-.mobile-menu.active .mobile-menu__link:nth-child(1) { transition-delay: 0.1s; }
-.mobile-menu.active .mobile-menu__link:nth-child(2) { transition-delay: 0.15s; }
-.mobile-menu.active .mobile-menu__link:nth-child(3) { transition-delay: 0.2s; }
-.mobile-menu.active .mobile-menu__link:nth-child(4) { transition-delay: 0.25s; }
-.mobile-menu.active .mobile-menu__link:nth-child(5) { transition-delay: 0.3s; }
-.mobile-menu.active .mobile-menu__link:nth-child(6) { transition-delay: 0.35s; }
+html { scroll-behavior: auto; scroll-padding-top: 108px; }
+.quote-success { scroll-margin-top: 0; }
+.nav .nav__hamburger.active span { background: #263027; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media (max-width: 520px) {
+  html { scroll-padding-top: 88px; }
+}
 
 .mobile-menu__cta {
   margin-top: 1rem;
@@ -516,17 +522,15 @@ picture {
   background: var(--color-text-primary);
   padding: 1rem 2.5rem;
   border-radius: 100px;
-  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out);
-  will-change: transform;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
 .btn--primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 30px rgba(184, 149, 106, 0.3);
+  box-shadow: 0 3px 12px rgba(184, 149, 106, 0.18);
 }
 
 .btn--primary:active {
-  transform: scale(0.97);
+  background-color: #465047;
 }
 
 .animations-ready .hero__cta {
@@ -594,14 +598,12 @@ picture {
   width: 60px;
   top: 8%;
   left: 5%;
-  animation: leafFloat1 8s ease-in-out infinite;
 }
 
 .showcase__leaf--2 {
   width: 45px;
   top: 60%;
   right: 8%;
-  animation: leafFloat2 10s ease-in-out infinite;
   transform: rotate(45deg);
 }
 
@@ -609,7 +611,6 @@ picture {
   width: 35px;
   bottom: 12%;
   left: 15%;
-  animation: leafFloat3 12s ease-in-out infinite;
   transform: rotate(-30deg);
 }
 
@@ -754,7 +755,7 @@ picture {
 }
 
 .service-card:hover .service-card__image img {
-  transform: scale(1.06);
+  transform: none;
 }
 
 .service-card__content {
@@ -837,7 +838,7 @@ picture {
 }
 
 .guide-card:hover .guide-card__image img {
-  transform: scale(1.04);
+  transform: none;
 }
 
 .guide-card__body {
@@ -911,7 +912,7 @@ picture {
 .gallery__track {
   display: flex;
   gap: 1.5rem;
-  transition: transform 0.6s ease;
+  transition: transform 180ms ease;
 }
 
 .gallery__slide {
@@ -981,7 +982,6 @@ picture {
 
 .marquee__track {
   display: inline-flex;
-  animation: marquee 30s linear infinite;
 }
 
 .marquee__text {
@@ -1320,14 +1320,12 @@ picture {
 
 .quote__checkmark circle {
   stroke-dasharray: 166;
-  stroke-dashoffset: 166;
-  animation: checkCircle 0.6s ease forwards;
+  stroke-dashoffset: 0;
 }
 
 .quote__checkmark path {
   stroke-dasharray: 48;
-  stroke-dashoffset: 48;
-  animation: checkPath 0.4s 0.4s ease forwards;
+  stroke-dashoffset: 0;
 }
 
 @keyframes checkCircle {

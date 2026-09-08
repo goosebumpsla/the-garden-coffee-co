@@ -68,7 +68,6 @@ function initForm() {
     if (!isValid) {
       var firstError = form.querySelector('.form-group--error');
       if (firstError) {
-        gsap.fromTo(firstError, { x: -8 }, { x: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
         var focusEl = firstError.querySelector('input, select, textarea');
         if (focusEl) focusEl.focus();
       }
@@ -121,27 +120,13 @@ function initForm() {
           });
         }
 
-        // Animate form out
-        gsap.to(form, {
-          opacity: 0,
-          y: -20,
-          duration: 0.5,
-          ease: 'power2.in',
-          onComplete: function() {
-            form.style.display = 'none';
-            successEl.classList.add('active');
-            mountBookingScheduler(successEl);
-            gsap.from(successEl, {
-              opacity: 0,
-              y: 20,
-              duration: 0.6,
-              ease: 'power3.out'
-            });
-            setTimeout(function() {
-              successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 120);
-          }
-        });
+        // The booking step appears immediately, without an animated layout shift.
+        form.style.display = 'none';
+        successEl.classList.add('active');
+        mountBookingScheduler(successEl);
+        successEl.setAttribute('tabindex', '-1');
+        successEl.focus({ preventScroll: true });
+        successEl.scrollIntoView({ behavior: 'instant', block: 'start' });
       } else {
         throw new Error('Form submission failed');
       }
@@ -153,7 +138,7 @@ function initForm() {
       errorMsg.textContent = 'Something went wrong. Please try again or email us at contact.thegardenco@gmail.com';
       errorMsg.style.cssText = 'color: var(--color-error); font-size: var(--font-small); margin-top: 0.75rem;';
       submitBtn.parentNode.insertBefore(errorMsg, submitBtn.nextSibling);
-      gsap.from(errorMsg, { opacity: 0, y: 10, duration: 0.4 });
+      errorMsg.setAttribute('role', 'alert');
       setTimeout(function() { errorMsg.remove(); }, 5000);
     });
   });
@@ -201,7 +186,6 @@ function initTestimonials() {
   if (!testimonials.length) return;
 
   var current = 0;
-  var interval;
 
   function showTestimonial(index) {
     var outgoing = testimonials[current];
@@ -209,20 +193,8 @@ function initTestimonials() {
 
     if (current === index) return;
 
-    gsap.to(outgoing, {
-      opacity: 0,
-      y: -15,
-      duration: 0.4,
-      ease: 'power2.in',
-      onComplete: function() {
-        outgoing.classList.remove('active');
-        incoming.classList.add('active');
-        gsap.fromTo(incoming,
-          { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-        );
-      }
-    });
+    outgoing.classList.remove('active');
+    incoming.classList.add('active');
 
     dots[current].classList.remove('active');
     dots[index].classList.add('active');
@@ -232,16 +204,7 @@ function initTestimonials() {
   dots.forEach(function(dot, i) {
     dot.addEventListener('click', function() {
       showTestimonial(i);
-      resetInterval();
     });
   });
 
-  function resetInterval() {
-    clearInterval(interval);
-    interval = setInterval(function() {
-      showTestimonial((current + 1) % testimonials.length);
-    }, 6000);
-  }
-
-  resetInterval();
 }
