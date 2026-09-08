@@ -2,6 +2,11 @@ const HOSTS = new Set(['thegardencoffeecart.com', 'www.thegardencoffeecart.com']
 const API_PATHS = new Set(['/api/meta-lead', '/.netlify/functions/meta-lead']);
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const hash = async value => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))), byte => byte.toString(16).padStart(2, '0')).join('');
+const preventPreviewIndexing = response => {
+  const headers = new Headers(response.headers);
+  headers.set('X-Robots-Tag', 'noindex, nofollow');
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+};
 
 export async function metaLead(request, env, send = fetch) {
   if (request.method !== 'POST') return json(405, { error: 'Method not allowed' });
@@ -61,8 +66,13 @@ export async function metaLead(request, env, send = fetch) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (API_PATHS.has(url.pathname)) return metaLead(request, env);
-    if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/.netlify/')) return json(404, { error: 'Not found' });
-    return env.ASSETS.fetch(request);
+    if (url.hostname === 'www.thegardencoffeecart.com') {
+      return Response.redirect(`https://thegardencoffeecart.com${url.pathname}${url.search}`, 301);
+    }
+    let response;
+    if (API_PATHS.has(url.pathname)) response = await metaLead(request, env);
+    else if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/.netlify/')) response = json(404, { error: 'Not found' });
+    else response = await env.ASSETS.fetch(request);
+    return url.hostname.endsWith('.workers.dev') ? preventPreviewIndexing(response) : response;
   }
 };

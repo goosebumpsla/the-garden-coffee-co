@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { metaLead, default as worker } from '../cloudflare/worker.mjs';
 const payload = { advertisingConsent: true, eventId: 'garden_lead_test_123', email: ' TEST@example.com ', phone: '(818) 555-0100', eventSourceUrl: 'https://thegardencoffeecart.com/weddings/?private=omit' };
 const env = { META_CAPI_ACCESS_TOKEN: 'dummy-test-only' };
@@ -30,8 +31,18 @@ test('Cloudflare rejects unconsented, invalid, oversized and unconfigured reques
 test('Cloudflare keeps static requests separate and API responses private', async () => {
   const result = await worker.fetch(new Request('https://example.com/weddings/'), { ASSETS: { fetch: () => new Response('page') } });
   assert.equal(await result.text(), 'page');
+  assert.equal(result.headers.get('X-Robots-Tag'), null);
+  const preview = await worker.fetch(new Request('https://garden-preview.workers.dev/weddings/'), { ASSETS: { fetch: () => new Response('page') } });
+  assert.equal(preview.headers.get('X-Robots-Tag'), 'noindex, nofollow');
+  const redirect = await worker.fetch(new Request('https://www.thegardencoffeecart.com/blog/?source=test'), {});
+  assert.equal(redirect.status, 301);
+  assert.equal(redirect.headers.get('Location'), 'https://thegardencoffeecart.com/blog/?source=test');
   const failure = await metaLead(req(), env, async () => new Response('error', { status: 400 }));
   assert.equal(failure.status, 502);
   assert.equal(failure.headers.get('Cache-Control'), 'no-store');
   assert.equal((await worker.fetch(new Request('https://example.com/api/missing'), {})).status, 404);
+});
+test('Cloudflare routes every asset through preview indexing protection', () => {
+  const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+  assert.equal(config.assets.run_worker_first, true);
 });

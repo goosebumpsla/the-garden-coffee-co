@@ -2,6 +2,15 @@
 
 Prepared September 8, 2026. Existing Netlify configuration is retained for rollback.
 
+## Completed preview validation
+
+- Worker preview deployed at `https://the-garden-coffee-co.mute-pine-597c.workers.dev`.
+- All seven sitemap URLs, `robots.txt`, and `sitemap.xml` return HTTP 200; an unknown URL returns the branded HTTP 404 page.
+- The preview hostname sends `X-Robots-Tag: noindex, nofollow`; production custom-domain responses remain indexable.
+- Desktop and 390px mobile layouts were checked with no horizontal overflow. The homepage video loaded, the quote form rendered, and the browser console showed no errors.
+- Netlify's authoritative DNS zone was inventoried on September 8, 2026. It contains only the apex and `www` Netlify routing records plus the Google Search Console verification TXT record. See `DNS_ZONE_BACKUP.md`.
+- The registrar is Squarespace Domains LLC. DNSSEC is unsigned.
+
 ## Deployment
 
 - Free Workers plan with static assets. No R2, Stream, database or paid add-ons.
@@ -15,9 +24,9 @@ Prepared September 8, 2026. Existing Netlify configuration is retained for rollb
 
 ## Before DNS cutover
 
-1. Deploy to the Workers preview address and verify pages, videos, real 404s, headers, and form behavior. Preview pages must be noindex; optional Meta tracking stays off outside the production domain.
+1. ~~Deploy to the Workers preview address and verify pages, videos, real 404s, headers, and form behavior. Preview pages must be noindex; optional Meta tracking stays off outside the production domain.~~ Completed September 8, 2026, except for an approved live form delivery test after cutover.
 2. Add and test the CAPI secret. Do not send fake production leads or treat the calendar opening as a booked call.
-3. Inventory/export all existing DNS records from the DNS provider; DNS queries alone are not a full zone backup. Preserve verification TXT, email-related records, and any subdomains.
+3. ~~Inventory/export all existing DNS records from the DNS provider; DNS queries alone are not a full zone backup. Preserve verification TXT, email-related records, and any subdomains.~~ Completed September 8, 2026; the exact authoritative-zone inventory is recorded in `DNS_ZONE_BACKUP.md`.
 4. Add the domain on Cloudflare Free, compare imported DNS against the export, and handle DNSSEC safely if enabled. Only then switch nameservers at the registrar.
 5. Add apex and www as Worker custom domains. Keep paths and canonical URLs unchanged; redirect www to apex.
 6. Verify HTTPS, robots/sitemap, mobile form delivery (with an approved test), and Pixel/CAPI deduplication on the real domain. Update the privacy notice to identify the active hosting provider.
