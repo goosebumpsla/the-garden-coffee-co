@@ -21,7 +21,8 @@ h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { color: var(--ink); font-family: var(--serif); font-weight: 500; }
 
 .w-nav { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 72px; padding: 0 max(1.25rem, calc((100% - 1180px) / 2)); border-bottom: 1px solid var(--line); background: rgba(253, 251, 247, 0.94); backdrop-filter: blur(16px); }
-.w-nav__logo { color: var(--ink); font-family: var(--serif); font-size: 1.3rem; text-decoration: none; }
+.w-nav__logo { display: block; width: clamp(155px, 17vw, 205px); flex: 0 0 auto; line-height: 0; text-decoration: none; }
+.w-nav__logo img { width: 100%; height: auto; mix-blend-mode: multiply; }
 .w-nav__links { display: flex; align-items: center; gap: 1.75rem; font-size: 0.82rem; }
 .w-nav__links > a:not(.w-button) { text-decoration: none; }
 .w-nav__links > a:not(.w-button):hover { color: var(--sage); }
@@ -164,7 +165,8 @@ h1, h2, h3 { color: var(--ink); font-family: var(--serif); font-weight: 500; }
 .booking-scheduler__fallback:hover { color: var(--ink); }
 
 .w-footer { display: grid; grid-template-columns: 1fr auto; gap: 1rem 3rem; align-items: end; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); background: #1d231e; color: rgba(255,255,255,.65); font-size: .75rem; }
-.w-footer__brand { color: #fff; font: 500 1.45rem var(--serif); text-decoration: none; }
+.w-footer__brand { display: block; width: 92px; color: #fff; line-height: 0; text-decoration: none; }
+.w-footer__brand img { width: 100%; height: auto; filter: invert(1) grayscale(1); mix-blend-mode: screen; opacity: .92; }
 .w-footer p { margin: 0; }
 .w-footer div { display: flex; grid-column: 2; grid-row: 1 / span 2; gap: 1.4rem; }
 .w-footer div a { text-decoration: none; }
