@@ -152,15 +152,16 @@ h1, h2, h3 { color: var(--ink); font-family: var(--serif); font-weight: 500; }
 .btn--loading .btn__text { display: none; }
 .btn--loading .btn__loader { display: inline; }
 .w-form-note { margin: -.2rem 0 0; color: #7e827d; font-size: .7rem; }
-.w-booking-call { display: flex; flex-wrap: wrap; gap: .4rem .7rem; align-items: baseline; margin-top: .15rem; padding-top: 1.25rem; border-top: 1px solid var(--line); font-size: .82rem; }
-.w-booking-call > span { color: #7e827d; }
-.w-booking-call a { color: var(--sage-dark); font-weight: 600; text-decoration: none; }
-.w-booking-call a:hover { color: var(--ink); }
-.quote__success { display: none; padding: 3rem 1rem; text-align: center; }
+.quote__success { display: none; padding: 1rem 0 0; text-align: center; }
 .quote__success.active { display: block; }
 .quote__success-mark { display: inline-grid; width: 52px; height: 52px; place-items: center; border: 1px solid var(--sage); border-radius: 50%; color: var(--sage); font-size: 1.4rem; }
 .quote__success h3 { margin: 1rem 0 .4rem; font-size: 2.2rem; }
 .quote__success p { margin: 0; }
+.booking-scheduler { position: relative; min-height: 600px; margin-top: 1.75rem; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+.booking-scheduler iframe { display: block; width: 100%; height: 600px; border: 0; }
+.booking-scheduler__loading { position: absolute; inset: 0; display: grid; place-items: center; color: #7e827d; font-size: .8rem; }
+.booking-scheduler__fallback { display: inline-block; margin-top: 1rem; color: var(--sage-dark); font-size: .8rem; font-weight: 600; text-decoration: none; }
+.booking-scheduler__fallback:hover { color: var(--ink); }
 
 .w-footer { display: grid; grid-template-columns: 1fr auto; gap: 1rem 3rem; align-items: end; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); background: #1d231e; color: rgba(255,255,255,.65); font-size: .75rem; }
 .w-footer__brand { color: #fff; font: 500 1.45rem var(--serif); text-decoration: none; }

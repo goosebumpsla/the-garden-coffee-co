@@ -130,12 +130,16 @@ function initForm() {
           onComplete: function() {
             form.style.display = 'none';
             successEl.classList.add('active');
+            mountBookingScheduler(successEl);
             gsap.from(successEl, {
               opacity: 0,
               y: 20,
               duration: 0.6,
               ease: 'power3.out'
             });
+            setTimeout(function() {
+              successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 120);
           }
         });
       } else {
@@ -153,6 +157,29 @@ function initForm() {
       setTimeout(function() { errorMsg.remove(); }, 5000);
     });
   });
+}
+
+function mountBookingScheduler(successEl) {
+  var container = successEl ? successEl.querySelector('[data-booking-scheduler]') : null;
+  if (!container || container.querySelector('iframe')) return;
+
+  var iframe = document.createElement('iframe');
+  iframe.src = container.getAttribute('data-booking-url');
+  iframe.title = 'Choose a time for your Garden Coffee consultation';
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('loading', 'eager');
+  iframe.addEventListener('load', function() {
+    var loadingEl = container.querySelector('.booking-scheduler__loading');
+    if (loadingEl) loadingEl.remove();
+  });
+  container.appendChild(iframe);
+
+  if (typeof window.fbq === 'function') {
+    window.fbq('trackCustom', 'BookingCalendarShown', {
+      content_name: 'Coffee Cart Event Consultation',
+      page_path: window.location.pathname
+    });
+  }
 }
 
 function getCookieValue(name) {

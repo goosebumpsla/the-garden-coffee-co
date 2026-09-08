@@ -37,7 +37,7 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/style.css?v=20260907-4">
+  <link rel="stylesheet" href="css/style.css?v=20260908-1">
 
   <!-- Meta Pixel -->
   <script src="/js/meta-pixel.js"></script>
@@ -531,10 +531,6 @@
                 </svg>
               </span>
             </button>
-            <div class="booking-call" data-reveal>
-              <span>Prefer to talk it through?</span>
-              <a class="booking-link" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3Jc7pghHn5h7ddHfeOwjsN36Xi0LAw-Lo6K_sz4HHKc8ABLa5QOb0Mr1PhovPnRDN26QxyYfZO" target="_blank" rel="noopener noreferrer">Book a 15-minute planning call <span aria-hidden="true">→</span></a>
-            </div>
           </form>
 
           <!-- Success Message -->
@@ -543,8 +539,12 @@
               <circle cx="26" cy="26" r="25" fill="none" stroke="currentColor" stroke-width="1"/>
               <path fill="none" stroke="currentColor" stroke-width="2" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
             </svg>
-            <h3 class="quote__success-title">Thank you!</h3>
-            <p class="quote__success-text">We'll be in touch within 24 hours to discuss your event.</p>
+            <h3 class="quote__success-title">Inquiry received—choose a time.</h3>
+            <p class="quote__success-text">Pick a 15-minute planning call below and we’ll meet you on Google Meet.</p>
+            <div class="booking-scheduler" data-booking-scheduler data-booking-url="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3Jc7pghHn5h7ddHfeOwjsN36Xi0LAw-Lo6K_sz4HHKc8ABLa5QOb0Mr1PhovPnRDN26QxyYfZO?gv=true">
+              <p class="booking-scheduler__loading" role="status">Loading available times…</p>
+            </div>
+            <a class="booking-scheduler__fallback booking-link" href="https://calendar.app.google/JcusaECvxmiePTmy5" target="_blank" rel="noopener noreferrer">Open the calendar in a new tab <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
@@ -584,7 +584,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js" defer></script>
   <script src="js/animations.js" defer></script>
-  <script src="js/form.js?v=20260907-3" defer></script>
+  <script src="js/form.js?v=20260908-1" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>
