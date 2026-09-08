@@ -23,6 +23,23 @@
       });
     }
 
+    document.querySelectorAll('[data-cta-location]').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (typeof window.fbq !== 'function') return;
+        window.fbq('trackCustom', 'WeddingQuoteIntent', {
+          content_name: 'Wedding Quote',
+          cta_location: link.getAttribute('data-cta-location') || 'unknown'
+        });
+      });
+    });
+
+    var weddingDate = document.getElementById('event-date');
+    if (weddingDate) {
+      var today = new Date();
+      var localToday = new Date(today.getTime() - (today.getTimezoneOffset() * 60000));
+      weddingDate.min = localToday.toISOString().slice(0, 10);
+    }
+
     var reelVideos = document.querySelectorAll('.w-reel-video');
     if (reelVideos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       var reelObserver = new IntersectionObserver(function(entries) {
