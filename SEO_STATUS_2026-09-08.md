@@ -31,7 +31,7 @@ Evidence captured September 8, 2026. This is a handoff record, not a ranking gua
 
 - `The Garden Coffee Co.` is verified as a service-area business.
 - Website: `https://thegardencoffeecart.com/` is current.
-- Instagram: `https://instagram.com/thegardencoffee.co` was submitted and is pending Google review.
+- Instagram: `https://instagram.com/thegardencoffee.co` is accepted and shown normally in the Business Profile editor with no pending-review notice.
 - Weddings services link: `https://thegardencoffeecart.com/weddings/` was saved and is pending Google review. Google says review usually takes up to 10 minutes.
 - All existing service areas were preserved, including the broader areas where travel carries an additional charge.
 - Hours still show open 24 hours. They remain unresolved until the owner supplies accurate customer-contact hours.
@@ -39,14 +39,14 @@ Evidence captured September 8, 2026. This is a handoff record, not a ranking gua
 
 ## Deployment and Cloudflare migration
 
-- GitHub `main` includes the latest SEO/accessibility work at commit `cfbe9bb`.
+- GitHub `main` includes the latest SEO, accessibility, Cloudflare migration, and verification work.
 - Garden-owned Cloudflare account: `contact.thegardenco@gmail.com`.
 - Owner-account preview: `https://the-garden-coffee-co.contact-thegardenco.workers.dev`.
 - Cloudflare Free zone is created and its production CAPI token is stored as an encrypted Worker secret, not in source control.
 - Assigned Cloudflare nameservers: `boyd.ns.cloudflare.com` and `sonia.ns.cloudflare.com`.
-- Production still resolves through Netlify. Netlify production is pinned to `ceb77a8`; its deploy trigger is disabled because the team exhausted its current billing-cycle credits. No paid upgrade was made.
+- Production still resolves through Netlify. The live exact-source audit fails because Netlify is serving the older pinned `ceb77a8` deployment instead of current GitHub `main`; its deploy trigger is disabled because the team exhausted its current billing-cycle credits. No paid upgrade was made.
 - The authoritative Netlify DNS inventory is backed up in `DNS_ZONE_BACKUP.md`. It contains two Netlify site records and the Google verification TXT; no MX records or signed DNSSEC delegation were present.
-- Final cutover is blocked on logging into the Squarespace registrar, replacing the four Netlify nameservers with the two Cloudflare nameservers, and then completing Worker custom-domain/redirect/HTTPS verification.
+- Final cutover is blocked on access to the Squarespace registrar account, replacing the four Netlify nameservers with the two Cloudflare nameservers, and then completing Worker custom-domain/redirect/HTTPS verification. Google sign-in with both `contact.thegardenco@gmail.com` and the available GOOSEBUMPS business account returned Squarespace “Account Not Found”; the Garden inbox contains no Squarespace or Google Domains ownership notices, so the actual registrar login must be supplied by the domain owner.
 - Keep the Netlify deployment and zone intact until Cloudflare production checks pass.
 
 ## Authority work
