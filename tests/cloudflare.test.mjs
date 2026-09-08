@@ -42,7 +42,11 @@ test('Cloudflare keeps static requests separate and API responses private', asyn
   assert.equal(failure.headers.get('Cache-Control'), 'no-store');
   assert.equal((await worker.fetch(new Request('https://example.com/api/missing'), {})).status, 404);
 });
-test('Cloudflare routes every asset through preview indexing protection', () => {
+test('Cloudflare serves static assets without Worker calls and protects the pinned preview', () => {
   const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
-  assert.equal(config.assets.run_worker_first, true);
+  assert.deepEqual(config.assets.run_worker_first, ['/.netlify/functions/*', '/api/*']);
+  assert.equal(config.preview_urls, false);
+  assert.equal(config.account_id, 'fa8f38e8680cea78962368c580c63f6c');
+  const headers = readFileSync(new URL('../cloudflare/_headers', import.meta.url), 'utf8');
+  assert.match(headers, /https:\/\/the-garden-coffee-co\.contact-thegardenco\.workers\.dev\/\*\s+X-Robots-Tag: noindex, nofollow/);
 });
