@@ -5,7 +5,7 @@
   --cream: #f2ede4;
   --sage: #68765e;
   --sage-dark: #4e5a47;
-  --gold: #b68d5a;
+  --gold: #80603e;
   --line: rgba(38, 48, 39, .14);
   --serif: "Cormorant Garamond", Georgia, serif;
   --sans: "Outfit", Arial, sans-serif;
@@ -51,10 +51,10 @@ button { font: inherit; }
 .g-video-toggle:hover { background: var(--ink); }
 .g-video-toggle:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .g-story__link { display: inline-block; margin-top: 1.6rem; color: var(--sage-dark); font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-underline-offset: .3rem; text-transform: uppercase; }
-.g-events__note { margin: 1.5rem 0 0; color: #737970; font-size: .8rem; }
+.g-events__note { margin: 1.5rem 0 0; color: #6b7168; font-size: .8rem; }
 
 .g-cta { padding: clamp(5rem, 10vw, 9rem) max(1.5rem, calc((100% - 960px) / 2)); background: var(--sage-dark); color: rgba(255,255,255,.78); text-align: center; }
-.g-cta .g-eyebrow { color: #d8c39f; }
+.g-cta .g-eyebrow { color: #f2e6d2; }
 .g-cta h2 { max-width: 900px; margin: 1rem auto 0; color: #fff; font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.8rem); font-weight: 500; letter-spacing: -.04em; line-height: .93; }
 .g-cta__actions { display: flex; align-items: center; justify-content: center; gap: 1.5rem 2rem; margin-top: 2.5rem; }
 .g-cta .g-button { border-color: #fff; background: #fff; color: var(--ink); }

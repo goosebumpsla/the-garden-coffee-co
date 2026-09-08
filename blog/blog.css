@@ -3,8 +3,8 @@
   --cream: #f5f0eb;
   --ink: #2a2a28;
   --body: #5a5a58;
-  --muted: #7e7e78;
-  --green: #66765d;
+  --muted: #666663;
+  --green: #596a50;
   --gold: #b8956a;
   --line: #e0dcd6;
   --serif: 'Cormorant Garamond', Georgia, serif;
@@ -206,7 +206,7 @@ a {
 .article-cta p {
   max-width: 620px;
   margin: 0 auto 2rem;
-  color: rgba(255, 255, 255, 0.82);
+  color: #fff;
 }
 
 .button-link {

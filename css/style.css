@@ -6,13 +6,13 @@
   --color-bg-dark: #2A2A28;
   --color-text-primary: #2A2A28;
   --color-text-body: #5A5A58;
-  --color-text-muted: #8A8A86;
+  --color-text-muted: #686865;
   --color-text-inverse: #FDFCFA;
   --color-accent: #B8956A;
   --color-accent-hover: #A07D54;
   --color-accent-light: #E8D9C5;
   --color-pink: #D4A5A5;
-  --color-green: #7A8B6F;
+  --color-green: #596A50;
   --color-border: #E0DCD6;
   --color-border-focus: #2A2A28;
   --color-error: #C45B5B;
@@ -1032,7 +1032,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   font-family: var(--font-serif);
   font-size: clamp(2.5rem, 4vw, 3.5rem);
   font-weight: 400;
-  color: var(--color-accent-light);
+  color: var(--color-accent-hover);
   line-height: 1;
   margin-bottom: 1rem;
   display: block;
@@ -1137,19 +1137,28 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 }
 
 .testimonial__dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.testimonial__dot::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
   border-radius: 50%;
   background: var(--color-border);
   transition: all var(--transition-fast);
 }
 
-.testimonial__dot.active {
+.testimonial__dot.active::after {
   background: var(--color-text-primary);
   transform: scale(1.3);
 }
 
-.testimonial__dot:hover {
+.testimonial__dot:hover::after {
   background: var(--color-accent);
 }
 
@@ -1266,7 +1275,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   font-size: var(--font-label);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: #80603E;
 }
 
 .form-group__line {
@@ -1437,7 +1446,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(253, 252, 250, 0.4);
+  color: rgba(253, 252, 250, 0.7);
   margin-bottom: 1rem;
 }
 
@@ -1462,7 +1471,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 
 .footer__bottom p {
   font-size: var(--font-small);
-  color: rgba(253, 252, 250, 0.4);
+  color: rgba(253, 252, 250, 0.7);
   text-align: center;
 }
 

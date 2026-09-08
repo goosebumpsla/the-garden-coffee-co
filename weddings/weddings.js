@@ -15,7 +15,7 @@
     function updateVideoToggle() {
       if (!heroVideo || !videoToggle) return;
       videoToggle.textContent = heroVideo.paused ? 'Play video' : 'Pause video';
-      videoToggle.setAttribute('aria-label', heroVideo.paused ? 'Play background video' : 'Pause background video');
+      videoToggle.setAttribute('aria-label', heroVideo.paused ? 'Play video' : 'Pause video');
     }
     function updateHeroPlayback() {
       if (!heroVideo) return;

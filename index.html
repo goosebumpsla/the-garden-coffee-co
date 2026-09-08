@@ -27,18 +27,16 @@
   <!-- Preconnects -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
   <!-- Preload hero image -->
-  <link rel="preload" as="image" href="images/hero/hero-desktop.webp" type="image/webp" media="(min-width: 769px)">
-  <link rel="preload" as="image" href="images/hero/hero-mobile.webp" type="image/webp" media="(max-width: 768px)">
+  <link rel="preload" as="image" href="images/hero/hero-desktop.webp" type="image/webp" media="(min-width: 769px)" fetchpriority="high">
+  <link rel="preload" as="image" href="images/hero/hero-mobile.webp" type="image/webp" media="(max-width: 768px)" fetchpriority="high">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/style.css?v=20260908-7">
+  <link rel="stylesheet" href="css/style.css?v=20260908-8">
   <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
 
   <!-- Meta Pixel -->
@@ -569,7 +567,7 @@
         <p class="footer__tagline">LA's garden-inspired mobile<br>coffee cart for your events.</p>
       </div>
       <div class="footer__links">
-        <h4 class="footer__heading">Links</h4>
+        <h2 class="footer__heading">Links</h2>
         <a href="weddings/" class="footer__link">Weddings</a>
         <a href="#services" class="footer__link">Services</a>
         <a href="/gallery/" class="footer__link">Gallery</a>
@@ -578,7 +576,7 @@
         <a href="#quote" class="footer__link">Request a Quote</a>
       </div>
       <div class="footer__contact">
-        <h4 class="footer__heading">Contact</h4>
+        <h2 class="footer__heading">Contact</h2>
         <a href="mailto:contact.thegardenco@gmail.com" class="footer__link">contact.thegardenco@gmail.com</a>
         <a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer" class="footer__link">@thegardencoffee.co</a>
         <span class="footer__link">Los Angeles, CA</span>
