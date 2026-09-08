@@ -327,7 +327,7 @@ picture {
   align-items: center;
   justify-content: flex-start;
   overflow: hidden;
-  padding: clamp(3rem, 6vw, 6rem) max(1.5rem, calc((100% - 1180px) / 2));
+  padding: clamp(2rem, 5vw, 5rem) max(1.5rem, calc((100% - 1180px) / 2));
 }
 
 .hero__bg {
@@ -364,43 +364,47 @@ picture {
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(20, 26, 21, 0.5), rgba(20, 26, 21, 0.08) 70%);
-  opacity: 0.55;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(17, 24, 19, 0.58) 0%, rgba(17, 24, 19, 0.2) 52%, rgba(17, 24, 19, 0.08) 100%),
+    linear-gradient(0deg, rgba(17, 24, 19, 0.18), rgba(17, 24, 19, 0.04) 55%);
+  opacity: 1;
 }
 .animations-ready .hero__overlay {
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .hero__content {
   position: relative;
   z-index: 2;
-  width: min(650px, 58vw);
-  padding: clamp(2.5rem, 5vw, 4.5rem);
-  background: rgba(253, 252, 250, 0.95);
-  box-shadow: 0 28px 75px rgba(26, 31, 27, 0.16);
+  width: min(610px, 56vw);
+  padding: clamp(2.25rem, 4vw, 3.75rem);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  background: rgba(253, 252, 250, 0.94);
+  box-shadow: 0 28px 80px rgba(15, 24, 17, 0.24);
   text-align: left;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px) saturate(110%);
+  -webkit-backdrop-filter: blur(16px) saturate(110%);
 }
 
 .hero__eyebrow {
-  margin-bottom: 1rem;
-  color: var(--color-green);
+  margin-bottom: 0.9rem;
+  color: #52664f;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.17em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .hero__title {
   font-family: var(--font-serif);
-  max-width: 590px;
-  font-size: clamp(3.6rem, 5.7vw, 6.2rem);
+  max-width: 540px;
+  margin-bottom: 1.25rem;
+  color: #202820;
+  font-size: clamp(3.1rem, 5vw, 5.35rem);
   font-weight: 500;
-  color: var(--color-text-primary);
-  line-height: 0.9;
-  letter-spacing: -0.045em;
-  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
 }
 
 .hero__title .word {
@@ -415,12 +419,12 @@ picture {
 .hero__subtitle {
   max-width: 500px;
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  margin-bottom: 1.8rem;
+  color: #4c564c;
+  font-size: clamp(1rem, 1.25vw, 1.12rem);
   font-weight: 400;
-  color: var(--color-text-body);
-  line-height: 1.55;
   letter-spacing: 0;
-  margin-bottom: 2rem;
+  line-height: 1.55;
 }
 .animations-ready .hero__subtitle {
   opacity: 0;
@@ -429,35 +433,38 @@ picture {
 .hero__actions {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.35rem;
 }
 
 .hero__secondary {
-  color: #4e5a47;
-  font-size: 0.75rem;
+  color: #3f4d3f;
+  font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-decoration: none;
   text-transform: uppercase;
 }
 
-.hero__secondary:hover { color: var(--color-text-primary); }
+.hero__secondary:hover {
+  color: #202820;
+}
 
 .hero__proof {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem 1.25rem;
-  margin: 2.2rem 0 0;
-  padding: 1.25rem 0 0;
-  border-top: 1px solid var(--color-border);
-  color: #4e5a47;
-  font-size: 0.78rem;
+  gap: 0.65rem 1.15rem;
+  margin: 1.9rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px solid rgba(63, 77, 63, 0.2);
+  color: #465246;
+  font-size: 0.79rem;
+  font-weight: 500;
   list-style: none;
 }
 
 .hero__proof li::before {
   margin-right: 0.4rem;
-  color: var(--color-accent);
+  color: #8b704f;
   content: '✓';
 }
 
@@ -1515,7 +1522,7 @@ picture {
   .hero {
     min-height: calc(100svh - 64px);
     align-items: flex-end;
-    padding: 5rem 1rem 1rem;
+    padding: 4rem 1rem 1rem;
   }
 
   .hero__img {
@@ -1527,18 +1534,19 @@ picture {
   }
 
   .hero__title {
-    font-size: clamp(2.8rem, 12vw, 4.25rem);
+    font-size: clamp(2.7rem, 11vw, 4rem);
   }
 
   .hero__subtitle {
-    font-size: 1rem;
     padding: 0;
+    font-size: 1rem;
   }
 
   .hero__content {
     width: 100%;
-    padding: 2rem 1.5rem;
-    box-shadow: 0 18px 45px rgba(26, 31, 27, 0.16);
+    padding: 1.8rem 1.4rem;
+    border-color: rgba(255, 255, 255, 0.68);
+    box-shadow: 0 18px 48px rgba(15, 24, 17, 0.25);
   }
 
   .hero__actions {
@@ -1548,7 +1556,7 @@ picture {
   }
 
   .hero__proof {
-    margin-top: 1.6rem;
+    margin-top: 1.4rem;
   }
 
   .hero__scroll-indicator {
