@@ -150,7 +150,6 @@ picture {
   width: 100%;
   height: auto;
   filter: invert(1) grayscale(1);
-  mix-blend-mode: screen;
   transition: filter var(--transition-fast);
 }
 
@@ -160,7 +159,6 @@ picture {
 
 .nav--scrolled .nav__logo img {
   filter: none;
-  mix-blend-mode: multiply;
 }
 
 .nav__links {
@@ -1382,7 +1380,6 @@ picture {
   width: 100%;
   height: auto;
   filter: invert(1) grayscale(1);
-  mix-blend-mode: screen;
   opacity: 0.92;
 }
 

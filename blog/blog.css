@@ -60,7 +60,6 @@ a {
   width: 100%;
   height: auto;
   filter: invert(1) grayscale(1);
-  mix-blend-mode: screen;
 }
 
 .blog-nav__links {
@@ -398,7 +397,6 @@ a {
   width: 100%;
   height: auto;
   filter: invert(1) grayscale(1);
-  mix-blend-mode: screen;
   opacity: .92;
 }
 
