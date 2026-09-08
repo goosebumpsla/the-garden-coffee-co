@@ -32,7 +32,7 @@ Evidence captured September 8, 2026. This is a handoff record, not a ranking gua
 - `The Garden Coffee Co.` is verified as a service-area business.
 - Website: `https://thegardencoffeecart.com/` is current.
 - Instagram: `https://instagram.com/thegardencoffee.co` was submitted and is pending Google review.
-- Weddings services link: `https://thegardencoffeecart.com/weddings/` is populated in the edit form but not saved; saving requires explicit action-time approval because it changes the public profile.
+- Weddings services link: `https://thegardencoffeecart.com/weddings/` was saved and is pending Google review. Google says review usually takes up to 10 minutes.
 - All existing service areas were preserved, including the broader areas where travel carries an additional charge.
 - Hours still show open 24 hours. They remain unresolved until the owner supplies accurate customer-contact hours.
 - Opening month/year remains unresolved until the owner supplies it.
