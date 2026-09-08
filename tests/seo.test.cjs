@@ -1,0 +1,103 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const nodePath = require('node:path');
+
+const root = nodePath.join(__dirname, '..');
+const origin = 'https://thegardencoffeecart.com';
+const read = file => fs.readFileSync(nodePath.join(root, file), 'utf8');
+const attribute = (html, selector) => {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${escaped}["'][^>]+content=["']([^"']+)["']`, 'i'))?.[1];
+};
+const canonicalToFile = canonical => {
+  const pathname = new URL(canonical).pathname;
+  return pathname === '/' ? 'index.html' : `${pathname.slice(1)}index.html`;
+};
+const normalizeInternal = (href, base) => {
+  if (!href || /^(?:mailto:|tel:|javascript:|#)/i.test(href)) return null;
+  const url = new URL(href, base);
+  if (url.origin !== origin) return null;
+  url.hash = '';
+  url.search = '';
+  return url.href;
+};
+
+const sitemap = read('sitemap.xml');
+const sitemapEntries = [...sitemap.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>\s*<\/url>/g)]
+  .map(([, canonical, lastmod]) => ({ canonical, lastmod, file: canonicalToFile(canonical) }));
+
+test('sitemap contains the seven intended canonical pages with current valid dates', () => {
+  assert.equal(sitemapEntries.length, 7);
+  assert.equal(new Set(sitemapEntries.map(entry => entry.canonical)).size, 7);
+  for (const entry of sitemapEntries) {
+    assert(entry.canonical.startsWith(`${origin}/`));
+    assert.match(entry.lastmod, /^\d{4}-\d{2}-\d{2}$/);
+    assert(!Number.isNaN(Date.parse(`${entry.lastmod}T00:00:00Z`)));
+    assert(fs.existsSync(nodePath.join(root, entry.file)), `${entry.file} must exist`);
+  }
+  const robots = read('robots.txt');
+  assert.match(robots, /User-agent:\s*\*/i);
+  assert.match(robots, /Allow:\s*\//i);
+  assert.match(robots, new RegExp(`Sitemap:\\s*${origin.replaceAll('.', '\\.')}\/sitemap\\.xml`, 'i'));
+  assert.doesNotMatch(robots, /Disallow:\s*\//i);
+});
+
+test('every sitemap page has complete, unique, indexable metadata and valid structured data', () => {
+  const titles = new Set();
+  const descriptions = new Set();
+  for (const { canonical, file } of sitemapEntries) {
+    const html = read(file);
+    const title = html.match(/<title>([^<]+)<\/title>/i)?.[1].trim();
+    const description = attribute(html, 'description');
+    const canonicalHref = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i)?.[1];
+    const h1s = [...html.matchAll(/<h1\b[^>]*>/gi)];
+    assert(title && title.length >= 30 && title.length <= 65, `${file} title length`);
+    assert(description && description.length >= 120 && description.length <= 170, `${file} description length`);
+    assert(!titles.has(title), `${file} title must be unique`);
+    assert(!descriptions.has(description), `${file} description must be unique`);
+    titles.add(title);
+    descriptions.add(description);
+    assert.equal(canonicalHref, canonical, `${file} canonical`);
+    assert.equal(h1s.length, 1, `${file} must contain one H1`);
+    assert.doesNotMatch(html, /<meta[^>]+(?:name|property)=["']robots["'][^>]+noindex/i, `${file} must remain indexable`);
+
+    assert.equal(attribute(html, 'og:title'), title, `${file} Open Graph title`);
+    assert(attribute(html, 'og:description'), `${file} Open Graph description`);
+    assert.match(attribute(html, 'og:image') || '', /^https:\/\//, `${file} Open Graph image`);
+    assert.equal(attribute(html, 'og:url'), canonical, `${file} Open Graph URL`);
+    assert.match(attribute(html, 'og:type') || '', /^(?:website|article)$/, `${file} Open Graph type`);
+    assert.equal(attribute(html, 'og:locale'), 'en_US', `${file} Open Graph locale`);
+    assert.equal(attribute(html, 'twitter:card'), 'summary_large_image', `${file} Twitter card`);
+    assert.equal(attribute(html, 'twitter:title'), title, `${file} Twitter title`);
+    assert(attribute(html, 'twitter:description'), `${file} Twitter description`);
+    assert.match(attribute(html, 'twitter:image') || '', /^https:\/\//, `${file} Twitter image`);
+
+    const schemas = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+    assert(schemas.length > 0, `${file} structured data`);
+    for (const [, schema] of schemas) assert.doesNotThrow(() => JSON.parse(schema), `${file} structured data must parse`);
+  }
+});
+
+test('sitemap pages are internally discoverable and local images have dimensions and alt text', () => {
+  const inbound = new Map(sitemapEntries.map(entry => [entry.canonical, new Set()]));
+  for (const { canonical, file } of sitemapEntries) {
+    const html = read(file);
+    const hrefs = [...html.matchAll(/<a\b[^>]+href=["']([^"']+)["']/gi)].map(match => normalizeInternal(match[1], canonical)).filter(Boolean);
+    for (const href of hrefs) if (inbound.has(href) && href !== canonical) inbound.get(href).add(canonical);
+    assert(hrefs.some(href => inbound.has(href)), `${file} must link to another sitemap page`);
+
+    for (const [imageTag] of html.matchAll(/<img\b[^>]*>/gi)) {
+      assert.match(imageTag, /\balt=["'][^"']*["']/i, `${file} image alt`);
+      assert.match(imageTag, /\bwidth=["']?\d+/i, `${file} image width`);
+      assert.match(imageTag, /\bheight=["']?\d+/i, `${file} image height`);
+      const src = imageTag.match(/\bsrc=["']([^"']+)["']/i)?.[1];
+      if (!src || src.startsWith('data:')) continue;
+      const url = new URL(src, canonical);
+      if (url.origin !== origin) continue;
+      const assetFile = decodeURIComponent(url.pathname).replace(/^\//, '');
+      assert(fs.existsSync(nodePath.join(root, assetFile)), `${file} image must exist: ${assetFile}`);
+    }
+  }
+  for (const [canonical, sources] of inbound) assert(sources.size > 0, `${canonical} needs an internal link from another sitemap page`);
+});
