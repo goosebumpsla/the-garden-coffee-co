@@ -1,0 +1,12 @@
+.privacy-choice { position: fixed; right: 1rem; bottom: 1rem; left: 1rem; z-index: 200; max-width: 780px; margin: auto; padding: 1.25rem; color: #263027; background: #fffefa; border: 1px solid #c9cfc6; box-shadow: 0 4px 24px #0002; font: 400 14px/1.5 "Outfit", Arial, sans-serif; }
+.privacy-choice[hidden] { display: none; }
+.privacy-choice p { margin: 0 0 .8rem; }
+.privacy-choice strong { display: block; margin-bottom: .3rem; font-size: 16px; }
+.privacy-choice a { text-decoration: underline; }
+.privacy-choice div { display: flex; flex-wrap: wrap; gap: .75rem; }
+.privacy-choice button { flex: 1 1 220px; min-height: 44px; padding: .6rem 1rem; border: 1px solid #4e5a47; border-radius: 4px; background: #fffefa; color: #263027; font: inherit; cursor: pointer; }
+.privacy-choice button:hover { background: #eef1eb; }
+.privacy-choice button:focus-visible { outline: 2px solid #263027; outline-offset: 3px; }
+.privacy-footer, .w-footer .privacy-footer, .g-footer .privacy-footer { display: flex; flex-wrap: wrap; gap: 1rem; grid-column: 1 / -1; grid-row: auto; padding-top: 1rem; }
+.privacy-footer a, .privacy-footer button { color: inherit; background: none; border: 0; padding: 0; font: inherit; text-decoration: underline; cursor: pointer; }
+@media (max-width: 680px) { .privacy-choice { bottom: 70px; padding: 1rem; } }

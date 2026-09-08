@@ -22,9 +22,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="/images/gallery/facetune-wedding.webp" type="image/webp">
   <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/weddings/weddings.css?v=20260908-11">
+  <link rel="stylesheet" href="/weddings/weddings.css?v=20260908-12">
   <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
-  <script src="/js/meta-pixel.js"></script>
+  <link rel="stylesheet" href="/css/privacy-controls.css?v=20260908-1">
+  <script src="/js/meta-pixel.js?v=20260908-2"></script>
 
   <script type="application/ld+json">
   {
@@ -64,7 +65,7 @@
   </script>
 </head>
 <body>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1075812884821288&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
+
 
   <header class="w-nav">
     <a class="w-nav__logo" href="/" aria-label="The Garden Coffee Co. home">
@@ -247,7 +248,7 @@
       </div>
       <ol>
         <li><span>01</span><div><h3>Tell us about the day</h3><p>Share your date, venue, guest count and the moment you want to serve coffee.</p></div></li>
-        <li><span>02</span><div><h3>Choose a planning-call time</h3><p>After the inquiry, available Google Meet times appear immediately—no email back-and-forth.</p></div></li>
+        <li><span>02</span><div><h3>Plan by email or on a quick call</h3><p>We’ll follow up by email. Prefer to talk? Choose an optional 15-minute Google Meet after sending your inquiry.</p></div></li>
         <li><span>03</span><div><h3>Receive your custom proposal</h3><p>We’ll shape the menu, service plan and logistics around the details of your wedding.</p></div></li>
       </ol>
     </section>
@@ -271,7 +272,7 @@
       <div class="w-quote__intro">
         <p class="w-eyebrow">Your date starts here</p>
         <h2>Tell us about your wedding.</h2>
-        <p>Share a few details, then choose a 15-minute planning call. We’ll use both to prepare the right recommendation for your wedding.</p>
+        <p>Share a few details for a personalized quote. We’ll follow up by email, with the option to book a quick planning call.</p>
         <div class="w-quote__assurance"><span>✓</span> No commitment—just a thoughtful recommendation for your day.</div>
       </div>
       <div class="w-quote__panel">
@@ -288,21 +289,19 @@
           </div>
           <div class="w-form-row">
             <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" autocomplete="tel"></div>
-            <div class="form-group"><label for="event-date">Wedding date *</label><input type="date" id="event-date" name="event-date" required></div>
+            <div class="form-group"><label for="event-date">Wedding date *</label><input type="date" id="event-date" name="event-date" required><label class="w-check" for="date-unconfirmed"><input type="checkbox" id="date-unconfirmed" name="date-not-confirmed" value="yes" data-date-unconfirmed> Date not confirmed yet</label></div>
           </div>
           <div class="w-form-row">
             <div class="form-group"><label for="guest-count">Estimated guests *</label><input type="number" id="guest-count" name="guest-count" min="1" max="1000" required></div>
-            <div class="form-group"><label for="location">Venue or city *</label><input type="text" id="location" name="location" required></div>
+            <div class="form-group"><label for="location">Venue or city (if known)</label><input type="text" id="location" name="location" placeholder="Still deciding? Leave this blank."></div>
           </div>
-          <div class="form-group"><label for="service-moment">When would you like coffee served?</label><select id="service-moment" name="service-moment"><option value="">Not sure yet</option><option>Guest arrival</option><option>Cocktail hour</option><option>Dessert</option><option>Late night</option><option>Farewell brunch</option></select></div>
-          <div class="form-group"><label for="message">What would make the cart feel like yours?</label><textarea id="message" name="message" rows="3"></textarea></div>
           <button type="submit" class="w-button quote-form__submit"><span class="btn__text">Request my wedding quote</span><span class="btn__loader">Sending…</span></button>
-          <p class="w-form-note"><strong>Next:</strong> choose a 15-minute Google Meet time. Your information is only used to respond to your inquiry.</p>
+          <p class="w-form-note">No commitment. A planning call is optional. See our <a href="/privacy/">privacy notice</a> for how we handle inquiries and optional advertising measurement.</p>
         </form>
         <div class="quote__success" id="quoteSuccess">
           <span class="quote__success-mark">✓</span>
-          <h3>Wedding details received—choose a time.</h3>
-          <p>Pick a 15-minute planning call below and we’ll meet you on Google Meet.</p>
+          <h3>Thank you—your inquiry is sent.</h3>
+          <p>We’ll follow up by email. You’re all set—no call is required. If you’d like to talk through your plans, choose an optional 15-minute Google Meet below.</p>
           <div class="booking-scheduler" data-booking-scheduler data-booking-url="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3Jc7pghHn5h7ddHfeOwjsN36Xi0LAw-Lo6K_sz4HHKc8ABLa5QOb0Mr1PhovPnRDN26QxyYfZO?gv=true">
             <p class="booking-scheduler__loading" role="status">Loading available times…</p>
           </div>
@@ -316,11 +315,12 @@
     <a href="/" class="w-footer__brand" aria-label="The Garden Coffee Co. home"><img src="/images/brand/logo-wordmark.png" alt="The Garden Coffee Co." width="717" height="215" loading="lazy"></a>
     <p>Garden-inspired mobile coffee cart catering in Los Angeles, CA.</p>
     <div><a href="/gallery/">Event gallery</a><a href="/blog/">Planning guides</a><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></div>
+    <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
   </footer>
 
   <a class="w-sticky-cta" href="#quote" data-cta-location="mobile-sticky">Check your date <span>→</span></a>
 
-  <script src="/js/form.js?v=20260908-2" defer></script>
+  <script src="/js/form.js?v=20260908-3" defer></script>
   <script src="/weddings/weddings.js?v=20260908-7" defer></script>
 </body>
 </html>

@@ -19,6 +19,22 @@ function initForm() {
   });
 
   if (!form) return;
+  var dateUnknown = form.querySelector('[data-date-unconfirmed]');
+  var eventDate = form.querySelector('#event-date');
+  if (dateUnknown && eventDate) {
+    function syncDateRequirement() {
+      eventDate.disabled = dateUnknown.checked;
+      eventDate.required = !dateUnknown.checked;
+    }
+    dateUnknown.addEventListener('change', syncDateRequirement);
+    syncDateRequirement();
+  }
+  var formStarted = false;
+  form.addEventListener('input', function() {
+    if (formStarted) return;
+    formStarted = true;
+    if (typeof window.gardenTrack === 'function') window.gardenTrack('FormStart');
+  });
 
   // Preserve ad and search attribution in every quote email without exposing
   // tracking details in the visible form.
@@ -37,11 +53,12 @@ function initForm() {
   var pageInput = document.createElement('input');
   pageInput.type = 'hidden';
   pageInput.name = 'landing-page';
-  pageInput.value = window.location.href.slice(0, 500);
+  pageInput.value = window.location.origin + window.location.pathname;
   form.appendChild(pageInput);
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    if (form.dataset.submitting === 'true') return;
 
     // Clear previous errors
     form.querySelectorAll('.form-group--error').forEach(function(g) {
@@ -78,19 +95,26 @@ function initForm() {
     var submitBtn = form.querySelector('.quote-form__submit');
     submitBtn.classList.add('btn--loading');
     submitBtn.disabled = true;
+    form.dataset.submitting = 'true';
+    if (typeof window.gardenTrack === 'function') window.gardenTrack('FormSubmitAttempt');
 
     // Submit to FormSubmit.co
     var formData = new FormData(form);
 
-    fetch(form.action, {
+    var submitUrl = form.action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+    fetch(submitUrl, {
       method: 'POST',
       body: formData,
       headers: { 'Accept': 'application/json' }
     })
     .then(function(response) {
-      if (response.ok) {
-        // Record a qualified lead only after FormSubmit confirms delivery.
-        if (typeof window.fbq === 'function') {
+      if (!response.ok) throw new Error('Form submission failed');
+      return response.json();
+    })
+    .then(function(result) {
+      if (result.success === true || result.success === 'true') {
+        // Count accepted inquiries, not button clicks or calendar views.
+        if (typeof window.fbq === 'function' && window.gardenAdvertisingAllowed && window.gardenAdvertisingAllowed()) {
           var eventId = 'garden_lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
           var eventTypeInput = form.querySelector('#event-type');
           var eventType = eventTypeInput ? eventTypeInput.value : 'other';
@@ -108,7 +132,8 @@ function initForm() {
             keepalive: true,
             body: JSON.stringify({
               eventId: eventId,
-              eventSourceUrl: window.location.href,
+              advertisingConsent: true,
+              eventSourceUrl: window.location.origin + window.location.pathname,
               eventType: eventType,
               email: form.querySelector('#email').value,
               phone: form.querySelector('#phone') ? form.querySelector('#phone').value : '',
@@ -134,6 +159,8 @@ function initForm() {
     .catch(function(error) {
       submitBtn.classList.remove('btn--loading');
       submitBtn.disabled = false;
+      delete form.dataset.submitting;
+      if (typeof window.gardenTrack === 'function') window.gardenTrack('FormSubmitError');
       var errorMsg = document.createElement('p');
       errorMsg.textContent = 'Something went wrong. Please try again or email us at contact.thegardenco@gmail.com';
       errorMsg.style.cssText = 'color: var(--color-error); font-size: var(--font-small); margin-top: 0.75rem;';

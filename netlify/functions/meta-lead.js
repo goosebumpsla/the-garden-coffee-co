@@ -67,6 +67,9 @@ exports.handler = async function handler(event) {
   }
 
   const eventId = String(input.eventId || '').slice(0, 100);
+  if (input.advertisingConsent !== true || event.headers['sec-gpc'] === '1' || event.headers.dnt === '1') {
+    return { statusCode: 403, body: JSON.stringify({ error: 'Advertising consent required' }) };
+  }
   if (!/^garden_lead_[a-zA-Z0-9_-]+$/.test(eventId)) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid event' }) };
   }
