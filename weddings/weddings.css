@@ -170,6 +170,9 @@ h1, h2 { font-weight: 600; }
 .booking-scheduler__fallback { display: inline-block; margin-top: 1rem; color: var(--sage-dark); font-size: .8rem; font-weight: 600; text-decoration: none; }
 .booking-scheduler__fallback:hover { color: var(--ink); }
 
+.w-real-events__note a { color: inherit; font-weight: 600; text-underline-offset: .25rem; }
+.w-real-events__note a:hover { color: var(--sage-dark); }
+
 .w-footer { display: grid; grid-template-columns: 1fr auto; gap: 1rem 3rem; align-items: end; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); background: #1d231e; color: rgba(255,255,255,.65); font-size: .75rem; }
 .w-footer__brand { display: block; width: 92px; color: #fff; line-height: 0; text-decoration: none; }
 .w-footer__brand img { width: 100%; height: auto; filter: invert(1) grayscale(1); opacity: .92; }
@@ -182,6 +185,8 @@ h1, h2 { font-weight: 600; }
 #experience, #included, #real-events, #kind-words, #faq, #quote { scroll-margin-top: 72px; }
 
 @media (max-width: 900px) {
+  .w-nav__links { display: none; }
+  .w-nav__mobile-cta { display: block; }
   .w-hero { grid-template-columns: 1fr; }
   .w-hero__copy { min-height: auto; padding: 5rem 1.5rem 3.5rem; }
   .w-hero h1 { max-width: 760px; }
