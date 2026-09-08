@@ -61,4 +61,27 @@ for (const privatePath of ['/definitely-not-a-page/', '/.git/config', '/CLOUDFLA
   console.log(`404  ${privatePath}`);
 }
 
+if (!expectNoindex) {
+  const redirectCases = [
+    [
+      'http://thegardencoffeecart.com/gallery/?source=audit',
+      'https://thegardencoffeecart.com/gallery/?source=audit',
+    ],
+    [
+      'https://www.thegardencoffeecart.com/blog/?source=audit',
+      'https://thegardencoffeecart.com/blog/?source=audit',
+    ],
+  ];
+
+  for (const [source, destination] of redirectCases) {
+    const response = await fetch(source, {
+      redirect: 'manual',
+      headers: { 'User-Agent': 'GardenCoffeeDeploymentAudit/1.0' },
+    });
+    assert.equal(response.status, 301, `${source} must permanently redirect`);
+    assert.equal(response.headers.get('location'), destination, `${source} redirect destination`);
+    console.log(`301  ${source}  ->  ${destination}`);
+  }
+}
+
 console.log(`Audit passed for ${baseUrl.origin}${expectNoindex ? ' (protected preview)' : ' (indexable production)'}.`);
