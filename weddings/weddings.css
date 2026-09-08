@@ -176,7 +176,7 @@ h1, h2 { font-weight: 600; }
 .w-real-events__note a:hover { color: var(--sage-dark); }
 
 .w-footer { display: grid; grid-template-columns: 1fr auto; gap: 1rem 3rem; align-items: end; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); background: #1d231e; color: rgba(255,255,255,.65); font-size: .75rem; }
-.w-footer__brand { display: block; width: 92px; color: #fff; line-height: 0; text-decoration: none; }
+.w-footer__brand { display: block; width: 220px; color: #fff; line-height: 0; text-decoration: none; }
 .w-footer__brand img { width: 100%; height: auto; filter: invert(1) grayscale(1); opacity: .92; }
 .w-footer p { margin: 0; }
 .w-footer div { display: flex; grid-column: 2; grid-row: 1 / span 2; gap: 1.4rem; }

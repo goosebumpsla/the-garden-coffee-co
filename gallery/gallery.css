@@ -62,7 +62,7 @@ button { font: inherit; }
 .g-cta .g-text-link { color: #fff; }
 
 .g-footer { display: grid; grid-template-columns: 1fr auto; gap: 1rem 3rem; align-items: end; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); background: #1d231e; color: rgba(255,255,255,.65); font-size: .75rem; }
-.g-footer__brand { display: block; width: 92px; color: #fff; line-height: 0; text-decoration: none; }
+.g-footer__brand { display: block; width: 220px; color: #fff; line-height: 0; text-decoration: none; }
 .g-footer__brand img { width: 100%; height: auto; filter: invert(1) grayscale(1); opacity: .92; }
 .g-footer p { margin: 0; }
 .g-footer div { display: flex; grid-column: 2; grid-row: 1 / span 2; gap: 1.4rem; }

@@ -87,13 +87,6 @@ function initHeroAnimation() {
     ease: 'power2.out'
   }, 0);
 
-  // Overlay lighten
-  tl.to('.hero__overlay', {
-    opacity: 0.3,
-    duration: 1.8,
-    ease: 'power2.out'
-  }, 0);
-
   // Title split and reveal
   var titleEl = document.querySelector('.hero__title');
   if (titleEl) {
@@ -141,24 +134,6 @@ function initHeroAnimation() {
     stagger: 0.08,
     ease: 'power3.out'
   }, 0.9);
-
-  // Scroll indicator
-  tl.to('.hero__scroll-indicator', {
-    opacity: 1,
-    duration: 0.6,
-    ease: 'power2.out'
-  }, 1.8);
-
-  // Fade out scroll indicator on scroll
-  gsap.to('.hero__scroll-indicator', {
-    opacity: 0,
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: '+=150',
-      scrub: true
-    }
-  });
 
   return tl;
 }
