@@ -1,0 +1,13 @@
+{
+  "name": "the-garden-coffee-co",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-cloudflare.cjs",
+    "test": "node --test tests/*.test.cjs tests/*.test.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "4.130.0"
+  }
+}

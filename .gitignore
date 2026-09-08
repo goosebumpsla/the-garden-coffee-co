@@ -7,3 +7,8 @@
 /*.JPG
 /*.MP4
 inspowebsite.png
+node_modules/
+dist-cloudflare/
+.wrangler/
+.dev.vars*
+.env*
