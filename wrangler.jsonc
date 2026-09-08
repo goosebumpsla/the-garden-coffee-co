@@ -1,15 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "the-garden-coffee-co",
+  "account_id": "fa8f38e8680cea78962368c580c63f6c",
   "main": "cloudflare/worker.mjs",
   "compatibility_date": "2026-09-08",
   "workers_dev": true,
+  "preview_urls": false,
   "assets": {
     "directory": "./dist-cloudflare",
     "binding": "ASSETS",
     "html_handling": "force-trailing-slash",
     "not_found_handling": "404-page",
-    "run_worker_first": true
+    "run_worker_first": ["/.netlify/functions/*", "/api/*"]
   },
   "vars": {
     "META_PIXEL_ID": "1075812884821288",

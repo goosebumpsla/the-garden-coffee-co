@@ -12,5 +12,5 @@
 /js/*
   Cache-Control: public, max-age=2592000
 
-https://:subdomain.workers.dev/*
+https://the-garden-coffee-co.contact-thegardenco.workers.dev/*
   X-Robots-Tag: noindex, nofollow

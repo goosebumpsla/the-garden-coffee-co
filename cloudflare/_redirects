@@ -1,1 +1,2 @@
-# Host redirects are handled by cloudflare/worker.mjs.
+# Configure the www-to-apex redirect as a Cloudflare zone Redirect Rule at cutover.
+# Workers static-asset redirects accept relative source paths only.
