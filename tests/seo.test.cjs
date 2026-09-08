@@ -101,3 +101,12 @@ test('sitemap pages are internally discoverable and local images have dimensions
   }
   for (const [canonical, sources] of inbound) assert(sources.size > 0, `${canonical} needs an internal link from another sitemap page`);
 });
+
+test('homepage links to the verified PEOPLE coverage without overstating endorsement', () => {
+  const homepage = read('index.html');
+  assert.match(homepage, /As seen in/);
+  assert.match(homepage, /Coffee from The Garden Coffee Co\. was served/);
+  assert.match(homepage, /href="https:\/\/people\.com\/barbie-blank-coba-celebrates-twins-3rd-birthday-exclusive-12075794"/);
+  assert.match(homepage, /rel="noopener noreferrer external"/);
+  assert.doesNotMatch(homepage, /endorsed by PEOPLE/i);
+});
