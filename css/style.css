@@ -328,10 +328,27 @@ picture {
   inset: 0;
 }
 
-.hero__img {
+.hero__poster {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__poster-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.hero__img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__video {
+  background: var(--color-bg-dark);
 }
 .animations-ready .hero__img {
   transform: scale(1.15);
@@ -1396,6 +1413,10 @@ picture {
 
   .hero__img {
     object-position: 90% center;
+  }
+
+  .hero__video {
+    display: none;
   }
 
   .hero__title {

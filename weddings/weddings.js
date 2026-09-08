@@ -22,6 +22,30 @@
         content_category: 'Wedding Catering'
       });
     }
+
+    var reelVideos = document.querySelectorAll('.w-reel-video');
+    if (reelVideos.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var reelObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          var video = entry.target;
+          if (entry.isIntersecting) {
+            var source = video.querySelector('source[data-src]');
+            if (source) {
+              source.src = source.dataset.src;
+              source.removeAttribute('data-src');
+              video.load();
+            }
+            video.play().catch(function() {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { rootMargin: '180px 0px', threshold: 0.18 });
+
+      reelVideos.forEach(function(video) {
+        reelObserver.observe(video);
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

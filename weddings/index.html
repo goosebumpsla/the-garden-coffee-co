@@ -21,7 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="/images/gallery/facetune-wedding.webp" type="image/webp">
   <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/weddings/weddings.css?v=20260907-1">
+  <link rel="stylesheet" href="/weddings/weddings.css?v=20260907-3">
   <script src="/js/meta-pixel.js"></script>
 
   <script type="application/ld+json">
@@ -98,10 +98,14 @@
         </ul>
       </div>
       <div class="w-hero__visual">
-        <picture>
+        <picture class="w-hero__fallback">
           <source srcset="/images/gallery/facetune-wedding.webp" type="image/webp">
           <img src="/images/gallery/facetune-wedding.jpg" alt="The Garden Coffee Co. barista preparing drinks at an outdoor Los Angeles wedding" width="800" height="1200" fetchpriority="high">
         </picture>
+        <video class="w-hero__video" autoplay muted loop playsinline preload="metadata" poster="/assets/video/garden-wedding-hero-poster.webp" aria-label="The Garden Coffee Co. serving guests at Los Angeles celebrations">
+          <source src="/assets/video/garden-wedding-hero.webm" type="video/webm" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
+          <source src="/assets/video/garden-wedding-hero.mp4" type="video/mp4" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
+        </video>
         <div class="w-hero__note"><span>Made for</span><strong>your kind of celebration</strong></div>
       </div>
     </section>
@@ -184,6 +188,42 @@
       <figure><img src="/images/gallery/DSCF1130.webp" alt="Botanical details on the mobile espresso bar" width="674" height="1200" loading="lazy"></figure>
     </section>
 
+    <section class="w-real-events" aria-labelledby="real-events-heading">
+      <div class="w-real-events__heading">
+        <div>
+          <p class="w-eyebrow">Real events, real guests</p>
+          <h2 id="real-events-heading">A little proof from behind the cart.</h2>
+        </div>
+        <a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">Follow the story @thegardencoffee.co →</a>
+      </div>
+      <div class="w-reels" aria-label="Recent Garden Coffee Co. events">
+        <article class="w-reel-card">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/wedding-service-poster.webp" aria-hidden="true">
+            <source data-src="/assets/social/wedding-service.mp4" type="video/mp4">
+          </video>
+          <div class="w-reel-card__label"><span>Wedding service</span><strong>Garden celebrations</strong></div>
+        </article>
+        <article class="w-reel-card">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/yacht-event-poster.webp" aria-hidden="true">
+            <source data-src="/assets/social/yacht-event.mp4" type="video/mp4">
+          </video>
+          <div class="w-reel-card__label"><span>Yacht event</span><strong>Coffee on the water</strong></div>
+        </article>
+        <article class="w-reel-card">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/grand-opening-poster.webp" aria-hidden="true">
+            <source data-src="/assets/social/grand-opening.mp4" type="video/mp4">
+          </video>
+          <div class="w-reel-card__label"><span>Grand opening</span><strong>Made for the crowd</strong></div>
+        </article>
+        <article class="w-reel-card">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/espresso-craft-poster.webp" aria-hidden="true">
+            <source data-src="/assets/social/espresso-craft.mp4" type="video/mp4">
+          </video>
+          <div class="w-reel-card__label"><span>Behind the bar</span><strong>The art of coffee</strong></div>
+        </article>
+      </div>
+    </section>
+
     <section class="w-process" aria-labelledby="process-heading">
       <div>
         <p class="w-eyebrow">Easy from the first hello</p>
@@ -262,6 +302,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js" defer></script>
   <script src="/js/form.js?v=20260907-2" defer></script>
-  <script src="/weddings/weddings.js?v=20260907-2" defer></script>
+  <script src="/weddings/weddings.js?v=20260907-3" defer></script>
 </body>
 </html>
