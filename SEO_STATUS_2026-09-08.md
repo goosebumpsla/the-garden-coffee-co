@@ -20,6 +20,8 @@ Evidence captured September 8, 2026. This is a handoff record, not a ranking gua
 - Local mobile homepage Lighthouse performance: 93.
 - Remote owner-preview homepage Lighthouse: 84 Performance, 100 Accessibility, and 100 Best Practices. Its SEO score is reduced by the intentional preview `noindex` header.
 - Mobile 390px layout has no horizontal overflow. Hero video loads, the quote form renders, and browser-console checks found no errors.
+- An owner-authorized production inquiry test was accepted September 8, 2026 at 4:35 PM Pacific. The success state and embedded booking calendar loaded, and the matching FormSubmit email arrived immediately in `contact.thegardenco@gmail.com` with the exact test fields.
+- Advertising consent was granted for that test. The browser/server Lead implementation uses one shared `eventID`, and the automated suite verifies the identical identifier is sent to the browser Pixel and Cloudflare CAPI endpoint. Direct confirmation inside Meta Events Manager was not available because the Garden Chrome profile is not signed into Facebook; no Meta login credentials were guessed or requested.
 
 ## Search Console
 
@@ -70,8 +72,10 @@ Completed:
 2. Confirmed every canonical page, `robots.txt`, sitemap, assets, and branded/private-path 404 behavior over HTTPS.
 3. Confirmed the production domain has no preview `X-Robots-Tag` header.
 4. Re-ran the 13 repository tests and live HTTP audit after cutover.
+5. Performed an owner-authorized production form-delivery test and confirmed receipt in the Garden inbox.
+6. Verified the consented browser/server Meta Lead code uses a shared event ID for deduplication through the automated test suite.
 
 Remaining:
 
-1. Perform one owner-approved real form-delivery test and verify the optional browser/server Meta event is deduplicated when consent is granted.
-2. Allow Google time to recrawl and process the four queued Blog URLs; recheck Search Console later without repeatedly resubmitting them.
+1. Allow Google time to recrawl and process the four queued Blog URLs; recheck Search Console later without repeatedly resubmitting them.
+2. Supply accurate customer-contact hours and the real opening month/year if the owner wants those Business Profile fields corrected; they were intentionally not guessed.
