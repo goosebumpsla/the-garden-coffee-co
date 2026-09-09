@@ -1,0 +1,37 @@
+.chat-link {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 52px;
+  padding: .65rem 1rem .65rem .75rem;
+  border: 1px solid #ffffff66;
+  border-radius: 999px;
+  background: #4e5a47;
+  box-shadow: 0 8px 24px rgba(20, 29, 22, .22);
+  color: #fff;
+  font: 600 .76rem/1.15 "Outfit", Arial, sans-serif;
+  letter-spacing: .07em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform .2s ease, background .2s ease;
+}
+
+.chat-link:hover { transform: translateY(-2px); background: #3f4b3a; }
+.chat-link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.chat-link__icon { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 50%; background: #fffefa; color: #394335; }
+.chat-link__icon svg { width: 17px; height: 17px; }
+.chat-link__copy { display: grid; gap: .16rem; }
+.chat-link__copy small { color: #e5e9df; font-size: .64rem; font-weight: 400; letter-spacing: .03em; text-transform: none; }
+
+@media (max-width: 680px) {
+  .chat-link { right: .85rem; bottom: 72px; min-height: 48px; padding: .55rem .85rem .55rem .62rem; }
+  .chat-link__copy small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-link { transition: none; }
+}
