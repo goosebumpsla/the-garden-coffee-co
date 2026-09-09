@@ -33,6 +33,9 @@
   text-decoration: none;
 }
 
+/* Keep the wedding landing page's brand mark compact for more hero space. */
+.w-nav__logo { width: clamp(168px, 15.4vw, 203px); }
+
 .nav__logo img,
 .nav.nav--scrolled .nav__logo img,
 .w-nav__logo img,
@@ -128,7 +131,7 @@
   .g-nav,
   .blog-nav { min-height: 76px; padding-block: .35rem; }
   .nav__logo,
-  .w-nav__logo,
   .g-nav__logo,
   .blog-nav__logo { width: clamp(190px, 56vw, 220px); }
+  .w-nav__logo { width: clamp(133px, 39.2vw, 154px); }
 }
