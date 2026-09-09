@@ -148,6 +148,14 @@ h1, h2 { font-weight: 600; }
 .w-faq details[open] summary::after { content: '–'; }
 .w-faq details p { max-width: 650px; padding: 0 2rem 1.4rem 0; font-size: .9rem; font-weight: 300; }
 
+.w-testimonials { padding: clamp(4rem, 7vw, 6.5rem) max(1.5rem, calc((100% - 1180px) / 2)); border-top: 1px solid var(--line); background: #eee5d8; }
+.w-testimonials__heading { max-width: 610px; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+.w-testimonials h2 { font-size: clamp(2.4rem, 4.2vw, 4.2rem); letter-spacing: -.035em; line-height: .96; }
+.w-testimonials__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.w-testimonials figure { display: flex; flex-direction: column; min-height: 220px; margin: 0; padding: clamp(1.5rem, 2.5vw, 2.25rem); border: 1px solid rgba(41, 49, 39, .16); background: var(--cream); }
+.w-testimonials blockquote { margin: 0; color: var(--ink); font: 400 clamp(1.25rem, 1.8vw, 1.6rem)/1.25 var(--serif); }
+.w-testimonials figcaption { margin-top: auto; padding-top: 1.5rem; color: var(--sage-dark); font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+
 .w-quote { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(3rem, 8vw, 8rem); padding: clamp(5rem, 9vw, 8rem) max(1.5rem, calc((100% - 1180px) / 2)); background: var(--ink); color: rgba(255,255,255,.76); }
 .w-quote .w-eyebrow { color: #d6c3a6; }
 .w-quote h2 { margin-bottom: 1.5rem; color: #fff; font-size: clamp(3rem, 5vw, 5rem); letter-spacing: -.035em; line-height: .98; }
@@ -224,6 +232,8 @@ h1, h2 { font-weight: 600; }
   .w-included, .w-process, .w-faq, .w-quote { grid-template-columns: 1fr; }
   .w-included__image { max-width: 420px; margin: 0 auto; }
   .w-included__copy { padding: 0; }
+  .w-testimonials__list { grid-template-columns: 1fr; }
+  .w-testimonials figure { min-height: 0; }
   .w-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .w-gallery figure { height: auto; aspect-ratio: 4 / 5; }
   .w-gallery .w-gallery__large { grid-column: 1 / -1; aspect-ratio: 3 / 2; }

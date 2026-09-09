@@ -176,7 +176,7 @@ test('conversion content uses factual proof and an accessible mobile CTA', () =>
   assert.match(homepage, /data-home-sticky-cta/);
   assert.match(homepage, /data-cta-location="homepage-mobile-sticky"/);
   assert.doesNotMatch(homepage, /Sarah &amp; James|Jessica M\.|Amanda R\./);
-  assert.doesNotMatch(weddings, /Emily &amp; Jack|Sofia &amp; Daniel|Hannah &amp; Michael|Chloe &amp; James/);
+  assert.doesNotMatch(weddings, /Olivia &amp; James|Jessica M\.|Amanda R\.|Chloe &amp; James/);
 });
 
 test('corporate and PEOPLE pages are substantive and internally linked', () => {
