@@ -6,6 +6,21 @@ const nodePath = require('node:path');
 const root = nodePath.join(__dirname, '..');
 const origin = 'https://thegardencoffeecart.com';
 const read = file => fs.readFileSync(nodePath.join(root, file), 'utf8');
+test('wedding page uses supplied wedding media with deferred video and responsive photos', () => {
+  const html = read('weddings/index.html');
+  const videos = [...html.matchAll(/<video\b[\s\S]*?<\/video>/g)].map(match => match[0]);
+  assert.equal(videos.length, 4);
+  for (const video of videos) {
+    assert.match(video, /preload="none"/);
+    assert.match(video, /data-src="\/assets\/weddings\//);
+    assert.match(video, /poster="\/assets\/weddings\//);
+  }
+  for (const match of html.matchAll(/(?:src|data-src|poster)="(\/assets\/weddings\/[^"?]+)"/g)) {
+    assert.ok(fs.existsSync(nodePath.join(root, match[1])), match[1]);
+  }
+  for (const name of ['cart-details', 'wedding-moment', 'garden-cart']) assert.ok(html.includes(name + '-480.webp'));
+  assert.doesNotMatch(html, /facetune-wedding|wedding-hero-v2/);
+});
 const attribute = (html, selector) => {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${escaped}["'][^>]+content=["']([^"']+)["']`, 'i'))?.[1];
