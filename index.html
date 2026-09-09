@@ -36,7 +36,6 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/style.css?v=20260908-10">
-  <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
 
   <!-- Meta Pixel -->
   <link rel="stylesheet" href="/css/privacy-controls.css?v=20260908-1">
@@ -98,42 +97,34 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="/css/brand.css?v=20260908-1">
+  <script src="/js/site-shell.js?v=20260908-1" defer></script>
 </head>
 <body>
 
 
   <!-- ===== NAVIGATION ===== -->
-  <header class="nav" id="nav">
-    <a href="/" class="nav__logo" aria-label="The Garden Coffee Co. home">
-      <img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108">
-    </a>
-    <nav class="nav__links" id="navLinks" aria-label="Primary navigation">
-      <a href="/weddings/" class="nav__link">Weddings</a>
-      <a href="/corporate-events/" class="nav__link">Corporate</a>
-      <a href="/gallery/" class="nav__link">Gallery</a>
-      <a href="/blog/" class="nav__link">Journal</a>
-      <a href="#quote" class="nav__cta">Request a Quote</a>
+  <header class="site-header">
+    <a class="site-logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108"></a>
+    <nav class="site-nav" aria-label="Main navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/">Journal</a>
     </nav>
-    <button class="nav__hamburger" id="hamburger" type="button" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-    </button>
+    <a class="site-quote" href="#quote" data-cta-location="navigation" data-gallery-cta="navigation">Request a quote</a>
+    <details class="site-menu">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">
+        <a href="/">Home</a>
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/">Journal</a>
+      </nav>
+    </details>
   </header>
 
-  <!-- ===== MOBILE MENU ===== -->
-  <div class="mobile-menu" id="mobileMenu">
-    <nav class="mobile-menu__nav" aria-label="Mobile navigation">
-      <a href="#about" class="mobile-menu__link">About</a>
-      <a href="/weddings/" class="mobile-menu__link">Weddings</a>
-      <a href="/corporate-events/" class="mobile-menu__link">Corporate Events</a>
-      <a href="#services" class="mobile-menu__link">Services</a>
-      <a href="/gallery/" class="mobile-menu__link">Gallery</a>
-      <a href="#how-it-works" class="mobile-menu__link">How It Works</a>
-      <a href="#event-proof" class="mobile-menu__link">Real Events</a>
-      <a href="/blog/" class="mobile-menu__link">Journal</a>
-      <a href="#quote" class="mobile-menu__link mobile-menu__cta">Request a Quote</a>
-    </nav>
-  </div>
 
   <main>
     <!-- ===== HERO ===== -->
@@ -610,35 +601,27 @@
   <a class="home-sticky-cta" href="#quote" data-home-sticky-cta data-cta-location="homepage-mobile-sticky">Check availability <span aria-hidden="true">→</span></a>
 
   <!-- ===== FOOTER ===== -->
-  <footer class="footer" id="footer">
-    <div class="footer__container">
-      <div class="footer__brand">
-        <a href="/" class="footer__logo" aria-label="The Garden Coffee Co. home">
-          <img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy">
-        </a>
-        <p class="footer__tagline">LA's garden-inspired mobile<br>coffee cart for your events.</p>
+  <footer class="site-footer">
+    <div class="site-footer__top">
+      <div>
+        <a class="site-footer__logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
+        <p>Garden-inspired coffee cart catering for weddings, company events and celebrations.</p>
+        <p>Los Angeles &amp; surrounding areas</p>
       </div>
-      <div class="footer__links">
-        <h2 class="footer__heading">Links</h2>
-        <a href="weddings/" class="footer__link">Weddings</a>
-        <a href="/corporate-events/" class="footer__link">Corporate Events</a>
-        <a href="#services" class="footer__link">Services</a>
-        <a href="/gallery/" class="footer__link">Gallery</a>
-        <a href="#how-it-works" class="footer__link">How It Works</a>
-        <a href="blog/" class="footer__link">Planning Guides</a>
-        <a href="#quote" class="footer__link">Request a Quote</a>
-      </div>
-      <div class="footer__contact">
-        <h2 class="footer__heading">Contact</h2>
-        <a href="mailto:contact.thegardenco@gmail.com" class="footer__link">contact.thegardenco@gmail.com</a>
-        <a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer" class="footer__link">@thegardencoffee.co</a>
-        <span class="footer__link">Los Angeles, CA</span>
+      <div>
+        <nav aria-label="Footer navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/">Journal</a>
+        </nav>
+        <p><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><br><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></p>
       </div>
     </div>
-    <div class="footer__bottom">
-      <p>&copy; 2026 The Garden Coffee Cart Co. &middot; Mobile coffee cart serving the greater Los Angeles area</p>
+    <div class="site-footer__bottom">
+      <p>© 2026 The Garden Coffee Co.</p>
+      <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
     </div>
-    <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
   </footer>
 
   <!-- Scripts -->

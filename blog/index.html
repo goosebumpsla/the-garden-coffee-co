@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="/css/fonts.css?v=20260908-1">
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/blog/blog.css?v=20260908-6">
-  <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
   <link rel="stylesheet" href="/css/privacy-controls.css?v=20260908-1">
   <script src="/js/meta-pixel.js?v=20260908-3"></script>
   <script type="application/ld+json">
@@ -35,18 +34,30 @@
     "publisher": {"@id": "https://thegardencoffeecart.com/#business"}
   }
   </script>
+  <link rel="stylesheet" href="/css/brand.css?v=20260908-1">
+  <script src="/js/site-shell.js?v=20260908-1" defer></script>
 </head>
 <body>
 
-  <header class="blog-nav">
-    <a class="blog-nav__logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" srcset="/images/responsive/logo-wordmark-240.webp 240w, /images/responsive/logo-wordmark-360.webp 360w" sizes="180px" alt="The Garden Coffee Co." width="360" height="108"></a>
-    <nav class="blog-nav__links" aria-label="Main navigation">
-      <a href="/weddings/">Weddings</a>
-      <a href="/corporate-events/">Corporate</a>
-      <a href="/gallery/">Gallery</a>
-      <a href="/blog/" aria-current="page">Journal</a>
-      <a class="blog-nav__cta" href="/#quote">Request a Quote</a>
+  <header class="site-header">
+    <a class="site-logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108"></a>
+    <nav class="site-nav" aria-label="Main navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/" aria-current="page">Journal</a>
     </nav>
+    <a class="site-quote" href="/#quote" data-cta-location="navigation" data-gallery-cta="navigation">Request a quote</a>
+    <details class="site-menu">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">
+        <a href="/">Home</a>
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/" aria-current="page">Journal</a>
+      </nav>
+    </details>
   </header>
 
   <main>
@@ -115,12 +126,27 @@
     </section>
   </main>
 
-  <footer class="blog-footer">
-    <div class="blog-footer__inner">
-      <a class="blog-footer__brand" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
-      <div><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a> · Los Angeles, CA</div>
+  <footer class="site-footer">
+    <div class="site-footer__top">
+      <div>
+        <a class="site-footer__logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
+        <p>Garden-inspired coffee cart catering for weddings, company events and celebrations.</p>
+        <p>Los Angeles &amp; surrounding areas</p>
+      </div>
+      <div>
+        <nav aria-label="Footer navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/">Gallery</a>
+        <a href="/blog/" aria-current="page">Journal</a>
+        </nav>
+        <p><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><br><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></p>
+      </div>
     </div>
-    <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
+    <div class="site-footer__bottom">
+      <p>© 2026 The Garden Coffee Co.</p>
+      <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
+    </div>
   </footer>
   <script src="/js/main.js?v=20260908-3" defer></script>
 </body>

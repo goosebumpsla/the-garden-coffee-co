@@ -27,6 +27,23 @@ const sitemap = read('sitemap.xml');
 const sitemapEntries = [...sitemap.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>\s*<\/url>/g)]
   .map(([, canonical, lastmod]) => ({ canonical, lastmod, file: canonicalToFile(canonical) }));
 
+test('every page shares brand assets, navigation destinations and privacy controls', () => {
+  for (const file of [...sitemapEntries.map(entry => entry.file), 'privacy/index.html', 'cloudflare/404.html']) {
+    const html = read(file);
+    assert.match(html, /href="\/css\/brand\.css\?v=/, file);
+    assert.match(html, /src="\/js\/site-shell\.js\?v=/, file);
+    const header = html.match(/<header class="site-header">([\s\S]*?)<\/header>/)?.[1];
+    assert(header, file + ' shared header');
+    for (const destination of ['/weddings/', '/corporate-events/', '/gallery/', '/blog/']) {
+      assert(header.includes('href="' + destination + '"'), file + ' navigation destination');
+    }
+    assert.match(header, /<details class="site-menu">/, file + ' mobile menu');
+    assert.match(html, /<footer class="site-footer">/, file + ' shared footer');
+    const footer = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)[1];
+    assert.equal((footer.match(/data-privacy-settings/g) || []).length, 1, file + ' footer privacy control');
+  }
+});
+
 test('sitemap contains the intended canonical pages with current valid dates', () => {
   assert.equal(sitemapEntries.length, 9);
   assert.equal(new Set(sitemapEntries.map(entry => entry.canonical)).size, 9);

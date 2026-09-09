@@ -24,7 +24,6 @@
   <link rel="preload" as="image" href="/assets/gallery-media/meet-taylor.webp" type="image/webp">
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/gallery/gallery.css?v=20260908-3">
-  <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
   <link rel="stylesheet" href="/css/privacy-controls.css?v=20260908-1">
   <script src="/js/meta-pixel.js?v=20260908-3"></script>
 
@@ -38,22 +37,31 @@
     "isPartOf": {"@id": "https://thegardencoffeecart.com/#website"}
   }
   </script>
+  <link rel="stylesheet" href="/css/brand.css?v=20260908-1">
+  <script src="/js/site-shell.js?v=20260908-1" defer></script>
 </head>
 <body>
 
 
-  <header class="g-nav">
-    <a class="g-nav__logo" href="/" aria-label="The Garden Coffee Co. home">
-      <img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108">
-    </a>
-    <nav class="g-nav__links" aria-label="Gallery navigation">
-      <a href="/weddings/">Weddings</a>
-      <a href="/corporate-events/">Corporate</a>
-      <a href="/gallery/" aria-current="page">Gallery</a>
-      <a href="/blog/">Journal</a>
-      <a class="g-button g-button--small" href="/#quote" data-gallery-cta="navigation">Request a quote</a>
+  <header class="site-header">
+    <a class="site-logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108"></a>
+    <nav class="site-nav" aria-label="Main navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/" aria-current="page">Gallery</a>
+        <a href="/blog/">Journal</a>
     </nav>
-    <a class="g-nav__mobile-cta" href="/#quote" data-gallery-cta="mobile-navigation">Request a quote</a>
+    <a class="site-quote" href="/#quote" data-cta-location="navigation" data-gallery-cta="navigation">Request a quote</a>
+    <details class="site-menu">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">
+        <a href="/">Home</a>
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/" aria-current="page">Gallery</a>
+        <a href="/blog/">Journal</a>
+      </nav>
+    </details>
   </header>
 
   <main>
@@ -171,11 +179,27 @@
     </section>
   </main>
 
-  <footer class="g-footer">
-    <a href="/" class="g-footer__brand" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
-    <p>Garden-inspired mobile coffee cart catering in Los Angeles, CA.</p>
-    <div><a href="/weddings/">Weddings</a><a href="/corporate-events/">Corporate events</a><a href="/blog/">Planning guides</a><a href="mailto:contact.thegardenco@gmail.com">Email us</a><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">Instagram</a></div>
-    <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
+  <footer class="site-footer">
+    <div class="site-footer__top">
+      <div>
+        <a class="site-footer__logo" href="/" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
+        <p>Garden-inspired coffee cart catering for weddings, company events and celebrations.</p>
+        <p>Los Angeles &amp; surrounding areas</p>
+      </div>
+      <div>
+        <nav aria-label="Footer navigation">
+        <a href="/weddings/">Weddings</a>
+        <a href="/corporate-events/">Corporate</a>
+        <a href="/gallery/" aria-current="page">Gallery</a>
+        <a href="/blog/">Journal</a>
+        </nav>
+        <p><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><br><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></p>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>© 2026 The Garden Coffee Co.</p>
+      <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
+    </div>
   </footer>
 
   <script src="/gallery/gallery.js?v=20260908-2" defer></script>
