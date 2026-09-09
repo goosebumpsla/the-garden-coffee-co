@@ -19,16 +19,19 @@ test('homepage service tiles use local refreshed media and one deferred silent l
 test('wedding page uses supplied wedding media with deferred video and responsive photos', () => {
   const html = read('weddings/index.html');
   const videos = [...html.matchAll(/<video\b[\s\S]*?<\/video>/g)].map(match => match[0]);
-  assert.equal(videos.length, 4);
+  assert.equal(videos.length, 3);
   for (const video of videos) {
     assert.match(video, /preload="none"/);
     assert.match(video, /data-src="\/assets\/weddings\//);
     assert.match(video, /poster="\/assets\/weddings\//);
   }
+  assert.match(html, /class="w-hero__image"/);
+  assert.match(html, /hero-photo-480\.webp 480w/);
+  assert.doesNotMatch(html, /class="w-hero__video"/);
   for (const match of html.matchAll(/(?:src|data-src|poster)="(\/assets\/weddings\/[^"?]+)"/g)) {
     assert.ok(fs.existsSync(nodePath.join(root, match[1])), match[1]);
   }
-  for (const name of ['cart-details', 'thompsons-cart', 'thompsons-details', 'matcha-mimosas-guest', 'matcha-mimosas-cart', 'matcha-mimosas-details']) assert.ok(html.includes(name + '-480.webp'));
+  for (const name of ['hero-photo', 'wedding-service', 'thompsons-cart', 'thompsons-details', 'matcha-mimosas-guest', 'matcha-mimosas-cart', 'matcha-mimosas-details']) assert.ok(html.includes(name + '-480.webp'));
   assert.doesNotMatch(html, /facetune-wedding|wedding-hero-v2/);
 });
 const attribute = (html, selector) => {

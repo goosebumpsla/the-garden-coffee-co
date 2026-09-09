@@ -54,6 +54,7 @@ h1, h2 { font-weight: 600; }
 .w-hero__visual { position: relative; width: 100%; max-width: 420px; justify-self: center; aspect-ratio: 9 / 16; overflow: hidden; }
 .w-hero__visual picture, .w-hero__visual img { height: 100%; }
 .w-hero__visual img { object-fit: cover; object-position: 50% 38%; }
+.w-hero__image img { object-position: 70% center; }
 .w-hero__fallback { position: absolute; inset: 0; }
 .w-hero__video { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; object-position: center; background: var(--cream-dark); }
 .w-hero__visual::after { position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, rgba(27,35,28,.24), transparent 60%); content: ''; pointer-events: none; }
