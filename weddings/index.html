@@ -21,9 +21,10 @@
   <link rel="icon" href="/images/brand/favicon-64.png?v=20260908-2" type="image/png">
   <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png?v=20260908-2">
   <link rel="preload" as="font" href="/assets/fonts/cormorant-garamond-latin.woff2" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="/assets/fonts/cormorant-garamond-italic-latin.woff2" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="/assets/fonts/outfit-latin.woff2" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/fonts.css?v=20260908-1">
-  <link rel="preload" as="image" href="/images/responsive/facetune-wedding-768.webp" type="image/webp">
+  <link rel="preload" as="image" href="/assets/video/wedding-hero-v2-poster.webp" type="image/webp" media="(min-width: 901px)">
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/weddings/weddings.css?v=20260908-16">
   <link rel="stylesheet" href="/css/site-header.css?v=20260908-3">
@@ -106,7 +107,7 @@
       <div class="w-hero__visual">
         <picture class="w-hero__fallback">
           <source srcset="/images/responsive/facetune-wedding-480.webp 480w, /images/responsive/facetune-wedding-720.webp 720w, /images/responsive/facetune-wedding-768.webp 768w" sizes="(max-width: 768px) 100vw, 50vw" type="image/webp">
-          <img src="/images/gallery/facetune-wedding.jpg" alt="The Garden Coffee Co. barista preparing drinks at an outdoor Los Angeles wedding" width="800" height="1200" fetchpriority="high">
+          <img src="/images/gallery/facetune-wedding.jpg" alt="The Garden Coffee Co. barista preparing drinks at an outdoor Los Angeles wedding" width="800" height="1200" loading="lazy">
         </picture>
         <video class="w-hero__video" muted loop playsinline preload="none" poster="/assets/video/wedding-hero-v2-poster.webp">
           <source data-src="/assets/video/wedding-hero-mobile.mp4" type="video/mp4" media="(max-width: 768px) and (prefers-reduced-motion: no-preference)">
