@@ -6,6 +6,16 @@ const nodePath = require('node:path');
 const root = nodePath.join(__dirname, '..');
 const origin = 'https://thegardencoffeecart.com';
 const read = file => fs.readFileSync(nodePath.join(root, file), 'utf8');
+test('homepage service tiles use local refreshed media and one deferred silent loop', () => {
+  const html = read('index.html');
+  const section = html.slice(html.indexOf('<!-- ===== SERVICES ===== -->'), html.indexOf('<!-- ===== PLANNING GUIDES ===== -->'));
+  assert.equal((section.match(/class="service-card service-card--/g) || []).length, 4);
+  assert.equal((section.match(/<video /g) || []).length, 1);
+  assert.match(section, /muted loop playsinline preload="none"/);
+  assert.match(section, /href="\/weddings\/"/);
+  assert.match(section, /href="\/corporate-events\/"/);
+  for (const match of section.matchAll(/(?:src|data-src|poster)="(\/assets\/home-services\/[^"?]+)"/g)) assert.ok(fs.existsSync(nodePath.join(root, match[1])), match[1]);
+});
 test('wedding page uses supplied wedding media with deferred video and responsive photos', () => {
   const html = read('weddings/index.html');
   const videos = [...html.matchAll(/<video\b[\s\S]*?<\/video>/g)].map(match => match[0]);
