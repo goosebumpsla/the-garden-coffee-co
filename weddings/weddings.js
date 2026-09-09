@@ -82,20 +82,10 @@
 
     var reelVideos = document.querySelectorAll('.w-reel-video');
     if (reelVideos.length) {
-      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      var visibleReels = new Set();
-      function syncReelPlayback(video) {
-        if (visibleReels.has(video) && !document.hidden && !reducedMotion.matches) {
-          video.play().catch(function() {
-            // Native controls remain available if the browser blocks autoplay.
-          });
-        } else video.pause();
-      }
       var reelObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           var video = entry.target;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.18) {
-            visibleReels.add(video);
             var source = video.querySelector('source[data-src]');
             if (source) {
               source.src = source.dataset.src;
@@ -103,20 +93,25 @@
               video.load();
             }
           } else {
-            visibleReels.delete(video);
+            video.pause();
           }
-          syncReelPlayback(video);
         });
       }, { rootMargin: '0px', threshold: 0.18 });
 
       reelVideos.forEach(function(video) {
         video.controls = true;
         video.muted = true;
+        video.addEventListener('play', function() {
+          reelVideos.forEach(function(other) { if (other !== video) other.pause(); });
+          if (typeof window.gardenTrack === 'function') {
+            window.gardenTrack('WeddingVideoPlay', { video: video.getAttribute('aria-describedby') });
+          }
+        });
         reelObserver.observe(video);
       });
-      function syncAllReels() { reelVideos.forEach(syncReelPlayback); }
-      document.addEventListener('visibilitychange', syncAllReels);
-      reducedMotion.addEventListener('change', syncAllReels);
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) reelVideos.forEach(function(video) { video.pause(); });
+      });
     }
   }
 
