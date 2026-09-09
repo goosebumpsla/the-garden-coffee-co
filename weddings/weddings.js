@@ -2,6 +2,12 @@
   'use strict';
 
   function startWeddingPage() {
+    // Keep the decision path concise: visual proof is available after the
+    // essential details, quote form and common questions rather than before them.
+    var weddingPhotos = document.querySelector('.w-wedding-photos');
+    var faq = document.querySelector('.w-faq');
+    if (weddingPhotos && faq) faq.insertAdjacentElement('afterend', weddingPhotos);
+
     if (typeof initForm === 'function') {
       initForm();
     }

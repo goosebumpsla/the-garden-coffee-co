@@ -43,12 +43,12 @@ h1, h2 { font-weight: 600; }
 .w-hero__secondary { color: var(--sage-dark); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
 .w-hero__secondary:hover { color: var(--ink); }
 .w-hero__assurance { margin: 1rem 0 0; color: var(--body); font-size: .78rem; }
-.w-press { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); border-block: 1px solid var(--line); background: #eee5d8; }
-.w-press > div { max-width: 650px; }
-.w-press h2 { margin-bottom: .8rem; font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.05; }
-.w-press p:not(.w-eyebrow) { margin-bottom: .6rem; font-size: .9rem; }
-.w-press > div > a { color: var(--sage-dark); font-size: .85rem; text-underline-offset: .25rem; }
-.w-press > .w-button { flex-shrink: 0; }
+.w-press { display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.5rem); padding: 1.5rem max(1.5rem, calc((100% - 1180px) / 2)); border-block: 1px solid var(--line); background: #eee5d8; }
+.w-press__label { color: var(--sage-dark); font-size: .66rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.w-press__mark { color: var(--ink); font: 700 clamp(1.7rem, 3vw, 2.6rem)/.9 var(--sans); letter-spacing: -.08em; text-decoration: none; }
+.w-press__mark:hover, .w-press__link:hover { color: var(--sage-dark); }
+.w-press__copy { flex: 1; max-width: 520px; margin: 0; color: var(--body); font-size: .82rem; }
+.w-press__link { min-width: max-content; color: var(--sage-dark); font-size: .76rem; font-weight: 600; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
 .w-proof { display: flex; flex-wrap: wrap; gap: .75rem 1.35rem; margin: 2.3rem 0 0; padding: 1.4rem 0 0; border-top: 1px solid var(--line); color: var(--sage-dark); font-size: .78rem; list-style: none; }
 .w-proof li::before { content: '✓'; margin-right: .45rem; color: var(--gold); }
 .w-hero__visual { position: relative; width: 100%; max-width: 420px; justify-self: center; aspect-ratio: 9 / 16; overflow: hidden; }
@@ -211,7 +211,9 @@ h1, h2 { font-weight: 600; }
 }
 
 @media (max-width: 900px) {
-  .w-press { flex-direction: column; align-items: flex-start; }
+  .w-press { flex-wrap: wrap; align-items: center; }
+  .w-press__copy { flex-basis: 100%; order: 3; }
+  .w-press__link { order: 4; }
   .w-nav__links { display: none; }
   .w-nav__mobile-cta { display: block; }
   .w-hero { display: grid; grid-template-columns: 1fr; padding: 0; }
