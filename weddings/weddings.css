@@ -291,10 +291,12 @@ body.w-film-open { overflow: hidden; }
 .w-wedding-photos .w-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0; gap: 1rem; }
 .w-wedding-photos figure { height: clamp(380px, 37vw, 520px); aspect-ratio: auto; overflow: hidden; }
 .w-wedding-photos img { height: 100%; }
+.w-wedding-photos .w-gallery__candid { grid-column: span 2; }
 .w-wedding-photos figcaption { padding-top: .65rem; font-size: .8rem; }
 @media (max-width: 900px) {
   .w-hero { gap: 0; }
   .w-wedding-photos .w-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .w-wedding-photos figure { height: auto; }
   .w-wedding-photos img { height: auto; aspect-ratio: 2 / 3; }
+  .w-wedding-photos .w-gallery__candid { grid-column: auto; }
 }
