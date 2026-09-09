@@ -10,9 +10,18 @@
   var panel;
   function allowed() { return choice === 'accepted' && !signal && production; }
   window.gardenAdvertisingAllowed = allowed;
-  window.gardenTrack = function(name) {
+  window.gardenTrack = function(name, details) {
     if (allowed() && typeof window.fbq === 'function') {
-      window.fbq('trackCustom', name, { page_path: location.pathname });
+      var payload = { page_path: location.pathname };
+      if (details && typeof details === 'object') {
+        Object.keys(details).slice(0, 8).forEach(function(key) {
+          var value = details[key];
+          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            payload[key] = typeof value === 'string' ? value.slice(0, 120) : value;
+          }
+        });
+      }
+      window.fbq('trackCustom', name, payload);
     }
   };
   function startPixel() {

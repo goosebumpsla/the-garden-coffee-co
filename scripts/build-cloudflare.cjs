@@ -5,7 +5,7 @@ const { execFileSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'dist-cloudflare');
 const roots = new Set(['index.html', 'robots.txt', 'sitemap.xml']);
-const dirs = /^(assets|images|css|js|weddings|gallery|blog|privacy)\//;
+const dirs = /^(assets|images|css|js|weddings|corporate-events|gallery|blog|privacy)\//;
 const extensions = /\.(html|css|js|png|jpe?g|webp|svg|ico|mp4|webm|woff2?)$/i;
 const files = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(file => roots.has(file) || (dirs.test(file) && extensions.test(file)));
 if (!files.includes('index.html')) throw Error('Website entry point missing');

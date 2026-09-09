@@ -20,15 +20,15 @@
 
   <link rel="icon" href="/images/brand/favicon-64.png?v=20260908-2" type="image/png">
   <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png?v=20260908-2">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="/images/gallery/facetune-wedding.webp" type="image/webp">
+  <link rel="preload" as="font" href="/assets/fonts/cormorant-garamond-latin.woff2" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="/assets/fonts/outfit-latin.woff2" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/fonts.css?v=20260908-1">
+  <link rel="preload" as="image" href="/images/responsive/facetune-wedding-768.webp" type="image/webp">
   <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/weddings/weddings.css?v=20260908-13">
+  <link rel="stylesheet" href="/weddings/weddings.css?v=20260908-15">
   <link rel="stylesheet" href="/css/site-header.css?v=20260908-2">
   <link rel="stylesheet" href="/css/privacy-controls.css?v=20260908-1">
-  <script src="/js/meta-pixel.js?v=20260908-2"></script>
+  <script src="/js/meta-pixel.js?v=20260908-3"></script>
 
   <script type="application/ld+json">
   {
@@ -75,10 +75,11 @@
 
   <header class="w-nav">
     <a class="w-nav__logo" href="/" aria-label="The Garden Coffee Co. home">
-      <img src="/images/brand/logo-wordmark.png" alt="The Garden Coffee Co." width="717" height="215">
+      <img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108">
     </a>
     <nav class="w-nav__links" aria-label="Wedding page navigation">
       <a href="/weddings/" aria-current="page">Weddings</a>
+      <a href="/corporate-events/">Corporate</a>
       <a href="/gallery/">Gallery</a>
       <a href="/blog/">Journal</a>
       <a class="w-button w-button--small" href="#quote" data-cta-location="navigation">Request a quote</a>
@@ -104,13 +105,13 @@
       </div>
       <div class="w-hero__visual">
         <picture class="w-hero__fallback">
-          <source srcset="/images/gallery/facetune-wedding.webp" type="image/webp">
+          <source srcset="/images/responsive/facetune-wedding-480.webp 480w, /images/responsive/facetune-wedding-720.webp 720w, /images/responsive/facetune-wedding-768.webp 768w" sizes="(max-width: 768px) 100vw, 50vw" type="image/webp">
           <img src="/images/gallery/facetune-wedding.jpg" alt="The Garden Coffee Co. barista preparing drinks at an outdoor Los Angeles wedding" width="800" height="1200" fetchpriority="high">
         </picture>
-        <video class="w-hero__video" autoplay muted loop playsinline preload="metadata" poster="/assets/video/wedding-hero-v2-poster.webp" aria-label="The Garden Coffee Co. serving espresso beside wedding florals in Los Angeles">
-          <source src="/assets/video/wedding-hero-mobile.mp4" type="video/mp4" media="(max-width: 768px) and (prefers-reduced-motion: no-preference)">
-          <source src="/assets/video/wedding-hero-v2.webm" type="video/webm" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
-          <source src="/assets/video/wedding-hero-v2.mp4" type="video/mp4" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
+        <video class="w-hero__video" muted loop playsinline preload="none" poster="/assets/video/wedding-hero-v2-poster.webp">
+          <source data-src="/assets/video/wedding-hero-mobile.mp4" type="video/mp4" media="(max-width: 768px) and (prefers-reduced-motion: no-preference)">
+          <source data-src="/assets/video/wedding-hero-v2.webm" type="video/webm" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
+          <source data-src="/assets/video/wedding-hero-v2.mp4" type="video/mp4" media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">
         </video>
         <button class="w-video-toggle" type="button" aria-label="Pause video">Pause video</button>
         <div class="w-hero__note"><span>A lovely fit for</span><strong>cocktail hour, dessert &amp; late-night dancing</strong></div>
@@ -132,27 +133,27 @@
         </div>
         <a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">More from @thegardencoffee.co →</a>
       </div>
-      <div class="w-reels" aria-label="Recent Garden Coffee Co. events">
+      <div class="w-reels">
         <article class="w-reel-card">
-          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/wedding-service-poster.webp" aria-label="Wedding coffee cart service">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/wedding-service-poster.webp" aria-hidden="true">
             <source data-src="/assets/social/wedding-service.mp4" type="video/mp4">
           </video>
           <div class="w-reel-card__label"><span>Wedding service</span><strong>Garden celebrations</strong></div>
         </article>
         <article class="w-reel-card">
-          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/gallery-media/garden-cocktail-hour-poster.webp" aria-label="Coffee and matcha cart at a garden wedding cocktail hour">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/gallery-media/garden-cocktail-hour-poster.webp" aria-hidden="true">
             <source data-src="/assets/gallery-media/garden-cocktail-hour.mp4" type="video/mp4">
           </video>
           <div class="w-reel-card__label"><span>Cocktail hour</span><strong>Made for the garden</strong></div>
         </article>
         <article class="w-reel-card">
-          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/gallery-media/wedding-evening-poster.webp" aria-label="Coffee cart details during an evening wedding reception">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/gallery-media/wedding-evening-poster.webp" aria-hidden="true">
             <source data-src="/assets/gallery-media/wedding-evening.mp4" type="video/mp4">
           </video>
           <div class="w-reel-card__label"><span>Evening reception</span><strong>From vows to dancing</strong></div>
         </article>
         <article class="w-reel-card">
-          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/espresso-craft-poster.webp" aria-label="Espresso being prepared behind the bar">
+          <video class="w-reel-video" muted loop playsinline preload="none" poster="/assets/social/espresso-craft-poster.webp" aria-hidden="true">
             <source data-src="/assets/social/espresso-craft.mp4" type="video/mp4">
           </video>
           <div class="w-reel-card__label"><span>Behind the bar</span><strong>The art of coffee</strong></div>
@@ -195,8 +196,8 @@
             <div><h3>Planned with your venue</h3><p>We confirm access, power, water, placement and timing before the wedding day.</p></div>
           </article>
         </div>
-        <div class="w-included__details" aria-label="What wedding coffee service can include">
-          <p>What we bring</p>
+        <div class="w-included__details" role="group" aria-labelledby="what-we-bring-heading">
+          <p id="what-we-bring-heading">What we bring</p>
           <ul>
             <li>Mobile cart &amp; professional espresso equipment</li>
             <li>Specialty coffee, matcha &amp; menu ingredients</li>
@@ -217,33 +218,33 @@
       <figure><img src="/images/gallery/DSCF1130.webp" alt="Handcrafted iced matcha served by The Garden Coffee Co." width="674" height="1200" loading="lazy"></figure>
     </section>
 
-    <section class="w-love-notes" id="kind-words" aria-labelledby="kind-words-heading">
+    <section class="w-love-notes" id="wedding-proof" aria-labelledby="wedding-proof-heading">
       <div class="w-love-notes__heading">
-        <p class="w-eyebrow">Kind words</p>
-        <h2 id="kind-words-heading">Little notes from very happy celebrations.</h2>
-        <p>Real reflections from couples who made The Garden Coffee Co. part of their wedding day.</p>
+        <p class="w-eyebrow">Designed for the day</p>
+        <h2 id="wedding-proof-heading">A coffee experience guests can step into.</h2>
+        <p>Each wedding setup brings together made-to-order drinks, thoughtful styling and a service plan built around the celebration.</p>
       </div>
       <div class="w-love-notes__grid">
-        <blockquote class="w-love-note">
-          <span class="w-love-note__mark" aria-hidden="true">“</span>
-          <p>The coffee cart was such a fun addition to our wedding! Our guests loved choosing their drinks, chatting with the baristas, and going back for seconds. The coffee lovers in our family were especially impressed.</p>
-          <footer>Emily &amp; Jack</footer>
-        </blockquote>
-        <blockquote class="w-love-note">
-          <span class="w-love-note__mark" aria-hidden="true">“</span>
-          <p>It quickly became a little gathering spot during the reception. Everyone was comparing drinks, taking photos, and trying something new—and the iced lattes were a huge hit!</p>
-          <footer>Sofia &amp; Daniel</footer>
-        </blockquote>
-        <blockquote class="w-love-note">
-          <span class="w-love-note__mark" aria-hidden="true">“</span>
-          <p>The setup looked beautiful, the coffee was amazing, and the baristas were so friendly. It gave everyone a fun boost before heading back to the dance floor!</p>
-          <footer>Hannah &amp; Michael</footer>
-        </blockquote>
-        <blockquote class="w-love-note">
-          <span class="w-love-note__mark" aria-hidden="true">“</span>
-          <p>Such a simple touch, but it made the evening feel extra special. Even guests who don’t usually drink coffee joined in for the fun specialty drinks. People are still talking about it!</p>
-          <footer>Chloe &amp; James</footer>
-        </blockquote>
+        <div class="w-love-note">
+          <span class="w-love-note__mark" aria-hidden="true">01</span>
+          <p>A garden-inspired cart styled to feel at home beside florals, tablescapes and the venue.</p>
+          <footer>Wedding styling</footer>
+        </div>
+        <div class="w-love-note">
+          <span class="w-love-note__mark" aria-hidden="true">02</span>
+          <p>Espresso, matcha and alternative drink choices prepared for guests at the cart.</p>
+          <footer>Made-to-order menu</footer>
+        </div>
+        <div class="w-love-note">
+          <span class="w-love-note__mark" aria-hidden="true">03</span>
+          <p>Service timing planned around guest arrival, the reception, dessert or the start of dancing.</p>
+          <footer>Event flow</footer>
+        </div>
+        <div class="w-love-note">
+          <span class="w-love-note__mark" aria-hidden="true">04</span>
+          <p>A personalized quote based on the venue, guest count, menu and details that matter to the couple.</p>
+          <footer>Thoughtful planning</footer>
+        </div>
       </div>
     </section>
 
@@ -295,7 +296,7 @@
           </div>
           <div class="w-form-row">
             <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" autocomplete="tel"></div>
-            <div class="form-group"><label for="event-date">Wedding date *</label><input type="date" id="event-date" name="event-date" required><label class="w-check" for="date-unconfirmed"><input type="checkbox" id="date-unconfirmed" name="date-not-confirmed" value="yes" data-date-unconfirmed> Date not confirmed yet</label></div>
+            <div class="form-group"><label for="event-date">Wedding date *</label><input type="date" id="event-date" name="event-date" required><label class="w-check"><input type="checkbox" id="date-unconfirmed" name="date-not-confirmed" value="yes" data-date-unconfirmed> Date not confirmed yet</label></div>
           </div>
           <div class="w-form-row">
             <div class="form-group"><label for="guest-count">Estimated guests *</label><input type="number" id="guest-count" name="guest-count" min="1" max="1000" required></div>
@@ -318,15 +319,15 @@
   </main>
 
   <footer class="w-footer">
-    <a href="/" class="w-footer__brand" aria-label="The Garden Coffee Co. home"><img src="/images/brand/logo-wordmark.png" alt="The Garden Coffee Co." width="717" height="215" loading="lazy"></a>
+    <a href="/" class="w-footer__brand" aria-label="The Garden Coffee Co. home"><img src="/images/responsive/logo-wordmark-360.webp" alt="The Garden Coffee Co." width="360" height="108" loading="lazy"></a>
     <p>Garden-inspired mobile coffee cart catering in Los Angeles, CA.</p>
-    <div><a href="/gallery/">Event gallery</a><a href="/blog/">Planning guides</a><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></div>
+    <div><a href="/corporate-events/">Corporate events</a><a href="/gallery/">Event gallery</a><a href="/blog/">Planning guides</a><a href="mailto:contact.thegardenco@gmail.com">contact.thegardenco@gmail.com</a><a href="https://instagram.com/thegardencoffee.co" target="_blank" rel="noopener noreferrer">@thegardencoffee.co</a></div>
     <div class="privacy-footer"><a href="/privacy/">Privacy notice</a><button type="button" data-privacy-settings>Tracking choices</button></div>
   </footer>
 
   <a class="w-sticky-cta" href="#quote" data-cta-location="mobile-sticky">Check your date <span>→</span></a>
 
-  <script src="/js/form.js?v=20260908-3" defer></script>
-  <script src="/weddings/weddings.js?v=20260908-8" defer></script>
+  <script src="/js/form.js?v=20260908-4" defer></script>
+  <script src="/weddings/weddings.js?v=20260908-10" defer></script>
 </body>
 </html>

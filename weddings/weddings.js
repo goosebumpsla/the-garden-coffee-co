@@ -11,7 +11,18 @@
     var videoToggle = document.querySelector('.w-video-toggle');
     var userPaused = false;
     var heroInView = true;
+    var heroVideoLoaded = false;
+    var pageReady = document.readyState === 'complete';
     var allowMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+    function loadHeroVideo() {
+      if (!heroVideo || heroVideoLoaded || !allowMotion.matches) return;
+      heroVideo.querySelectorAll('source[data-src]').forEach(function(source) {
+        source.src = source.dataset.src;
+        source.removeAttribute('data-src');
+      });
+      heroVideoLoaded = true;
+      heroVideo.load();
+    }
     function updateVideoToggle() {
       if (!heroVideo || !videoToggle) return;
       videoToggle.textContent = heroVideo.paused ? 'Play video' : 'Pause video';
@@ -19,7 +30,8 @@
     }
     function updateHeroPlayback() {
       if (!heroVideo) return;
-      if (!userPaused && heroInView && !document.hidden && allowMotion.matches) {
+      if (!userPaused && heroInView && !document.hidden && allowMotion.matches && pageReady) {
+        loadHeroVideo();
         heroVideo.play().catch(updateVideoToggle);
       } else heroVideo.pause();
     }
@@ -28,6 +40,7 @@
       updateVideoToggle();
       videoToggle.addEventListener('click', function() {
         userPaused = !heroVideo.paused;
+        if (!userPaused) pageReady = true;
         updateHeroPlayback();
       });
       ['play', 'pause'].forEach(function(eventName) {
@@ -39,6 +52,14 @@
       }).observe(heroVideo);
       document.addEventListener('visibilitychange', updateHeroPlayback);
       allowMotion.addEventListener('change', updateHeroPlayback);
+      if (!pageReady) window.addEventListener('load', function() {
+        // Let the poster, typography and primary CTA finish rendering before
+        // the decorative video competes for the visitor's connection.
+        window.setTimeout(function() {
+          pageReady = true;
+          updateHeroPlayback();
+        }, 3500);
+      }, { once: true });
     }
     var quote = document.getElementById('quote');
     var stickyCta = document.querySelector('.w-sticky-cta');
@@ -48,29 +69,16 @@
       }).observe(quote);
     }
 
-    if (typeof window.fbq === 'function') {
-      window.fbq('track', 'ViewContent', {
-        content_name: 'Los Angeles Wedding Coffee Cart',
-        content_category: 'Wedding Catering'
-      });
-    }
+    if (typeof window.gardenTrack === 'function') window.gardenTrack('WeddingPageView');
 
     document.querySelectorAll('[data-cta-location]').forEach(function(link) {
       link.addEventListener('click', function() {
-        if (typeof window.fbq !== 'function') return;
-        window.fbq('trackCustom', 'WeddingQuoteIntent', {
-          content_name: 'Wedding Quote',
+        if (typeof window.gardenTrack !== 'function') return;
+        window.gardenTrack('WeddingQuoteIntent', {
           cta_location: link.getAttribute('data-cta-location') || 'unknown'
         });
       });
     });
-
-    var weddingDate = document.getElementById('event-date');
-    if (weddingDate) {
-      var today = new Date();
-      var localToday = new Date(today.getTime() - (today.getTimezoneOffset() * 60000));
-      weddingDate.min = localToday.toISOString().slice(0, 10);
-    }
 
     var reelVideos = document.querySelectorAll('.w-reel-video');
     if (reelVideos.length) {

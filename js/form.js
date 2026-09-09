@@ -21,6 +21,11 @@ function initForm() {
   if (!form) return;
   var dateUnknown = form.querySelector('[data-date-unconfirmed]');
   var eventDate = form.querySelector('#event-date');
+  if (eventDate) {
+    var today = new Date();
+    var localToday = new Date(today.getTime() - (today.getTimezoneOffset() * 60000));
+    eventDate.min = localToday.toISOString().slice(0, 10);
+  }
   if (dateUnknown && eventDate) {
     function syncDateRequirement() {
       eventDate.disabled = dateUnknown.checked;
@@ -83,6 +88,9 @@ function initForm() {
     }
 
     if (!isValid) {
+      if (typeof window.gardenTrack === 'function') {
+        window.gardenTrack('FormValidationError', { error_count: form.querySelectorAll('.form-group--error').length });
+      }
       var firstError = form.querySelector('.form-group--error');
       if (firstError) {
         var focusEl = firstError.querySelector('input, select, textarea');
@@ -113,6 +121,7 @@ function initForm() {
     })
     .then(function(result) {
       if (result.success === true || result.success === 'true') {
+        if (typeof window.gardenTrack === 'function') window.gardenTrack('FormSuccess');
         // Count accepted inquiries, not button clicks or calendar views.
         if (typeof window.fbq === 'function' && window.gardenAdvertisingAllowed && window.gardenAdvertisingAllowed()) {
           var eventId = 'garden_lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
@@ -204,34 +213,4 @@ function getCookieValue(name) {
     }
   }
   return '';
-}
-
-// ===== TESTIMONIAL CAROUSEL =====
-function initTestimonials() {
-  var testimonials = document.querySelectorAll('.testimonial');
-  var dots = document.querySelectorAll('.testimonial__dot');
-  if (!testimonials.length) return;
-
-  var current = 0;
-
-  function showTestimonial(index) {
-    var outgoing = testimonials[current];
-    var incoming = testimonials[index];
-
-    if (current === index) return;
-
-    outgoing.classList.remove('active');
-    incoming.classList.add('active');
-
-    dots[current].classList.remove('active');
-    dots[index].classList.add('active');
-    current = index;
-  }
-
-  dots.forEach(function(dot, i) {
-    dot.addEventListener('click', function() {
-      showTestimonial(i);
-    });
-  });
-
 }

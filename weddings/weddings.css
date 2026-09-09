@@ -100,7 +100,7 @@ h1, h2 { font-weight: 600; }
 .w-love-note { position: relative; margin: 0; padding: clamp(1.8rem, 3.5vw, 3rem); border: 1px solid rgba(82,91,78,.17); background: rgba(253,251,247,.72); box-shadow: 0 18px 60px rgba(47,52,45,.045); }
 .w-love-note:nth-child(even) { transform: translateY(2.25rem); }
 .w-love-note:nth-child(3) { margin-left: 2rem; }
-.w-love-note__mark { display: block; height: 2.2rem; color: rgba(174,137,84,.7); font: 400 5.5rem/.72 var(--serif); }
+.w-love-note__mark { display: block; height: 2.2rem; color: #76592f; font: 500 1rem/1 var(--sans); letter-spacing: .14em; }
 .w-love-note p { max-width: 530px; margin: 1.2rem 0 2rem; color: var(--ink); font: 500 clamp(1.3rem, 2.25vw, 1.8rem)/1.2 var(--serif); letter-spacing: -.01em; }
 .w-love-note footer { color: var(--sage-dark); font-size: .7rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
 .w-love-note footer::before { content: ''; display: inline-block; width: 1.8rem; margin-right: .65rem; border-top: 1px solid var(--gold); vertical-align: middle; }
@@ -188,7 +188,7 @@ h1, h2 { font-weight: 600; }
 .w-footer div a:hover { color: #fff; }
 .w-sticky-cta { display: none; }
 
-#experience, #included, #real-events, #kind-words, #faq, #quote { scroll-margin-top: 0; }
+#experience, #included, #real-events, #wedding-proof, #faq, #quote { scroll-margin-top: 0; }
 .quote-success { scroll-margin-top: 0; }
 .w-button { transition: background-color 150ms ease; }
 .w-sticky-cta[hidden] { display: none; }

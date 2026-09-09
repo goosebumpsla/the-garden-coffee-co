@@ -27,9 +27,9 @@ const sitemap = read('sitemap.xml');
 const sitemapEntries = [...sitemap.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>\s*<\/url>/g)]
   .map(([, canonical, lastmod]) => ({ canonical, lastmod, file: canonicalToFile(canonical) }));
 
-test('sitemap contains the seven intended canonical pages with current valid dates', () => {
-  assert.equal(sitemapEntries.length, 7);
-  assert.equal(new Set(sitemapEntries.map(entry => entry.canonical)).size, 7);
+test('sitemap contains the intended canonical pages with current valid dates', () => {
+  assert.equal(sitemapEntries.length, 9);
+  assert.equal(new Set(sitemapEntries.map(entry => entry.canonical)).size, 9);
   for (const entry of sitemapEntries) {
     assert(entry.canonical.startsWith(`${origin}/`));
     assert.match(entry.lastmod, /^\d{4}-\d{2}-\d{2}$/);
@@ -40,7 +40,9 @@ test('sitemap contains the seven intended canonical pages with current valid dat
   assert.match(robots, /User-agent:\s*\*/i);
   assert.match(robots, /Allow:\s*\//i);
   assert.match(robots, new RegExp(`Sitemap:\\s*${origin.replaceAll('.', '\\.')}\/sitemap\\.xml`, 'i'));
-  assert.doesNotMatch(robots, /Disallow:\s*\//i);
+  const generalRules = robots.match(/User-agent:\s*\*([\s\S]*?)(?=\nUser-agent:|\nSitemap:|$)/i)?.[1] || '';
+  assert.doesNotMatch(generalRules, /Disallow:\s*\//i);
+  assert.match(robots, /User-agent:\s*Google-Extended\s*\nDisallow:\s*\//i);
 });
 
 test('every sitemap page has complete, unique, indexable metadata and valid structured data', () => {
@@ -109,4 +111,37 @@ test('homepage links to the verified PEOPLE coverage without overstating endorse
   assert.match(homepage, /href="https:\/\/people\.com\/barbie-blank-coba-celebrates-twins-3rd-birthday-exclusive-12075794"/);
   assert.match(homepage, /rel="noopener noreferrer external"/);
   assert.doesNotMatch(homepage, /endorsed by PEOPLE/i);
+});
+
+test('performance assets are local and responsive on the homepage', () => {
+  const homepage = read('index.html');
+  assert.doesNotMatch(homepage, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
+  assert.match(homepage, /href="\/css\/fonts\.css/);
+  assert.match(homepage, /hero-mobile-480\.webp 480w/);
+  assert.match(homepage, /facetune-wedding-480\.webp 480w/);
+  assert.match(homepage, /logo-wordmark-360\.webp/);
+});
+
+test('conversion content uses factual proof and an accessible mobile CTA', () => {
+  const homepage = read('index.html');
+  const weddings = read('weddings/index.html');
+  assert.match(homepage, /id="event-proof"/);
+  assert.match(homepage, /id="home-faq-heading"/);
+  assert.match(homepage, /data-home-sticky-cta/);
+  assert.match(homepage, /data-cta-location="homepage-mobile-sticky"/);
+  assert.doesNotMatch(homepage, /Sarah &amp; James|Jessica M\.|Amanda R\./);
+  assert.doesNotMatch(weddings, /Emily &amp; Jack|Sofia &amp; Daniel|Hannah &amp; Michael|Chloe &amp; James/);
+});
+
+test('corporate and PEOPLE pages are substantive and internally linked', () => {
+  const homepage = read('index.html');
+  const journal = read('blog/index.html');
+  const corporate = read('corporate-events/index.html');
+  const people = read('blog/people-magazine-three-haw-birthday/index.html');
+  assert.match(homepage, /href="\/corporate-events\/"/);
+  assert.match(journal, /href="\/blog\/people-magazine-three-haw-birthday\/"/);
+  assert.match(corporate, /"@type": "Service"/);
+  assert.match(corporate, /id="quoteForm"/);
+  assert.match(people, /"citation": "https:\/\/people\.com\//);
+  assert.match(people, /does not claim an endorsement/i);
 });
