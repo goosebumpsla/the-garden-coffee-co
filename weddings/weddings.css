@@ -254,7 +254,6 @@ h1, h2 { font-weight: 600; }
   .w-reels { grid-template-columns: repeat(3, minmax(245px, 72vw)); overflow-x: auto; margin-right: -1.5rem; padding-right: 1.5rem; padding-bottom: .5rem; scroll-snap-type: x proximity; scrollbar-width: thin; }
   .w-reels::-webkit-scrollbar { display: none; }
   .w-reel-card { scroll-snap-align: start; }
-  .w-love-notes__grid { grid-template-columns: 1fr; }
   .w-love-note:nth-child(even) { transform: none; }
   .w-included__details ul { grid-template-columns: 1fr; }
   .w-quote__panel { padding: 1.4rem; }
