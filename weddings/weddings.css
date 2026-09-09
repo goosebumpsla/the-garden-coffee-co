@@ -287,13 +287,13 @@ body.w-film-open { overflow: hidden; }
 .w-reel-card__label span { color: var(--sage-dark); }
 .w-wedding-photos { padding: 3rem max(1.5rem, calc((100% - 1180px) / 2)); }
 .w-wedding-photos h2 { font-size: clamp(2.3rem, 4vw, 3.6rem); line-height: 1; }
-.w-wedding-photos .w-gallery { padding: 0; gap: 1rem; }
-.w-wedding-photos figure { height: auto; aspect-ratio: auto; overflow: visible; }
-.w-wedding-photos img { height: 330px; }
+.w-wedding-photos .w-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0; gap: 1rem; }
+.w-wedding-photos figure { height: clamp(380px, 37vw, 520px); aspect-ratio: auto; overflow: hidden; }
+.w-wedding-photos img { height: 100%; }
 .w-wedding-photos figcaption { padding-top: .65rem; font-size: .8rem; }
 @media (max-width: 900px) {
   .w-hero { gap: 0; }
-  .w-wedding-photos .w-gallery__large { aspect-ratio: auto; }
+  .w-wedding-photos .w-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .w-wedding-photos figure { height: auto; }
   .w-wedding-photos img { height: auto; aspect-ratio: 2 / 3; }
-  .w-wedding-photos .w-gallery__large img { aspect-ratio: 3 / 2; }
 }

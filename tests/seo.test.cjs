@@ -28,7 +28,7 @@ test('wedding page uses supplied wedding media with deferred video and responsiv
   for (const match of html.matchAll(/(?:src|data-src|poster)="(\/assets\/weddings\/[^"?]+)"/g)) {
     assert.ok(fs.existsSync(nodePath.join(root, match[1])), match[1]);
   }
-  for (const name of ['cart-details', 'thompsons-cart', 'thompsons-details']) assert.ok(html.includes(name + '-480.webp'));
+  for (const name of ['cart-details', 'thompsons-cart', 'thompsons-details', 'matcha-mimosas-guest', 'matcha-mimosas-cart', 'matcha-mimosas-details']) assert.ok(html.includes(name + '-480.webp'));
   assert.doesNotMatch(html, /facetune-wedding|wedding-hero-v2/);
 });
 const attribute = (html, selector) => {
