@@ -61,3 +61,7 @@ Cloudflare imported the matching Google TXT and four resolved Netlify A records 
 ## Remaining external requirements
 
 Registrar access, Worker custom domains, www redirect, successful production verification, and optional automatic repository deployment remain outstanding. The production secret and DNS inventory are now recorded above. Free quotas still apply; do not enable paid upgrades automatically.
+
+## Compatibility repair — September 9, 2026
+
+The registrar now delegates to Cloudflare (`boyd.ns.cloudflare.com` and `sonia.ns.cloudflare.com`), and Cloudflare serves the Worker custom domain. Some local resolvers still held the former Netlify nameserver delegation and therefore reached the old site. The inactive Netlify DNS zone has been converted from its two `NETLIFY` website records to low-TTL A-record fallbacks for both the apex and `www`, using Cloudflare's current addresses (`104.21.54.216` and `172.67.142.216`). The Google Search Console verification TXT was retained unchanged. Direct checks against both the Netlify legacy nameservers and Cloudflare return the current Worker site; `www` redirects to the apex. Retain this compatibility zone until stale delegations have aged out, then review it before any removal.
