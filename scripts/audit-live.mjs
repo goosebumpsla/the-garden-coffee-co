@@ -28,7 +28,7 @@ const headerExpectation = response => {
 
 const sitemapSource = await read('sitemap.xml');
 const canonicals = [...sitemapSource.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-assert.equal(canonicals.length, 7, 'Expected seven sitemap URLs');
+assert.equal(canonicals.length, 9, 'Expected nine sitemap URLs');
 
 for (const canonical of canonicals) {
   assert(canonical.startsWith(`${canonicalOrigin}/`), `Unexpected canonical origin: ${canonical}`);
