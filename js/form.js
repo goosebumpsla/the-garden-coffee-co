@@ -106,6 +106,14 @@ function initForm() {
     form.dataset.submitting = 'true';
     if (typeof window.gardenTrack === 'function') window.gardenTrack('FormSubmitAttempt');
 
+    // FormSubmit correctly refuses loopback URLs because they are not public web
+    // pages. Let local reviewers check the booking experience without pretending
+    // that an inquiry was delivered.
+    if (isLocalPreview()) {
+      showLocalBookingPreview(form, successEl);
+      return;
+    }
+
     // Submit to FormSubmit.co
     var formData = new FormData(form);
 
@@ -178,6 +186,24 @@ function initForm() {
       setTimeout(function() { errorMsg.remove(); }, 5000);
     });
   });
+}
+
+function isLocalPreview() {
+  var host = String(window.location && window.location.hostname || '').toLowerCase();
+  return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+}
+
+function showLocalBookingPreview(form, successEl) {
+  form.style.display = 'none';
+  successEl.classList.add('active');
+  var title = successEl.querySelector('h3');
+  var message = successEl.querySelector('h3 + p');
+  if (title) title.textContent = 'Preview: choose a consultation time.';
+  if (message) message.textContent = 'This local preview does not send an inquiry. On the live site, the calendar appears after a quote request is delivered.';
+  mountBookingScheduler(successEl);
+  successEl.setAttribute('tabindex', '-1');
+  successEl.focus({ preventScroll: true });
+  successEl.scrollIntoView({ behavior: 'instant', block: 'start' });
 }
 
 function mountBookingScheduler(successEl) {

@@ -33,7 +33,7 @@ test('GPC, Do Not Track and localhost prevent advertising SDK load', () => {
   }
 });
 
-async function submitResult({ success = true, httpOK = true, jsonFails = false, consent = false } = {}) {
+async function submitResult({ success = true, httpOK = true, jsonFails = false, consent = false, host = 'thegardencoffeecart.com' } = {}) {
   const handlers = {}, requests = [], events = [];
   let shown = false, errors = 0, focused = false;
   const classes = { add() {}, remove() {} };
@@ -41,7 +41,7 @@ async function submitResult({ success = true, httpOK = true, jsonFails = false, 
   const button = { classList: classes, parentNode: { insertBefore() { errors++; } } };
   const successEl = { classList: { add() { shown = true; } }, setAttribute() {}, focus() { focused = true; }, scrollIntoView() {}, querySelector() { return null; } };
   const form = { action: 'https://formsubmit.co/test@example.com', style: {}, dataset: {}, appendChild() {}, querySelectorAll() { return []; }, querySelector(s) { return ({ '[data-date-unconfirmed]': unknown, '#event-date': date, '#email': { value: 'test@example.com' }, '#event-type': { value: 'wedding' }, '.quote-form__submit': button })[s] || null; }, addEventListener(name, fn) { handlers[name] = fn; } };
-  const context = { document: { getElementById: id => id === 'quoteForm' ? form : successEl, querySelectorAll: () => [], cookie: '', createElement: () => ({ style: {}, setAttribute() {}, remove() {} }) }, window: { location: { search: '', origin: 'https://example.com', pathname: '/weddings/' }, gardenAdvertisingAllowed: () => consent, fbq(...args) { events.push(args); } }, FormData: class {}, URLSearchParams, setTimeout() {}, fetch: async (url, options) => { requests.push({ url, options }); return { ok: httpOK, json: async () => { if (jsonFails) throw Error('Not JSON'); return { success }; } }; } };
+  const context = { document: { getElementById: id => id === 'quoteForm' ? form : successEl, querySelectorAll: () => [], cookie: '', createElement: () => ({ style: {}, setAttribute() {}, remove() {} }) }, window: { location: { search: '', origin: 'https://example.com', pathname: '/weddings/', hostname: host }, gardenAdvertisingAllowed: () => consent, fbq(...args) { events.push(args); } }, FormData: class {}, URLSearchParams, setTimeout() {}, fetch: async (url, options) => { requests.push({ url, options }); return { ok: httpOK, json: async () => { if (jsonFails) throw Error('Not JSON'); return { success }; } }; } };
   vm.runInNewContext(read('js/form.js'), context);
   context.initForm();
   assert.equal(date.disabled, true); assert.equal(date.required, false);
@@ -57,6 +57,12 @@ test('Accepted form shows booking step once; no CAPI without consent', async () 
   assert(r.shown && r.focused);
   assert.equal(r.requests.length, 1);
   assert.equal(r.requests[0].url, 'https://formsubmit.co/ajax/test@example.com');
+  assert.equal(r.events.length, 0);
+});
+test('Local preview shows the calendar without sending a false inquiry', async () => {
+  const r = await submitResult({ host: '127.0.0.1', consent: true });
+  assert(r.shown && r.focused);
+  assert.equal(r.requests.length, 0);
   assert.equal(r.events.length, 0);
 });
 test('Consented inquiry uses one matching browser/server event ID', async () => {
