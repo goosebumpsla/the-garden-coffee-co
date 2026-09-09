@@ -82,36 +82,100 @@
 
     var reelVideos = document.querySelectorAll('.w-reel-video');
     if (reelVideos.length) {
+      var previewsPaused = false;
+      var visibleReels = new Set();
+      var dialog = document.createElement('dialog');
+      dialog.className = 'w-film-dialog';
+      dialog.setAttribute('aria-label', 'Wedding film');
+      dialog.innerHTML = '<button type="button" class="w-film-close" aria-label="Close wedding film">Close ×</button><video controls muted playsinline preload="none" aria-label="Wedding film, no sound"></video>';
+      document.body.appendChild(dialog);
+      var player = dialog.querySelector('video');
+      player.muted = true;
+      var opener;
+      var pauseButton = document.createElement('button');
+      pauseButton.type = 'button';
+      pauseButton.className = 'w-previews-toggle';
+      document.querySelector('.w-real-events__note').before(pauseButton);
+      function loadReel(video) {
+        var source = video.querySelector('source[data-src]');
+        if (source) {
+          source.src = source.dataset.src;
+          source.removeAttribute('data-src');
+          video.load();
+        }
+      }
+      function updatePreviews() {
+        pauseButton.hidden = !allowMotion.matches;
+        pauseButton.textContent = previewsPaused ? 'Play previews' : 'Pause previews';
+        reelVideos.forEach(function(video) {
+          if (visibleReels.has(video) && !previewsPaused && allowMotion.matches && !document.hidden && !dialog.open) {
+            loadReel(video);
+            video.play().catch(function() {});
+          } else video.pause();
+        });
+      }
+      pauseButton.addEventListener('click', function() { previewsPaused = !previewsPaused; updatePreviews(); });
+      dialog.querySelector('button').addEventListener('click', function() { dialog.close(); });
+      dialog.addEventListener('click', function(event) {
+        if (event.target === dialog) {
+          var rect = dialog.getBoundingClientRect();
+          if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+        }
+      });
+      dialog.addEventListener('close', function() {
+        player.pause();
+        player.removeAttribute('src');
+        player.load();
+        document.body.classList.remove('w-film-open');
+        updatePreviews();
+        if (opener) opener.focus({ preventScroll: true });
+      });
       var reelObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           var video = entry.target;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.18) {
-            var source = video.querySelector('source[data-src]');
-            if (source) {
-              source.src = source.dataset.src;
-              source.removeAttribute('data-src');
-              video.load();
-            }
+            visibleReels.add(video);
           } else {
-            video.pause();
+            visibleReels.delete(video);
           }
         });
+        updatePreviews();
       }, { rootMargin: '0px', threshold: 0.18 });
 
       reelVideos.forEach(function(video) {
-        video.controls = true;
+        video.controls = false;
         video.muted = true;
-        video.addEventListener('play', function() {
-          reelVideos.forEach(function(other) { if (other !== video) other.pause(); });
+        video.loop = true;
+        var frame = document.createElement('div');
+        frame.className = 'w-reel-frame';
+        video.before(frame);
+        frame.appendChild(video);
+        var openButton = document.createElement('button');
+        openButton.type = 'button';
+        openButton.className = 'w-film-open-button';
+        openButton.textContent = 'Watch film ↗';
+        var label = document.getElementById(video.getAttribute('aria-describedby'));
+        openButton.setAttribute('aria-label', 'Watch ' + label.textContent + ' — no sound');
+        frame.appendChild(openButton);
+        openButton.addEventListener('click', function() {
+          opener = openButton;
+          var source = video.querySelector('source');
+          player.src = source.dataset.src || source.src;
+          player.poster = video.poster;
+          player.muted = true;
+          dialog.showModal();
+          document.body.classList.add('w-film-open');
+          updatePreviews();
+          player.play().catch(function() {});
           if (typeof window.gardenTrack === 'function') {
             window.gardenTrack('WeddingVideoPlay', { video: video.getAttribute('aria-describedby') });
           }
         });
         reelObserver.observe(video);
       });
-      document.addEventListener('visibilitychange', function() {
-        if (document.hidden) reelVideos.forEach(function(video) { video.pause(); });
-      });
+      document.addEventListener('visibilitychange', function() { if (document.hidden) player.pause(); updatePreviews(); });
+      allowMotion.addEventListener('change', updatePreviews);
+      updatePreviews();
     }
   }
 

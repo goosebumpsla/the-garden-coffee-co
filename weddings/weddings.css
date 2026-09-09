@@ -271,6 +271,15 @@ h1, h2 { font-weight: 600; }
 }
 
 /* Keep portrait footage intact and native player controls unobstructed. */
+.w-reel-frame { position: relative; }
+.w-film-open-button { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: flex-end; padding: 1.25rem; border: 0; background: linear-gradient(transparent 75%, rgba(0,0,0,.45)); color: white; font: 500 .85rem var(--sans); cursor: pointer; }
+.w-film-open-button:focus-visible { outline: 3px solid var(--sage-dark); outline-offset: 4px; }
+.w-previews-toggle { margin-top: 1rem; padding: .65rem 1rem; border: 1px solid var(--sage-dark); border-radius: 999px; color: var(--ink); background: transparent; font: inherit; cursor: pointer; }
+.w-film-dialog { position: fixed; inset: 0; margin: auto; width: min(480px, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); padding: .75rem; border: 0; background: var(--paper); }
+.w-film-dialog::backdrop { background: rgba(15,20,16,.85); }
+.w-film-dialog video { display: block; width: 100%; max-height: calc(100dvh - 7rem); background: #111; }
+.w-film-close { display: block; margin: 0 0 .75rem auto; min-height: 44px; padding: .5rem 1rem; border: 0; border-radius: 999px; background: var(--sage-dark); color: white; font: inherit; cursor: pointer; }
+body.w-film-open { overflow: hidden; }
 .w-reel-card { aspect-ratio: auto; overflow: visible; background: transparent; }
 .w-reel-card::after { display: none; }
 .w-reel-card video { display: block; height: auto; aspect-ratio: 9 / 16; object-fit: contain; background: var(--cream-dark); }
