@@ -157,6 +157,12 @@ h1, h2 { font-weight: 600; }
 .w-testimonials figure::before { content: '“'; display: block; margin-bottom: .7rem; color: var(--gold); font: 400 2.4rem/.55 var(--serif); }
 .w-testimonials blockquote { margin: 0; color: var(--ink); font: 400 clamp(1.25rem, 1.8vw, 1.6rem)/1.25 var(--serif); }
 .w-testimonials figcaption { margin-top: auto; padding-top: 1.5rem; color: var(--sage-dark); font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.w-final-cta { display: flex; flex-direction: column; align-items: center; padding: clamp(4.5rem, 8vw, 7rem) 1.5rem; background: var(--ink); color: rgba(255,255,255,.78); text-align: center; }
+.w-final-cta .w-eyebrow { color: #d6c3a6; }
+.w-final-cta h2 { max-width: 720px; margin: .65rem 0 1rem; color: #fff; font-size: clamp(2.7rem, 5vw, 5rem); letter-spacing: -.04em; line-height: .96; }
+.w-final-cta > p:not(.w-eyebrow) { max-width: 475px; margin: 0 0 1.8rem; font-size: .95rem; font-weight: 300; }
+.w-final-cta .w-button { background: #fff; color: var(--ink); }
+.w-final-cta .w-button:hover { background: var(--cream-dark); }
 
 .w-quote { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(3rem, 8vw, 8rem); padding: clamp(5rem, 9vw, 8rem) max(1.5rem, calc((100% - 1180px) / 2)); background: var(--ink); color: rgba(255,255,255,.76); }
 .w-quote .w-eyebrow { color: #d6c3a6; }
