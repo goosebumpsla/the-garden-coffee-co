@@ -31,7 +31,8 @@
 
   /* Spacing */
   --section-padding: clamp(5rem, 12vh, 10rem);
-  --container-max: 1280px;
+  /* A wider desktop measure prevents the editorial layout feeling stranded on large screens. */
+  --container-max: 1440px;
   --container-padding: clamp(1.25rem, 4vw, 3rem);
 
   /* Transitions */
@@ -329,7 +330,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: 46% 54%;
+  grid-template-columns: 50% 50%;
   min-height: clamp(640px, calc(100svh - 88px), 760px);
   overflow: hidden;
   background: var(--color-bg);
@@ -385,7 +386,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   flex-direction: column;
   justify-content: center;
   width: auto;
-  padding: clamp(3.5rem, 7vh, 5.5rem) clamp(2rem, 4.5vw, 4.5rem) clamp(3.5rem, 7vh, 5.5rem) max(1.5rem, calc((100vw - 1180px) / 2));
+  padding: clamp(3.5rem, 7vh, 5.5rem) clamp(2rem, 4.5vw, 4.5rem) clamp(3.5rem, 7vh, 5.5rem) max(1.5rem, calc((100vw - 1440px) / 2));
   background: var(--color-bg);
   text-align: left;
 }
@@ -401,7 +402,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 
 .hero__title {
   font-family: var(--font-serif);
-  max-width: 510px;
+  max-width: 590px;
   margin-bottom: 1.25rem;
   color: #202820;
   font-size: clamp(3.2rem, 4.5vw, 4.5rem);
