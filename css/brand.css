@@ -47,18 +47,23 @@ body { background: var(--paper); }
   .site-nav { display: none; }
   .site-header .site-quote { margin-left: auto; }
   .site-menu { display: block; order: 3; }
-  .site-menu summary { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; cursor: pointer; list-style: none; font-size: .8rem; }
+  .site-menu summary { display: flex; align-items: center; justify-content: center; position: relative; width: 44px; min-width: 44px; min-height: 44px; cursor: pointer; list-style: none; color: transparent; font-size: 0; }
   .site-menu summary::-webkit-details-marker { display: none; }
+  .site-menu summary::before, .site-menu summary::after { content: ''; position: absolute; width: 22px; height: 1.5px; border-radius: 99px; background: var(--ink); transition: transform .18s ease, opacity .18s ease; }
+  .site-menu summary::before { transform: translateY(-4px); box-shadow: 0 8px 0 var(--ink); }
+  .site-menu summary::after { opacity: 0; }
+  .site-menu[open] summary::before { transform: rotate(45deg); box-shadow: none; }
+  .site-menu[open] summary::after { opacity: 1; transform: rotate(-45deg); }
   .site-menu nav { position: absolute; top: 100%; left: 0; right: 0; display: grid; padding: 1rem 1.5rem; border-bottom: 1px solid #26302724; background: #fdfbf7; box-shadow: 0 10px 20px #0001; }
   .site-menu nav a { display: flex; align-items: center; min-height: 44px; }
   .site-footer__top, .site-footer__bottom { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 520px) {
   html { scroll-padding-top: 84px; }
-  .site-header { min-height: 68px; gap: .5rem; padding: .4rem 1rem; }
+  .site-header { min-height: 68px; gap: .5rem; padding: .4rem 1.25rem; }
   .site-logo { width: clamp(133px, 39.2vw, 154px); }
   .site-header .site-quote { min-height: 40px; padding: .6rem .65rem; font-size: .6rem; letter-spacing: .025em; }
-  .site-menu summary { font-size: .75rem; }
+  .site-menu summary { width: 42px; min-width: 42px; }
 }
 @media (max-width: 360px) {
   .site-logo { width: 120px; }

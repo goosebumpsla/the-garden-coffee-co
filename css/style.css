@@ -1301,6 +1301,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 .quote__container {
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-areas: "form" "image";
   gap: 3rem;
   max-width: var(--container-max);
   margin: 0 auto;
@@ -1310,9 +1311,13 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
 @media (min-width: 768px) {
   .quote__container {
     grid-template-columns: 1fr 1fr;
+    grid-template-areas: "form image";
     gap: 4rem;
   }
 }
+
+.quote__form-wrapper { grid-area: form; }
+.quote__image { grid-area: image; }
 
 .quote__image {
   border-radius: 4px;
@@ -1335,6 +1340,13 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   font-size: var(--font-body);
   color: var(--color-text-muted);
   margin-bottom: 2.5rem;
+}
+
+.quote__reassurance {
+  margin: -1.15rem 0 2rem;
+  color: #556055;
+  font-size: .82rem;
+  line-height: 1.5;
 }
 
 /* Form */
@@ -1376,6 +1388,31 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   border-radius: 0;
   -webkit-appearance: none;
 }
+
+.form-date-help {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-top: -.8rem;
+  color: #556055;
+  font-size: .84rem;
+}
+
+.form-date-help input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-green);
+}
+
+.quote-form__details summary {
+  cursor: pointer;
+  color: #3f4d3f;
+  font-size: .86rem;
+  font-weight: 600;
+}
+
+.quote-form__details summary span { color: var(--color-text-muted); font-weight: 400; }
+.quote-form__details[open] summary { margin-bottom: .9rem; }
 
 .form-group textarea {
   resize: vertical;
@@ -1790,7 +1827,7 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   }
 
   .quote__image {
-    aspect-ratio: 16 / 10;
+    display: none;
   }
 
   .quote__heading {
@@ -1800,6 +1837,8 @@ html { scroll-behavior: auto; scroll-padding-top: 108px; }
   .quote__subtext {
     text-align: center;
   }
+
+  .quote__reassurance { text-align: center; }
 
   .form-row {
     grid-template-columns: 1fr;
