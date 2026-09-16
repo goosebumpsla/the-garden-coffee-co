@@ -49,6 +49,9 @@
   function save(value) {
     choice = value;
     try { localStorage.setItem(key, value); } catch (_) {}
+    if (typeof window.gardenGoogleAnalyticsConsent === 'function') {
+      window.gardenGoogleAnalyticsConsent(value === 'accepted' && !signal);
+    }
     if (!allowed()) {
       if (window.fbq) window.fbq('consent', 'revoke');
       clearAdCookies();
@@ -66,7 +69,7 @@
     panel = document.createElement('aside');
     panel.className = 'privacy-choice'; panel.setAttribute('aria-label', 'Optional advertising tracking');
     panel.hidden = Boolean(choice) || signal;
-    panel.innerHTML = '<p><strong>Your privacy choices</strong>We use optional Meta tracking to measure advertising. You can request a quote without it. <a href="/privacy/">Privacy notice</a></p><div><button type="button" data-choice="declined">Continue without tracking</button><button type="button" data-choice="accepted">Allow advertising tracking</button></div>';
+    panel.innerHTML = '<p><strong>Your privacy choices</strong>We use optional Google Analytics and Meta tracking to understand advertising performance. You can request a quote without it. <a href="/privacy/">Privacy notice</a></p><div><button type="button" data-choice="declined">Continue without tracking</button><button type="button" data-choice="accepted">Allow tracking</button></div>';
     document.body.appendChild(panel);
     panel.querySelectorAll('[data-choice]').forEach(function(button) {
       button.addEventListener('click', function() { save(button.dataset.choice); });
