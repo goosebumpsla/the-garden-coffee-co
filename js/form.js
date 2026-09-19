@@ -34,6 +34,37 @@ function initForm() {
     dateUnknown.addEventListener('change', syncDateRequirement);
     syncDateRequirement();
   }
+  // An event that is not on the list gets named by the guest, so a quote is
+  // never built from the closest-looking option.
+  var eventTypeField = form.querySelector('#event-type');
+  var otherGroup = form.querySelector('[data-event-type-other]');
+  var otherInput = form.querySelector('#event-type-other');
+  if (eventTypeField && otherGroup && otherInput) {
+    function syncEventTypeOther() {
+      var isOther = eventTypeField.value === 'other';
+      otherGroup.hidden = !isOther;
+      otherInput.disabled = !isOther;
+      otherInput.required = isOther;
+      if (!isOther) otherInput.value = '';
+    }
+    eventTypeField.addEventListener('change', syncEventTypeOther);
+    syncEventTypeOther();
+  }
+
+  // The chosen event type reaches the inbox in the subject line, so a booking
+  // made from a wedding or corporate page is not read as that kind of event.
+  var subjectField = form.querySelector('input[name="_subject"]');
+  if (eventTypeField && subjectField && eventTypeField.tagName === 'SELECT') {
+    var defaultSubject = subjectField.value;
+    eventTypeField.addEventListener('change', function() {
+      var option = eventTypeField.options[eventTypeField.selectedIndex];
+      var label = option ? option.textContent.split('\u2014')[0].trim() : '';
+      subjectField.value = label
+        ? 'New Quote Request (' + label + ') \u2014 The Garden Coffee Co.'
+        : defaultSubject;
+    });
+  }
+
   var formStarted = false;
   form.addEventListener('input', function() {
     if (formStarted) return;

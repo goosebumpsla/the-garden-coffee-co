@@ -263,7 +263,6 @@
           <input type="hidden" name="_subject" value="New Wedding Quote Request — The Garden Coffee Co.">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">
-          <input type="hidden" id="event-type" name="event-type" value="wedding">
           <label class="w-honeypot">Leave this field blank<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
 
           <div class="w-form-row">
@@ -277,6 +276,10 @@
           <div class="w-form-row">
             <div class="form-group"><label for="guest-count">Estimated guests *</label><input type="number" id="guest-count" name="guest-count" min="1" max="1000" required></div>
             <div class="form-group"><label for="location">Venue or city (if known)</label><input type="text" id="location" name="location" placeholder="Still deciding? Leave this blank."></div>
+          </div>
+          <div class="w-form-row">
+            <div class="form-group"><label for="event-type">Event type *</label><select id="event-type" name="event-type" required><optgroup label="Weddings &amp; celebrations"><option value="wedding" selected>Wedding</option><option value="engagement-shower">Engagement or Bridal Shower</option><option value="baby-shower">Baby Shower or Gender Reveal</option><option value="birthday">Birthday Party</option><option value="graduation">Graduation</option><option value="celebration-of-life">Anniversary or Celebration of Life</option></optgroup><optgroup label="Private &amp; social"><option value="private-party">Private Event or Party</option><option value="holiday-party">Holiday Party</option></optgroup><optgroup label="Corporate &amp; brand"><option value="corporate">Corporate Event</option><option value="brand-activation">Brand Activation or Pop-Up</option><option value="conference">Conference or Trade Show</option><option value="grand-opening">Grand Opening</option><option value="production">Film or Production Set</option></optgroup><optgroup label="Something else"><option value="other">Other &mdash; tell us below</option></optgroup></select></div>
+            <div class="form-group" id="event-type-other-group" data-event-type-other hidden><label for="event-type-other">Tell us what kind of event *</label><input type="text" id="event-type-other" name="event-type-other" maxlength="80" disabled></div>
           </div>
           <button type="submit" class="w-button quote-form__submit"><span class="btn__text">Request my wedding quote</span><span class="btn__loader">Sending…</span></button>
           <p class="w-form-note">No commitment. A planning call is optional. See our <a href="/privacy/">privacy notice</a> for how we handle inquiries and optional advertising measurement.</p>
