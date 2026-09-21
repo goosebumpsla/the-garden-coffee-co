@@ -47,6 +47,7 @@ function doPost(event) {
 
     const row = findAvailableRow_(sheet);
     if (!row) throw new Error('Lead tracker is full; extend the template rows');
+    const leadNumber = reserveLeadNumber_(sheet);
 
     sheet.getRange(row, 1, 1, 16).setValues([[
       receivedAt,
@@ -65,6 +66,18 @@ function doPost(event) {
       '',
       'Contact lead',
       lead.notes,
+    ]]);
+    // Q:R contain Sheet formulas. Attribution fields live in S:Z so the
+    // operational workflow and its formulas remain untouched.
+    sheet.getRange(row, 19, 1, 8).setValues([[
+      leadNumber,
+      lead.formSource,
+      lead.channel,
+      lead.campaign,
+      lead.adSet,
+      lead.adCreative,
+      lead.landingPage,
+      lead.campaignId,
     ]]);
 
     SpreadsheetApp.flush();
@@ -95,6 +108,13 @@ function normalizeLead_(data, receivedAt) {
   const utmSource = clean_(data.utm_source, 180);
   const utmMedium = clean_(data.utm_medium, 180);
   const paidSocial = /facebook|instagram|meta/i.test(utmSource) || /paid[_ -]?social/i.test(utmMedium);
+  const channel = paidSocial
+    ? 'Paid Meta'
+    : /google/i.test(utmSource) && /organic/i.test(utmMedium)
+      ? 'Organic search'
+      : utmSource
+        ? 'Other tracked campaign'
+        : 'Direct / organic unknown';
   const eventDate = data['date-not-confirmed'] === 'yes' ? '' : parseDate_(data['event-date']);
   const notes = [];
   const message = clean_(data.message, 500);
@@ -102,11 +122,17 @@ function normalizeLead_(data, receivedAt) {
   if (data['date-not-confirmed'] === 'yes') notes.push('Event date not confirmed');
 
   const campaign = clean_(data.utm_campaign, 180);
+  const adSet = clean_(data.utm_term, 180);
+  const adCreative = clean_(data.utm_content, 180);
+  const campaignId = clean_(data.utm_id, 80);
   const landingPage = clean_(data['landing-page'], 250);
   const attribution = [
     utmSource && 'utm_source=' + utmSource,
     utmMedium && 'utm_medium=' + utmMedium,
     campaign && 'utm_campaign=' + campaign,
+    adSet && 'utm_term=' + adSet,
+    adCreative && 'utm_content=' + adCreative,
+    campaignId && 'utm_id=' + campaignId,
     landingPage && 'landing_page=' + landingPage,
   ].filter(Boolean).join(', ');
   if (attribution) notes.push(attribution);
@@ -121,6 +147,13 @@ function normalizeLead_(data, receivedAt) {
     guests: parseGuestCount_(data['guest-count']),
     location: clean_(data.location, 200),
     source: paidSocial ? 'Meta ads / website' : 'Website form',
+    formSource: 'FormSubmit',
+    channel: channel,
+    campaign: campaign,
+    adSet: adSet,
+    adCreative: adCreative,
+    landingPage: landingPage,
+    campaignId: campaignId,
     notes: clean_(notes.join(' | '), 900),
   };
 }
@@ -130,6 +163,20 @@ function findAvailableRow_(sheet) {
   const names = sheet.getRange(TRACKER.firstDataRow, 2, height, 1).getDisplayValues();
   const offset = names.findIndex(function(row) { return !String(row[0] || '').trim(); });
   return offset < 0 ? null : TRACKER.firstDataRow + offset;
+}
+
+function reserveLeadNumber_(sheet) {
+  const properties = PropertiesService.getScriptProperties();
+  const height = TRACKER.lastTemplateRow - TRACKER.firstDataRow + 1;
+  const existingIds = sheet.getRange(TRACKER.firstDataRow, 19, height, 1).getDisplayValues();
+  const highestExisting = existingIds.reduce(function(highest, row) {
+    const match = String(row[0] || '').match(/^GCC-(\d+)$/);
+    return match ? Math.max(highest, Number(match[1])) : highest;
+  }, 0);
+  const stored = Number(properties.getProperty('lastLeadNumber'));
+  const nextNumber = Math.max(Number.isInteger(stored) ? stored : 0, highestExisting) + 1;
+  properties.setProperty('lastLeadNumber', String(nextNumber));
+  return 'GCC-' + String(nextNumber).padStart(4, '0');
 }
 
 function parseDate_(value) {

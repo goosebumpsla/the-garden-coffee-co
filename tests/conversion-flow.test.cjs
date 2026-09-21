@@ -33,6 +33,15 @@ test('GPC, Do Not Track and localhost prevent advertising SDK load', () => {
   }
 });
 
+test('quote forms preserve campaign, ad set, creative, and campaign ID attribution', () => {
+  const formScript = read('js/form.js');
+  for (const field of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id']) {
+    assert.match(formScript, new RegExp("'" + field + "'"));
+  }
+  const webhook = read('integrations/formsubmit-webhook.gs');
+  for (const field of ['campaign', 'adSet', 'adCreative', 'campaignId']) assert.match(webhook, new RegExp(field + ':'));
+});
+
 async function submitResult({ success = true, httpOK = true, jsonFails = false, consent = false, host = 'thegardencoffeecart.com' } = {}) {
   const handlers = {}, requests = [], events = [];
   let shown = false, errors = 0, focused = false;
