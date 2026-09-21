@@ -42,6 +42,31 @@ test('quote forms preserve campaign, ad set, creative, and campaign ID attributi
   for (const field of ['campaign', 'adSet', 'adCreative', 'campaignId']) assert.match(webhook, new RegExp(field + ':'));
 });
 
+test('lead webhook accepts nested JSON, flat JSON, and form-encoded request fields', () => {
+  const context = { console };
+  vm.runInNewContext(read('integrations/formsubmit-webhook.gs'), context);
+  const token = 'token-value';
+  const nested = context.parseRequest_({
+    parameter: { token },
+    postData: { contents: JSON.stringify({ form_data: { name: 'Nested', email: 'nested@example.com' } }) },
+  });
+  const flat = context.parseRequest_({
+    parameter: { token },
+    postData: { contents: JSON.stringify({ name: 'Flat', email: 'flat@example.com' }) },
+  });
+  const encoded = context.parseRequest_({
+    parameter: { token, name: 'Encoded', email: 'encoded@example.com' },
+    postData: { contents: 'name=Encoded&email=encoded%40example.com' },
+  });
+
+  assert.deepEqual(JSON.parse(JSON.stringify(nested.formData)), { name: 'Nested', email: 'nested@example.com' });
+  assert.deepEqual(JSON.parse(JSON.stringify(flat.formData)), { name: 'Flat', email: 'flat@example.com' });
+  assert.deepEqual(JSON.parse(JSON.stringify(encoded.formData)), { name: 'Encoded', email: 'encoded@example.com' });
+  assert.equal(nested.token, token);
+  assert.equal(flat.token, token);
+  assert.equal(encoded.token, token);
+});
+
 async function submitResult({ success = true, httpOK = true, jsonFails = false, consent = false, host = 'thegardencoffeecart.com' } = {}) {
   const handlers = {}, requests = [], events = [];
   let shown = false, errors = 0, focused = false;

@@ -19,19 +19,22 @@ function doPost(event) {
   lock.waitLock(10000);
 
   try {
-    if (!event || !event.parameter || event.parameter.token !== TRACKER.webhookToken) {
+    const request = parseRequest_(event);
+    if (request.token !== TRACKER.webhookToken) {
+      console.warn('Lead webhook rejected: invalid token');
       return jsonResponse_({ ok: false, error: 'Invalid token' });
     }
 
-    const payload = JSON.parse((event.postData && event.postData.contents) || '{}');
-    const formData = payload && payload.form_data;
+    const formData = request.formData;
     if (!formData || typeof formData !== 'object' || Array.isArray(formData)) {
+      console.warn('Lead webhook rejected: unsupported payload shape');
       return jsonResponse_({ ok: false, error: 'Invalid FormSubmit payload' });
     }
 
     const receivedAt = new Date();
     const lead = normalizeLead_(formData, receivedAt);
     if (!lead.name || !lead.email || !isEmail_(lead.email)) {
+      console.warn('Lead webhook rejected: missing name or valid email');
       return jsonResponse_({ ok: false, error: 'Name and valid email are required' });
     }
 
@@ -90,6 +93,58 @@ function doPost(event) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * FormSubmit has used both JSON and application/x-www-form-urlencoded webhook
+ * bodies. Accept the nested JSON format, a flat JSON object, or Apps Script's
+ * parsed request parameters so a successful form email cannot silently miss
+ * the tracker because the delivery format changed.
+ */
+function parseRequest_(event) {
+  const parameters = event && event.parameter && typeof event.parameter === 'object'
+    ? event.parameter
+    : {};
+  const raw = event && event.postData ? String(event.postData.contents || '') : '';
+  let payload = {};
+
+  if (raw.trim()) {
+    try {
+      payload = JSON.parse(raw);
+    } catch (error) {
+      // URL-encoded bodies are exposed through event.parameter by Apps Script.
+      payload = {};
+    }
+  }
+
+  const payloadObject = isPlainObject_(payload) ? payload : {};
+  const token = String(parameters.token || payloadObject.token || payloadObject.webhook_token || '');
+  let formData = isPlainObject_(payloadObject.form_data)
+    ? payloadObject.form_data
+    : isPlainObject_(payloadObject.data)
+      ? payloadObject.data
+      : stripRequestMetadata_(payloadObject);
+
+  if (!Object.keys(formData).length) {
+    formData = stripRequestMetadata_(parameters);
+  }
+
+  return { token: token, formData: formData };
+}
+
+function isPlainObject_(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function stripRequestMetadata_(value) {
+  if (!isPlainObject_(value)) return {};
+  const result = {};
+  Object.keys(value).forEach(function(key) {
+    if (key !== 'token' && key !== 'webhook_token' && key !== 'form_data' && key !== 'data') {
+      result[key] = value[key];
+    }
+  });
+  return result;
 }
 
 function normalizeLead_(data, receivedAt) {
