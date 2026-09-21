@@ -2,7 +2,7 @@ const HOSTS = new Set(['thegardencoffeecart.com', 'www.thegardencoffeecart.com']
 const API_PATHS = new Set(['/api/meta-lead', '/.netlify/functions/meta-lead']);
 const OPS_API_PATHS = new Set(['/api/ops/leads', '/api/ops/update']);
 const OPS_ACTIONS = new Set(['contacted', 'good-response', 'quote-sent', 'booked', 'closed', 'follow-up', 'assign']);
-const OPS_OWNERS = new Set(['', 'Albert', 'DS']);
+const OPS_OWNERS = new Set(['', 'Albert', 'Taylor']);
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const hash = async value => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))), byte => byte.toString(16).padStart(2, '0')).join('');
 const preventPreviewIndexing = response => {
@@ -149,9 +149,10 @@ export async function opsApi(request, env, send = fetch) {
       if (redirected.protocol !== 'https:' || redirected.hostname !== 'script.googleusercontent.com') throw new Error('Invalid upstream redirect');
       upstream = await send(redirected.toString(), {
         method: 'GET',
-        redirect: 'error',
+        redirect: 'manual',
         signal: AbortSignal.timeout(25000),
       });
+      if ([301, 302, 303, 307, 308].includes(upstream.status)) throw new Error('Unexpected upstream redirect');
     }
     if (!upstream.ok) {
       console.error('Lead tracker upstream status', upstream.status);
@@ -162,7 +163,7 @@ export async function opsApi(request, env, send = fetch) {
     if (data.ok === false) return json(400, { error: String(data.error || 'Unable to update lead') });
     return json(200, data);
   } catch (error) {
-    console.error('Lead tracker proxy error', error && error.name ? error.name : 'unknown');
+    console.error('Lead tracker proxy error', error && error.name ? error.name : 'unknown', error && error.message ? error.message : '');
     return json(502, { error: 'Lead tracker request failed', diagnostic: error && error.name ? String(error.name) : 'unknown' });
   }
 }

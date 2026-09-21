@@ -220,39 +220,39 @@ function updateLeadInboxRecord_(leadId, action) {
     const owner = ownerFromAction_(action, String(workflow[0] || ''));
 
     if (type === 'contacted') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[1] = 'Contacted';
       workflow[2] = '';
       workflow[3] = now;
       workflow[4] = addDays_(now, 1);
       workflow[5] = 'Follow up';
     } else if (type === 'good-response') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[1] = 'Replied';
       workflow[2] = 'Good response';
       workflow[3] = now;
       workflow[4] = addDays_(now, 1);
       workflow[5] = 'Follow up';
     } else if (type === 'quote-sent') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[1] = 'Quote sent';
       workflow[3] = now;
       workflow[4] = addDays_(now, 2);
       workflow[5] = 'Follow up';
     } else if (type === 'booked') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[1] = 'Won';
       workflow[3] = now;
       workflow[4] = '';
       workflow[5] = '';
     } else if (type === 'closed') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[1] = 'Lost';
       workflow[3] = now;
       workflow[4] = '';
       workflow[5] = '';
     } else if (type === 'follow-up') {
-      workflow[0] = owner || 'DS';
+      workflow[0] = owner || 'Taylor';
       workflow[4] = parseIsoDate_(action.date);
       workflow[5] = 'Follow up';
     } else if (type === 'assign') {
@@ -287,7 +287,7 @@ function classifyQueue_(lead) {
 function ownerFromAction_(action, currentOwner) {
   if (!Object.prototype.hasOwnProperty.call(action, 'owner')) return currentOwner;
   const owner = String(action.owner || '');
-  if (owner !== '' && owner !== 'Albert' && owner !== 'DS') throw new Error('Invalid owner');
+  if (owner !== '' && owner !== 'Albert' && owner !== 'Taylor') throw new Error('Invalid owner');
   return owner;
 }
 
@@ -365,7 +365,7 @@ function syncGmailLeadReplies_() {
         const lastContact = current[3] instanceof Date ? current[3].getTime() : 0;
 
         if (events.inbound > lastContact && events.inbound >= events.outbound) {
-          current[0] = current[0] || 'DS';
+          current[0] = current[0] || 'Taylor';
           current[1] = 'Replied';
           current[2] = 'Client replied';
           current[3] = new Date(events.inbound);
@@ -373,7 +373,7 @@ function syncGmailLeadReplies_() {
           current[5] = 'Review reply';
           updates += 1;
         } else if (events.outbound > lastContact && (stage === '' || stage === 'new' || stage === 'contacted')) {
-          current[0] = current[0] || 'DS';
+          current[0] = current[0] || 'Taylor';
           current[1] = 'Contacted';
           current[2] = '';
           current[3] = new Date(events.outbound);

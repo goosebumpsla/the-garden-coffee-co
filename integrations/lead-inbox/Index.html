@@ -128,7 +128,7 @@
           <div class="filters">
             <input class="search" id="searchInput" type="search" autocomplete="off" placeholder="Search name, email, phone or event…" aria-label="Search leads">
             <select class="owner-filter" id="ownerFilter" aria-label="Filter by owner">
-              <option value="">All owners</option><option value="Albert">Albert</option><option value="DS">DS</option><option value="Unassigned">Unassigned</option>
+              <option value="">All owners</option><option value="Albert">Albert</option><option value="Taylor">Taylor</option><option value="Unassigned">Unassigned</option>
             </select>
           </div>
           <div class="updated" id="updatedText">Loading tracker…</div>
@@ -271,13 +271,13 @@
         const actions = el('div', 'actions');
         const ownerSelect = el('select', 'owner-select');
         ownerSelect.setAttribute('aria-label', 'Owner for ' + lead.name);
-        [['', 'Unassigned'], ['Albert', 'Albert'], ['DS', 'DS']].forEach(optionData => {
+        [['', 'Unassigned'], ['Albert', 'Albert'], ['Taylor', 'Taylor']].forEach(optionData => {
           const option = el('option'); option.value = optionData[0]; option.textContent = optionData[1]; ownerSelect.append(option);
         });
-        ownerSelect.value = lead.owner === 'Albert' || lead.owner === 'DS' ? lead.owner : '';
+        ownerSelect.value = lead.owner === 'Albert' || lead.owner === 'Taylor' ? lead.owner : '';
         ownerSelect.addEventListener('change', () => save(lead.id, { type: 'assign', owner: ownerSelect.value }));
         actions.append(ownerSelect);
-        const selectedOwner = () => ownerSelect.value || 'DS';
+        const selectedOwner = () => ownerSelect.value || 'Taylor';
         actions.append(actionButton('Contacted', 'contacted', lead.id, 'primary', selectedOwner));
         actions.append(actionButton('Good response', 'good-response', lead.id, '', selectedOwner));
         actions.append(actionButton('Quote sent', 'quote-sent', lead.id, '', selectedOwner));

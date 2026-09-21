@@ -32,6 +32,8 @@ test('lead inbox exposes the requested queues and actions', () => {
   assert.match(html, /fetch\('\/api\/ops\/update'/);
   assert.match(html, /noindex,nofollow,noarchive/);
   assert.match(html, /id="ownerFilter"/);
+  assert.match(html, /Taylor/);
+  assert.doesNotMatch(html, />DS</);
   assert.match(html, /type: 'assign'/);
   assert.match(html, /setInterval/);
   assert.doesNotMatch(html, /google\.script\.run/);

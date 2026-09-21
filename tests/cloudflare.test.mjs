@@ -98,7 +98,7 @@ test('Cloudflare proxies only validated lead operations and keeps the backend to
   assert.equal(redirectedResponse.status, 200);
   assert.equal(redirectCalls.length, 2);
   assert.equal(redirectCalls[0].options.redirect, 'manual');
-  assert.equal(redirectCalls[1].options.redirect, 'error');
+  assert.equal(redirectCalls[1].options.redirect, 'manual');
   assert.equal(new URL(redirectCalls[1].url).hostname, 'script.googleusercontent.com');
 
   const rejectedRedirect = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/leads'), opsEnv, async () => new Response(null, { status: 302, headers: { Location: 'https://example.com/not-google' } }));
@@ -128,14 +128,14 @@ test('Cloudflare proxies only validated lead operations and keeps the backend to
   }
 
   const assign = new Request('https://thegardencoffeecart.com/api/ops/update', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ leadId: 'GCC-0048', action: { type: 'assign', owner: 'DS' } }),
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ leadId: 'GCC-0048', action: { type: 'assign', owner: 'Taylor' } }),
   });
   const assignResponse = await opsApi(assign, opsEnv, async (url, options) => {
     sent = { url, body: JSON.parse(options.body) };
     return Response.json({ ok: true, leads: [] });
   });
   assert.equal(assignResponse.status, 200);
-  assert.deepEqual(sent.body, { leadId: 'GCC-0048', action: { type: 'assign', owner: 'DS' } });
+  assert.deepEqual(sent.body, { leadId: 'GCC-0048', action: { type: 'assign', owner: 'Taylor' } });
 });
 test('Cloudflare serves static assets without Worker calls and protects the pinned preview', () => {
   const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
