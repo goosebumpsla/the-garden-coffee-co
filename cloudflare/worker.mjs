@@ -17,17 +17,54 @@ const protectOpsResponse = response => {
   headers.set('X-Content-Type-Options', 'nosniff');
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 };
-const unauthorized = () => new Response('Authentication required', {
-  status: 401,
-  headers: {
-    'WWW-Authenticate': 'Basic realm="Garden & Coffee Ops", charset="UTF-8"',
-    'Cache-Control': 'no-store',
-    'X-Robots-Tag': 'noindex, nofollow',
-    'X-Content-Type-Options': 'nosniff',
-  },
+const opsLoginPage = error => new Response(`<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>Garden &amp; Coffee Ops</title>
+<style>:root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#16201f;background:#f3f1e9}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}.card{width:min(420px,100%);background:#fffdf7;border:1px solid #dfe5e1;border-radius:24px;padding:34px;box-shadow:0 24px 70px rgba(31,53,48,.13)}.mark{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:#173f3a;color:#f7f0df;font-weight:900;letter-spacing:-.06em}h1{font:600 2rem Georgia,"Times New Roman",serif;margin:22px 0 8px}p{color:#65716e;margin:0 0 24px;line-height:1.5}label{display:block;font-weight:800;font-size:.88rem;margin-bottom:8px}input{width:100%;min-height:50px;border:1px solid #cdd7d2;border-radius:13px;padding:0 14px;font:inherit;background:white}input:focus{outline:3px solid rgba(217,130,88,.35);border-color:#d98258}button{width:100%;min-height:50px;margin-top:14px;border:0;border-radius:13px;background:#173f3a;color:white;font:inherit;font-weight:850;cursor:pointer}.error{color:#a93128;background:#fae6e3;border-radius:11px;padding:10px 12px;margin-bottom:16px;font-size:.88rem}</style></head>
+<body><main class="card"><div class="mark">G&amp;C</div><h1>Lead inbox</h1><p>Sign in to manage Garden &amp; Coffee inquiries.</p>${error ? '<div class="error" role="alert">That password was not correct. Please try again.</div>' : ''}<form method="post" action="/ops/login"><label for="password">Team password</label><input id="password" name="password" type="password" autocomplete="current-password" required autofocus><button type="submit">Open lead inbox</button></form></main></body></html>`, {
+  status: error ? 401 : 200,
+  headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' },
 });
 
+async function sessionSignature(secret, expires) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(expires));
+  return Array.from(new Uint8Array(signature), byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function validOpsCookie(request, env) {
+  const match = String(request.headers.get('Cookie') || '').match(/(?:^|;\s*)garden_ops=([^;]+)/);
+  if (!match || !env.OPS_PASSWORD) return false;
+  const [expires, supplied] = decodeURIComponent(match[1]).split('.');
+  if (!/^\d{10,}$/.test(expires || '') || Number(expires) < Date.now()) return false;
+  const expected = await sessionSignature(String(env.OPS_PASSWORD), expires);
+  return supplied === expected;
+}
+
+async function opsLogin(request, env) {
+  if (request.method === 'GET') {
+    if (await validOpsCookie(request, env)) return Response.redirect('https://thegardencoffeecart.com/ops/', 302);
+    return opsLoginPage(false);
+  }
+  if (request.method !== 'POST') return json(405, { error: 'Method not allowed' });
+  if (!request.headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') || Number(request.headers.get('Content-Length')) > 1024) return opsLoginPage(true);
+  const form = await request.formData();
+  const supplied = String(form.get('password') || '');
+  if (!env.OPS_PASSWORD || await hash(supplied) !== await hash(String(env.OPS_PASSWORD))) return opsLoginPage(true);
+  const expires = String(Date.now() + 12 * 60 * 60 * 1000);
+  const token = `${expires}.${await sessionSignature(String(env.OPS_PASSWORD), expires)}`;
+  return new Response(null, {
+    status: 303,
+    headers: {
+      Location: '/ops/',
+      'Set-Cookie': `garden_ops=${encodeURIComponent(token)}; Max-Age=43200; Path=/; Secure; HttpOnly; SameSite=Strict`,
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
+  });
+}
+
 export async function opsAuthorized(request, env) {
+  if (await validOpsCookie(request, env)) return true;
   if (!env.OPS_PASSWORD) return false;
   const match = String(request.headers.get('Authorization') || '').match(/^Basic\s+(.+)$/i);
   if (!match) return false;
@@ -99,7 +136,7 @@ export async function opsApi(request, env, send = fetch) {
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
       redirect: 'follow',
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(25000),
     });
     if (!upstream.ok) return json(502, { error: 'Lead tracker request failed' });
     const data = await upstream.json();
@@ -170,8 +207,13 @@ export default {
     if (url.hostname === 'www.thegardencoffeecart.com') {
       return Response.redirect(`https://thegardencoffeecart.com${url.pathname}${url.search}`, 301);
     }
-    const opsPath = url.pathname === '/ops' || url.pathname.startsWith('/ops/') || url.pathname.startsWith('/api/ops/');
-    if (opsPath && !await opsAuthorized(request, env)) return unauthorized();
+    if (url.pathname === '/ops/login') return opsLogin(request, env);
+    const opsPage = url.pathname === '/ops' || url.pathname.startsWith('/ops/');
+    const opsApiPath = url.pathname.startsWith('/api/ops/');
+    if ((opsPage || opsApiPath) && !await opsAuthorized(request, env)) {
+      if (opsApiPath) return protectOpsResponse(json(401, { error: 'Sign in required' }));
+      return Response.redirect(`https://thegardencoffeecart.com/ops/login`, 302);
+    }
 
     let response;
     if (OPS_API_PATHS.has(url.pathname)) response = await opsApi(request, env);

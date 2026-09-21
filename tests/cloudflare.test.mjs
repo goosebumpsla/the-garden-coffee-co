@@ -49,17 +49,30 @@ const opsEnv = {
   LEAD_OPS_TOKEN: 'server-only-token',
   ASSETS: { fetch: () => new Response('<h1>Lead inbox</h1>', { headers: { 'Content-Type': 'text/html' } }) },
 };
-test('Cloudflare requires server-side authentication for the lead inbox', async () => {
-  for (const request of [
-    new Request('https://thegardencoffeecart.com/ops/'),
-    new Request('https://thegardencoffeecart.com/ops/', { headers: { Authorization: auth('wrong') } }),
-    new Request('https://thegardencoffeecart.com/api/ops/leads'),
-  ]) {
+test('Cloudflare provides a normal sign-in screen and protects the lead inbox', async () => {
+  for (const request of [new Request('https://thegardencoffeecart.com/ops/'), new Request('https://thegardencoffeecart.com/ops/', { headers: { Authorization: auth('wrong') } })]) {
     const response = await worker.fetch(request, opsEnv);
-    assert.equal(response.status, 401);
-    assert.match(response.headers.get('WWW-Authenticate'), /Garden & Coffee Ops/);
-    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get('Location'), 'https://thegardencoffeecart.com/ops/login');
   }
+  const apiDenied = await worker.fetch(new Request('https://thegardencoffeecart.com/api/ops/leads'), opsEnv);
+  assert.equal(apiDenied.status, 401);
+  assert.equal((await apiDenied.json()).error, 'Sign in required');
+
+  const loginPage = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/login'), opsEnv);
+  assert.equal(loginPage.status, 200);
+  assert.match(await loginPage.text(), /Team password/);
+  const wrongLogin = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/login', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=wrong' }), opsEnv);
+  assert.equal(wrongLogin.status, 401);
+
+  const login = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/login', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'password=test-secret' }), opsEnv);
+  assert.equal(login.status, 303);
+  assert.equal(login.headers.get('Location'), '/ops/');
+  assert.match(login.headers.get('Set-Cookie'), /Secure; HttpOnly; SameSite=Strict/);
+  const cookie = login.headers.get('Set-Cookie').split(';')[0];
+  const cookieAllowed = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/', { headers: { Cookie: cookie } }), opsEnv);
+  assert.equal(cookieAllowed.status, 200);
+
   const allowed = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/', { headers: { Authorization: auth('test-secret') } }), opsEnv);
   assert.equal(allowed.status, 200);
   assert.equal(allowed.headers.get('X-Robots-Tag'), 'noindex, nofollow');
