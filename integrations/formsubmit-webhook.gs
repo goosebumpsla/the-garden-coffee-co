@@ -9,7 +9,7 @@
 const TRACKER = Object.freeze({
   spreadsheetId: '1FIb5MSTfrimaMyeuBZD2CHnCUE7jhBIvygtsDbxX9C0',
   sheetName: 'Lead Tracker',
-  firstDataRow: 9,
+  firstDataRow: 8,
   lastTemplateRow: 208,
   webhookToken: '063dbdb533aaff7b85fa79e87fb6a7fd91022466205d5ce0',
   opsTokenProperty: 'OPS_TOKEN',
