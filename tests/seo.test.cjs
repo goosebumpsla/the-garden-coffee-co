@@ -191,3 +191,14 @@ test('corporate and PEOPLE pages are substantive and internally linked', () => {
   assert.match(people, /"citation": "https:\/\/people\.com\//);
   assert.match(people, /does not claim an endorsement/i);
 });
+
+test('every quote form forwards accepted submissions to the lead tracker webhook', () => {
+  const quotePages = ['index.html', 'weddings/index.html', 'corporate-events/index.html'];
+  const webhookPattern = /name="_webhook" value="https:\/\/script\.google\.com\/macros\/s\/[^"?]+\/exec\?token=[a-f0-9]+"/;
+  for (const file of quotePages) {
+    const html = read(file);
+    assert.match(html, webhookPattern, `${file} webhook`);
+    assert.equal((html.match(/name="_webhook"/g) || []).length, 1, `${file} must include one webhook`);
+  }
+  assert.match(read('integrations/formsubmit-webhook.gs'), /spreadsheetId: '1FIb5MSTfrimaMyeuBZD2CHnCUE7jhBIvygtsDbxX9C0'/);
+});
