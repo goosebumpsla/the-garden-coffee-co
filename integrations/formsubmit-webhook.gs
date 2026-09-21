@@ -13,6 +13,9 @@ const TRACKER = Object.freeze({
   lastTemplateRow: 208,
   webhookToken: '063dbdb533aaff7b85fa79e87fb6a7fd91022466205d5ce0',
   opsTokenProperty: 'OPS_TOKEN',
+  notificationEmail: 'contact.thegardenco@gmail.com',
+  opsUrl: 'https://thegardencoffeecart.com/ops/',
+  gmailLookbackDays: 30,
 });
 
 function doGet(event) {
@@ -213,45 +216,47 @@ function updateLeadInboxRecord_(leadId, action) {
     const workflowRange = sheet.getRange(TRACKER.firstDataRow + offset, 10, 1, 6);
     const workflow = workflowRange.getValues()[0];
     const now = new Date();
-    const owner = 'Website ops';
     const type = String(action.type || '');
+    const owner = ownerFromAction_(action, String(workflow[0] || ''));
 
     if (type === 'contacted') {
-      workflow[0] = owner;
+      workflow[0] = owner || 'DS';
       workflow[1] = 'Contacted';
       workflow[2] = '';
       workflow[3] = now;
       workflow[4] = addDays_(now, 1);
       workflow[5] = 'Follow up';
     } else if (type === 'good-response') {
-      workflow[0] = owner;
+      workflow[0] = owner || 'DS';
       workflow[1] = 'Replied';
       workflow[2] = 'Good response';
       workflow[3] = now;
       workflow[4] = addDays_(now, 1);
       workflow[5] = 'Follow up';
     } else if (type === 'quote-sent') {
-      workflow[0] = owner;
+      workflow[0] = owner || 'DS';
       workflow[1] = 'Quote sent';
       workflow[3] = now;
       workflow[4] = addDays_(now, 2);
       workflow[5] = 'Follow up';
     } else if (type === 'booked') {
-      workflow[0] = owner;
+      workflow[0] = owner || 'DS';
       workflow[1] = 'Won';
       workflow[3] = now;
       workflow[4] = '';
       workflow[5] = '';
     } else if (type === 'closed') {
-      workflow[0] = owner;
+      workflow[0] = owner || 'DS';
       workflow[1] = 'Lost';
       workflow[3] = now;
       workflow[4] = '';
       workflow[5] = '';
     } else if (type === 'follow-up') {
-      workflow[0] = workflow[0] || owner;
+      workflow[0] = owner || 'DS';
       workflow[4] = parseIsoDate_(action.date);
       workflow[5] = 'Follow up';
+    } else if (type === 'assign') {
+      workflow[0] = owner;
     } else {
       throw new Error('Unsupported update');
     }
@@ -273,9 +278,184 @@ function classifyQueue_(lead) {
   if (stage === 'won' || stage === 'consultation booked') return 'booked';
   if (stage === 'quote sent') return 'quote';
   if (response === 'good response') return 'good';
+  if (response === 'client replied' || stage === 'replied') return 'reply';
   if (follow === 'overdue' || follow === 'due today') return 'followup';
-  if (stage === 'contacted' || stage === 'replied' || lead.lastContact) return 'responded';
+  if (stage === 'contacted' || lead.lastContact) return 'responded';
   return 'new';
+}
+
+function ownerFromAction_(action, currentOwner) {
+  if (!Object.prototype.hasOwnProperty.call(action, 'owner')) return currentOwner;
+  const owner = String(action.owner || '');
+  if (owner !== '' && owner !== 'Albert' && owner !== 'DS') throw new Error('Invalid owner');
+  return owner;
+}
+
+/**
+ * Install once from the Apps Script editor. The first pass reconciles existing
+ * Gmail conversations without sending a flood of old missed-lead alerts.
+ */
+function installOpsAutomation() {
+  const functions = ['syncGmailLeadReplies', 'sendDailyLeadDigest'];
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (functions.indexOf(trigger.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(trigger);
+  });
+  ScriptApp.newTrigger('syncGmailLeadReplies').timeBased().everyMinutes(5).create();
+  ScriptApp.newTrigger('sendDailyLeadDigest').timeBased().everyDays(1).atHour(8).create();
+  syncGmailLeadReplies_();
+  primeExistingNewLeadAlerts_();
+  return 'Gmail sync and lead alerts installed';
+}
+
+function syncGmailLeadReplies() {
+  syncGmailLeadReplies_();
+  sendStaleNewLeadAlerts_();
+}
+
+function syncGmailLeadReplies_() {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const spreadsheet = SpreadsheetApp.openById(TRACKER.spreadsheetId);
+    const sheet = spreadsheet.getSheetByName(TRACKER.sheetName);
+    if (!sheet) throw new Error('Lead Tracker sheet not found');
+    const height = TRACKER.lastTemplateRow - TRACKER.firstDataRow + 1;
+    const rows = sheet.getRange(TRACKER.firstDataRow, 1, height, 19).getValues();
+    const workflow = sheet.getRange(TRACKER.firstDataRow, 10, height, 6).getValues();
+    const leadsByEmail = {};
+
+    rows.forEach(function(row, index) {
+      const email = String(row[2] || '').trim().toLowerCase();
+      const id = String(row[18] || '').trim();
+      if (!email || !id || !isEmail_(email)) return;
+      if (!leadsByEmail[email]) leadsByEmail[email] = [];
+      leadsByEmail[email].push(index);
+    });
+
+    const emails = Object.keys(leadsByEmail);
+    const activity = {};
+    for (let start = 0; start < emails.length; start += 20) {
+      const batch = emails.slice(start, start + 20);
+      const query = 'newer_than:' + TRACKER.gmailLookbackDays + 'd {' + batch.map(function(email) {
+        return 'from:' + email + ' to:' + email;
+      }).join(' ') + '}';
+      GmailApp.search(query, 0, 500).forEach(function(thread) {
+        thread.getMessages().forEach(function(message) {
+          const from = extractEmails_(message.getFrom());
+          const recipients = extractEmails_([message.getTo(), message.getCc()].join(','));
+          const timestamp = message.getDate().getTime();
+          batch.forEach(function(email) {
+            if (!activity[email]) activity[email] = { inbound: 0, outbound: 0 };
+            if (from.indexOf(email) >= 0) activity[email].inbound = Math.max(activity[email].inbound, timestamp);
+            else if (recipients.indexOf(email) >= 0) activity[email].outbound = Math.max(activity[email].outbound, timestamp);
+          });
+        });
+      });
+    }
+
+    let updates = 0;
+    emails.forEach(function(email) {
+      const events = activity[email];
+      if (!events) return;
+      leadsByEmail[email].forEach(function(index) {
+        const current = workflow[index];
+        const stage = String(current[1] || '').toLowerCase();
+        const response = String(current[2] || '').toLowerCase();
+        if (['lost', 'not a fit', 'won', 'consultation booked', 'quote sent'].indexOf(stage) >= 0 || response === 'good response') return;
+        const lastContact = current[3] instanceof Date ? current[3].getTime() : 0;
+
+        if (events.inbound > lastContact && events.inbound >= events.outbound) {
+          current[0] = current[0] || 'DS';
+          current[1] = 'Replied';
+          current[2] = 'Client replied';
+          current[3] = new Date(events.inbound);
+          current[4] = '';
+          current[5] = 'Review reply';
+          updates += 1;
+        } else if (events.outbound > lastContact && (stage === '' || stage === 'new' || stage === 'contacted')) {
+          current[0] = current[0] || 'DS';
+          current[1] = 'Contacted';
+          current[2] = '';
+          current[3] = new Date(events.outbound);
+          current[4] = addDays_(new Date(events.outbound), 1);
+          current[5] = 'Follow up';
+          updates += 1;
+        }
+      });
+    });
+
+    if (updates) {
+      sheet.getRange(TRACKER.firstDataRow, 10, height, 6).setValues(workflow);
+      SpreadsheetApp.flush();
+    }
+    console.log('Gmail lead sync updated ' + updates + ' record(s)');
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function extractEmails_(value) {
+  const matches = String(value || '').toLowerCase().match(/[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9.-]+\.[a-z]{2,}/g);
+  return matches || [];
+}
+
+function primeExistingNewLeadAlerts_() {
+  const properties = PropertiesService.getScriptProperties();
+  getLeadInboxData_().leads.forEach(function(lead) {
+    if (lead.queue === 'new' && lead.id) properties.setProperty('ops_new_alert_' + lead.id, 'primed');
+  });
+}
+
+function sendStaleNewLeadAlerts_() {
+  const properties = PropertiesService.getScriptProperties();
+  const cutoff = Date.now() - (30 * 60 * 1000);
+  const stale = getLeadInboxData_().leads.filter(function(lead) {
+    return lead.queue === 'new' && lead.id && lead.receivedSort && lead.receivedSort <= cutoff && !properties.getProperty('ops_new_alert_' + lead.id);
+  });
+  if (!stale.length) return;
+
+  const lines = stale.map(function(lead) {
+    return lead.id + ' — ' + lead.name + (lead.eventType ? ' — ' + lead.eventType : '');
+  });
+  MailApp.sendEmail({
+    to: TRACKER.notificationEmail,
+    subject: stale.length + ' Garden & Coffee lead' + (stale.length === 1 ? '' : 's') + ' waiting for a response',
+    body: 'These new inquiries have been waiting more than 30 minutes:\n\n' + lines.join('\n') + '\n\nOpen the lead inbox: ' + TRACKER.opsUrl,
+  });
+  stale.forEach(function(lead) { properties.setProperty('ops_new_alert_' + lead.id, String(Date.now())); });
+}
+
+function sendDailyLeadDigest() {
+  const data = getLeadInboxData_();
+  const important = data.leads.filter(function(lead) {
+    return lead.queue === 'new' || lead.queue === 'reply' || lead.queue === 'followup';
+  });
+  if (!important.length) return;
+  const counts = important.reduce(function(result, lead) {
+    result[lead.queue] = (result[lead.queue] || 0) + 1;
+    return result;
+  }, {});
+  const lines = important.slice(0, 25).map(function(lead) {
+    return lead.id + ' — ' + lead.name + ' — ' + queueLabel_(lead.queue) + ' — ' + (lead.owner || 'Unassigned');
+  });
+  MailApp.sendEmail({
+    to: TRACKER.notificationEmail,
+    subject: 'Garden & Coffee lead digest: ' + important.length + ' need attention',
+    body: [
+      'New: ' + (counts.new || 0),
+      'Client replied: ' + (counts.reply || 0),
+      'Follow-up due: ' + (counts.followup || 0),
+      '',
+      lines.join('\n'),
+      important.length > 25 ? '\n+' + (important.length - 25) + ' more' : '',
+      '',
+      'Open the lead inbox: ' + TRACKER.opsUrl,
+    ].join('\n'),
+  });
+}
+
+function queueLabel_(queue) {
+  return queue === 'reply' ? 'Client replied' : queue === 'followup' ? 'Follow-up due' : 'New';
 }
 
 function addDays_(date, days) {

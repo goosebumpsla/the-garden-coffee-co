@@ -106,10 +106,21 @@ test('Cloudflare proxies only validated lead operations and keeps the backend to
     { leadId: 'bad', action: { type: 'contacted' } },
     { leadId: 'GCC-0048', action: { type: 'delete' } },
     { leadId: 'GCC-0048', action: { type: 'follow-up', date: 'tomorrow' } },
+    { leadId: 'GCC-0048', action: { type: 'assign', owner: 'Someone else' } },
   ]) {
     const response = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }), opsEnv, () => { throw Error('Must not call backend'); });
     assert.equal(response.status, 400);
   }
+
+  const assign = new Request('https://thegardencoffeecart.com/api/ops/update', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ leadId: 'GCC-0048', action: { type: 'assign', owner: 'DS' } }),
+  });
+  const assignResponse = await opsApi(assign, opsEnv, async (url, options) => {
+    sent = { url, body: JSON.parse(options.body) };
+    return Response.json({ ok: true, leads: [] });
+  });
+  assert.equal(assignResponse.status, 200);
+  assert.deepEqual(sent.body, { leadId: 'GCC-0048', action: { type: 'assign', owner: 'DS' } });
 });
 test('Cloudflare serves static assets without Worker calls and protects the pinned preview', () => {
   const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));

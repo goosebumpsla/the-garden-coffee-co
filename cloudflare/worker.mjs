@@ -1,7 +1,8 @@
 const HOSTS = new Set(['thegardencoffeecart.com', 'www.thegardencoffeecart.com']);
 const API_PATHS = new Set(['/api/meta-lead', '/.netlify/functions/meta-lead']);
 const OPS_API_PATHS = new Set(['/api/ops/leads', '/api/ops/update']);
-const OPS_ACTIONS = new Set(['contacted', 'good-response', 'quote-sent', 'booked', 'closed', 'follow-up']);
+const OPS_ACTIONS = new Set(['contacted', 'good-response', 'quote-sent', 'booked', 'closed', 'follow-up', 'assign']);
+const OPS_OWNERS = new Set(['', 'Albert', 'DS']);
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const hash = async value => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))), byte => byte.toString(16).padStart(2, '0')).join('');
 const preventPreviewIndexing = response => {
@@ -125,7 +126,11 @@ export async function opsApi(request, env, send = fetch) {
     const type = String(body.action.type || '');
     if (!OPS_ACTIONS.has(type)) return json(400, { error: 'Invalid update' });
     if (type === 'follow-up' && !/^\d{4}-\d{2}-\d{2}$/.test(String(body.action.date || ''))) return json(400, { error: 'Invalid follow-up date' });
-    body = { leadId: String(body.leadId), action: type === 'follow-up' ? { type, date: String(body.action.date) } : { type } };
+    const owner = Object.prototype.hasOwnProperty.call(body.action, 'owner') ? String(body.action.owner || '') : undefined;
+    if (owner !== undefined && !OPS_OWNERS.has(owner)) return json(400, { error: 'Invalid owner' });
+    const action = type === 'follow-up' ? { type, date: String(body.action.date) } : { type };
+    if (owner !== undefined) action.owner = owner;
+    body = { leadId: String(body.leadId), action };
     endpoint.searchParams.set('action', 'update');
   }
   endpoint.searchParams.set('ops_token', String(env.LEAD_OPS_TOKEN));

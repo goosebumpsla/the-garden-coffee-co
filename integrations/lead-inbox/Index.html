@@ -26,7 +26,7 @@
       }
       * { box-sizing: border-box; }
       body { margin: 0; color: var(--ink); background: var(--canvas); font-size: 16px; }
-      button, input { font: inherit; }
+      button, input, select { font: inherit; }
       button { cursor: pointer; }
       .shell { min-height: 100vh; }
       .topbar { background: var(--green); color: white; padding: 24px clamp(18px, 4vw, 52px) 28px; }
@@ -36,13 +36,15 @@
       h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.45rem, 3vw, 2rem); font-weight: 600; }
       .refresh { color: white; background: transparent; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; min-height: 42px; padding: 8px 15px; }
       .refresh:hover, .refresh:focus-visible { background: rgba(255,255,255,.1); }
-      .summary { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin-top: 24px; }
+      .summary { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; margin-top: 24px; }
       .stat { border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.07); border-radius: 16px; padding: 14px 16px; }
       .stat strong { display: block; font-size: 1.7rem; line-height: 1; }
       .stat span { display: block; margin-top: 7px; color: rgba(255,255,255,.76); font-size: .86rem; }
       main { width: min(1280px, calc(100% - 32px)); margin: 0 auto; padding: 26px 0 56px; }
       .controls { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-      .search { width: min(430px,100%); min-height: 46px; border: 1px solid var(--line); border-radius: 14px; background: white; padding: 0 15px; color: var(--ink); box-shadow: 0 8px 24px rgba(31,53,48,.04); }
+      .filters { display: flex; gap: 10px; width: min(650px,100%); }
+      .search { flex: 1 1 370px; min-width: 180px; min-height: 46px; border: 1px solid var(--line); border-radius: 14px; background: white; padding: 0 15px; color: var(--ink); box-shadow: 0 8px 24px rgba(31,53,48,.04); }
+      .owner-filter { flex: 0 1 190px; min-height: 46px; border: 1px solid var(--line); border-radius: 14px; background: white; padding: 0 12px; color: var(--ink); }
       .updated { color: var(--muted); font-size: .88rem; }
       .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 12px; scrollbar-width: thin; }
       .tab { flex: 0 0 auto; border: 1px solid var(--line); background: rgba(255,255,255,.72); color: var(--ink); border-radius: 999px; min-height: 42px; padding: 9px 14px; font-weight: 700; }
@@ -56,6 +58,7 @@
       .lead { display: grid; grid-template-columns: minmax(220px,1.05fr) minmax(210px,.8fr) minmax(230px,1fr) auto; align-items: center; gap: 18px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--green); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); }
       .lead[data-queue="new"] { border-left-color: var(--orange); }
       .lead[data-queue="followup"] { border-left-color: var(--red); }
+      .lead[data-queue="reply"] { border-left-color: #5d54a4; }
       .lead[data-queue="good"] { border-left-color: #247764; }
       .lead[data-queue="quote"] { border-left-color: var(--gold); }
       .identity { min-width: 0; }
@@ -77,6 +80,7 @@
       .action.primary { background: var(--green); border-color: var(--green); color: white; }
       .action.danger { color: var(--red); }
       .follow-date { width: 142px; min-height: 38px; border: 1px solid var(--line); border-radius: 10px; padding: 6px 8px; background: white; font-size: .8rem; }
+      .owner-select { min-height: 38px; border: 1px solid var(--line); border-radius: 10px; padding: 6px 9px; background: #f7f0df; color: var(--ink); font-size: .8rem; font-weight: 800; }
       .empty, .loading { border: 1px dashed #c5cfca; background: rgba(255,255,255,.55); border-radius: 18px; padding: 44px 20px; text-align: center; color: var(--muted); }
       .empty strong { display: block; color: var(--ink); margin-bottom: 5px; }
       .toast { position: fixed; right: 20px; bottom: 20px; z-index: 10; max-width: 360px; border-radius: 14px; padding: 13px 16px; background: var(--green); color: white; box-shadow: 0 18px 40px rgba(0,0,0,.18); transform: translateY(130%); transition: transform .2s ease; }
@@ -93,6 +97,8 @@
         .summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
         main { width: min(100% - 20px, 1280px); padding-top: 18px; }
         .controls { align-items: stretch; flex-direction: column; }
+        .filters { flex-direction: column; }
+        .owner-filter { flex-basis: 46px; }
         .updated { padding-left: 2px; }
         .lead { grid-template-columns: 1fr; gap: 13px; padding: 15px; }
         .actions { grid-column: auto; }
@@ -110,6 +116,7 @@
         <div class="summary" aria-label="Lead summary">
           <div class="stat"><strong id="totalCount">—</strong><span>Total leads</span></div>
           <div class="stat"><strong id="newCount">—</strong><span>New inquiries</span></div>
+          <div class="stat"><strong id="replyCount">—</strong><span>Client replied</span></div>
           <div class="stat"><strong id="followupCount">—</strong><span>Follow-ups due</span></div>
           <div class="stat"><strong id="goodCount">—</strong><span>Good responses</span></div>
           <div class="stat"><strong id="quoteCount">—</strong><span>Quotes pending</span></div>
@@ -118,7 +125,12 @@
 
       <main>
         <div class="controls">
-          <input class="search" id="searchInput" type="search" autocomplete="off" placeholder="Search name, email, phone or event…" aria-label="Search leads">
+          <div class="filters">
+            <input class="search" id="searchInput" type="search" autocomplete="off" placeholder="Search name, email, phone or event…" aria-label="Search leads">
+            <select class="owner-filter" id="ownerFilter" aria-label="Filter by owner">
+              <option value="">All owners</option><option value="Albert">Albert</option><option value="DS">DS</option><option value="Unassigned">Unassigned</option>
+            </select>
+          </div>
           <div class="updated" id="updatedText">Loading tracker…</div>
         </div>
         <div class="tabs" id="tabs" role="tablist" aria-label="Lead queues"></div>
@@ -133,6 +145,7 @@
     <script>
       const QUEUES = [
         { id: 'new', label: 'New', title: 'New inquiries', description: 'People who still need a first response.' },
+        { id: 'reply', label: 'Client replied', title: 'Client replied', description: 'New Gmail replies that need to be reviewed.' },
         { id: 'followup', label: 'Follow-up', title: 'Follow-ups due', description: 'Leads that need attention today or are overdue.' },
         { id: 'responded', label: 'Responded', title: 'Responded', description: 'You replied and are waiting for the next step.' },
         { id: 'good', label: 'Good responses', title: 'Good responses', description: 'Interested leads with positive replies.' },
@@ -140,11 +153,12 @@
         { id: 'booked', label: 'Booked', title: 'Booked', description: 'Confirmed consultations and clients.' },
         { id: 'closed', label: 'Closed', title: 'Closed', description: 'Lost or not-a-fit leads kept for reference.' },
       ];
-      let state = { leads: [], queue: 'new', query: '', saving: false };
+      let state = { leads: [], queue: 'new', query: '', owner: '', saving: false };
 
       const $ = id => document.getElementById(id);
       $('refreshButton').addEventListener('click', loadData);
       $('searchInput').addEventListener('input', event => { state.query = event.target.value.trim().toLowerCase(); render(); });
+      $('ownerFilter').addEventListener('change', event => { state.owner = event.target.value; render(); });
 
       async function loadData() {
         $('refreshButton').disabled = true;
@@ -174,6 +188,7 @@
 
         const filtered = state.leads.filter(lead => {
           if (lead.queue !== state.queue) return false;
+          if (state.owner === 'Unassigned' ? Boolean(lead.owner) : state.owner && lead.owner !== state.owner) return false;
           if (!state.query) return true;
           return [lead.name, lead.email, lead.phone, lead.eventType, lead.location, lead.id, lead.campaign]
             .join(' ').toLowerCase().includes(state.query);
@@ -185,6 +200,7 @@
         const count = queue => state.leads.filter(lead => lead.queue === queue).length;
         $('totalCount').textContent = state.leads.length;
         $('newCount').textContent = count('new');
+        $('replyCount').textContent = count('reply');
         $('followupCount').textContent = count('followup');
         $('goodCount').textContent = count('good');
         $('quoteCount').textContent = count('quote');
@@ -247,31 +263,42 @@
         const chips = el('div', 'chips');
         chips.append(chip(lead.channel || lead.source || 'Unknown source', lead.channel === 'Paid Meta' ? 'paid' : ''));
         if (lead.followUpStatus === 'Overdue' || lead.followUpStatus === 'Due today') chips.append(chip(lead.followUpStatus, 'alert'));
+        const waiting = waitingLabel(lead);
+        if (waiting) chips.append(chip(waiting, 'alert'));
         if (lead.campaign) chips.append(chip(lead.campaign));
         status.append(chips);
 
         const actions = el('div', 'actions');
-        actions.append(actionButton('Contacted', 'contacted', lead.id, 'primary'));
-        actions.append(actionButton('Good response', 'good-response', lead.id));
-        actions.append(actionButton('Quote sent', 'quote-sent', lead.id));
-        actions.append(actionButton('Booked', 'booked', lead.id));
+        const ownerSelect = el('select', 'owner-select');
+        ownerSelect.setAttribute('aria-label', 'Owner for ' + lead.name);
+        [['', 'Unassigned'], ['Albert', 'Albert'], ['DS', 'DS']].forEach(optionData => {
+          const option = el('option'); option.value = optionData[0]; option.textContent = optionData[1]; ownerSelect.append(option);
+        });
+        ownerSelect.value = lead.owner === 'Albert' || lead.owner === 'DS' ? lead.owner : '';
+        ownerSelect.addEventListener('change', () => save(lead.id, { type: 'assign', owner: ownerSelect.value }));
+        actions.append(ownerSelect);
+        const selectedOwner = () => ownerSelect.value || 'DS';
+        actions.append(actionButton('Contacted', 'contacted', lead.id, 'primary', selectedOwner));
+        actions.append(actionButton('Good response', 'good-response', lead.id, '', selectedOwner));
+        actions.append(actionButton('Quote sent', 'quote-sent', lead.id, '', selectedOwner));
+        actions.append(actionButton('Booked', 'booked', lead.id, '', selectedOwner));
         const date = el('input', 'follow-date');
         date.type = 'date'; date.value = lead.nextFollowUpISO || ''; date.setAttribute('aria-label', 'Follow-up date for ' + lead.name);
         const dateButton = el('button', 'action');
         dateButton.type = 'button'; dateButton.textContent = 'Set follow-up';
-        dateButton.addEventListener('click', () => date.value ? save(lead.id, { type: 'follow-up', date: date.value }) : showToast('Choose a follow-up date first.', true));
-        actions.append(date, dateButton, actionButton('Close', 'closed', lead.id, 'danger'));
+        dateButton.addEventListener('click', () => date.value ? save(lead.id, { type: 'follow-up', date: date.value, owner: selectedOwner() }) : showToast('Choose a follow-up date first.', true));
+        actions.append(date, dateButton, actionButton('Close', 'closed', lead.id, 'danger', selectedOwner));
 
         card.append(identity, event, status, actions);
         return card;
       }
 
-      function actionButton(label, type, id, extraClass) {
+      function actionButton(label, type, id, extraClass, ownerGetter) {
         const button = el('button', 'action' + (extraClass ? ' ' + extraClass : ''));
         button.type = 'button'; button.textContent = label;
         button.addEventListener('click', () => {
           if (type === 'closed' && !window.confirm('Move this lead to Closed?')) return;
-          save(id, { type });
+          save(id, { type, owner: ownerGetter ? ownerGetter() : undefined });
         });
         return button;
       }
@@ -280,7 +307,7 @@
         if (state.saving) return;
         state.saving = true;
         showToast('Saving…');
-        document.querySelectorAll('button').forEach(button => button.disabled = true);
+        document.querySelectorAll('button, select').forEach(control => control.disabled = true);
         try {
           const response = await fetch('/api/ops/update', {
             method: 'POST',
@@ -298,7 +325,7 @@
           showToast(error && error.message ? error.message : 'Could not save the update.', true);
         } finally {
           state.saving = false;
-          document.querySelectorAll('button').forEach(button => button.disabled = false);
+          document.querySelectorAll('button, select').forEach(control => control.disabled = false);
         }
       }
 
@@ -307,9 +334,17 @@
       function chip(value, extraClass) { const node = el('span', 'chip' + (extraClass ? ' ' + extraClass : '')); node.textContent = value; return node; }
       function link(label, href) { const node = el('a'); node.textContent = label; node.href = href; if (href.startsWith('http')) { node.target = '_blank'; node.rel = 'noopener'; } return node; }
       function gmailSearch(email) { return 'https://mail.google.com/mail/u/0/#search/' + encodeURIComponent('{from:(' + email + ') to:(' + email + ')}'); }
+      function waitingLabel(lead) {
+        if (lead.queue !== 'new' || !lead.receivedSort) return '';
+        const minutes = Math.max(0, Math.floor((Date.now() - Number(lead.receivedSort)) / 60000));
+        if (minutes < 30) return '';
+        return minutes < 120 ? 'Waiting ' + minutes + ' min' : 'Waiting ' + Math.floor(minutes / 60) + ' hr';
+      }
       function showToast(message, error) { const toast = $('toast'); toast.textContent = message; toast.classList.toggle('error', Boolean(error)); toast.classList.add('show'); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2600); }
 
       loadData();
+      window.setInterval(() => { if (!document.hidden && !state.saving) loadData(); }, 120000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && !state.saving) loadData(); });
     </script>
   </body>
 </html>
