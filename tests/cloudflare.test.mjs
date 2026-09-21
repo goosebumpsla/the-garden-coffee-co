@@ -89,6 +89,21 @@ test('Cloudflare proxies only validated lead operations and keeps the backend to
   assert.equal(new URL(sent.url).searchParams.get('action'), 'leads');
   assert(!JSON.stringify(await getResponse.json()).includes('server-only-token'));
 
+  const redirectCalls = [];
+  const redirectedResponse = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/leads'), opsEnv, async (url, options) => {
+    redirectCalls.push({ url, options });
+    if (redirectCalls.length === 1) return new Response(null, { status: 302, headers: { Location: 'https://script.googleusercontent.com/macros/echo?user_content_key=test' } });
+    return Response.json({ ok: true, leads: [] });
+  });
+  assert.equal(redirectedResponse.status, 200);
+  assert.equal(redirectCalls.length, 2);
+  assert.equal(redirectCalls[0].options.redirect, 'manual');
+  assert.equal(redirectCalls[1].options.redirect, 'error');
+  assert.equal(new URL(redirectCalls[1].url).hostname, 'script.googleusercontent.com');
+
+  const rejectedRedirect = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/leads'), opsEnv, async () => new Response(null, { status: 302, headers: { Location: 'https://example.com/not-google' } }));
+  assert.equal(rejectedRedirect.status, 502);
+
   const update = new Request('https://thegardencoffeecart.com/api/ops/update', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

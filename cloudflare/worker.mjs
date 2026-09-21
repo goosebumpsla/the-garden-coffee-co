@@ -136,19 +136,35 @@ export async function opsApi(request, env, send = fetch) {
   endpoint.searchParams.set('ops_token', String(env.LEAD_OPS_TOKEN));
 
   try {
-    const upstream = await send(endpoint.toString(), {
+    let upstream = await send(endpoint.toString(), {
       method: body ? 'POST' : 'GET',
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
-      redirect: 'follow',
+      redirect: 'manual',
       signal: AbortSignal.timeout(25000),
     });
-    if (!upstream.ok) return json(502, { error: 'Lead tracker request failed' });
+    if ([301, 302, 303, 307, 308].includes(upstream.status)) {
+      const location = upstream.headers.get('Location');
+      const redirected = new URL(location || '', endpoint);
+      if (redirected.protocol !== 'https:' || redirected.hostname !== 'script.googleusercontent.com') throw new Error('Invalid upstream redirect');
+      upstream = await send(redirected.toString(), {
+        method: 'GET',
+        redirect: 'error',
+        signal: AbortSignal.timeout(25000),
+      });
+    }
+    if (!upstream.ok) {
+      console.error('Lead tracker upstream status', upstream.status);
+      return json(502, { error: 'Lead tracker request failed', diagnostic: `upstream-${upstream.status}` });
+    }
     const data = await upstream.json();
     if (!data || typeof data !== 'object') throw new Error();
     if (data.ok === false) return json(400, { error: String(data.error || 'Unable to update lead') });
     return json(200, data);
-  } catch (_) { return json(502, { error: 'Lead tracker request failed' }); }
+  } catch (error) {
+    console.error('Lead tracker proxy error', error && error.name ? error.name : 'unknown');
+    return json(502, { error: 'Lead tracker request failed', diagnostic: error && error.name ? String(error.name) : 'unknown' });
+  }
 }
 
 export async function metaLead(request, env, send = fetch) {

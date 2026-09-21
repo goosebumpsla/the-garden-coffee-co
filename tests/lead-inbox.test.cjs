@@ -51,3 +51,13 @@ test('FormSubmit integration includes the protected lead API without changing th
   assert.match(code, /request\.token !== TRACKER\.webhookToken/);
   assert.doesNotMatch(code, /OPS_TOKEN:\s*['"][^'"]+/);
 });
+
+test('Apps Script requests least-privilege Gmail access', () => {
+  const manifest = JSON.parse(read('integrations/appsscript.json'));
+  assert.ok(manifest.oauthScopes.includes('https://www.googleapis.com/auth/gmail.readonly'));
+  assert.ok(manifest.oauthScopes.includes('https://www.googleapis.com/auth/script.send_mail'));
+  assert.ok(manifest.oauthScopes.includes('https://www.googleapis.com/auth/script.scriptapp'));
+  assert.ok(!manifest.oauthScopes.includes('https://mail.google.com/'));
+  assert.equal(manifest.webapp.executeAs, 'USER_DEPLOYING');
+  assert.equal(manifest.webapp.access, 'ANYONE_ANONYMOUS');
+});
