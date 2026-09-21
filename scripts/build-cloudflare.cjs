@@ -5,7 +5,7 @@ const { execFileSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'dist-cloudflare');
 const roots = new Set(['index.html', 'robots.txt', 'sitemap.xml', 'hzhxwevje67ssum5lqys0tkfuu7g3b.html']);
-const dirs = /^(assets|images|css|js|weddings|corporate-events|gallery|blog|privacy)\//;
+const dirs = /^(assets|images|css|js|weddings|corporate-events|gallery|blog|privacy|ops)\//;
 const extensions = /\.(html|css|js|png|jpe?g|webp|svg|ico|mp4|webm|woff2?)$/i;
 const files = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(file => roots.has(file) || (dirs.test(file) && extensions.test(file)));
 if (!files.includes('index.html')) throw Error('Website entry point missing');
@@ -22,6 +22,11 @@ for (const file of files) {
   fs.copyFileSync(source, destination);
   bytes += info.size;
 }
+const opsSource = path.join(root, 'integrations/lead-inbox/Index.html');
+const opsDestination = path.join(out, 'ops/index.html');
+fs.mkdirSync(path.dirname(opsDestination), { recursive: true });
+fs.copyFileSync(opsSource, opsDestination);
+bytes += fs.statSync(opsSource).size;
 fs.copyFileSync(path.join(root, 'cloudflare/_headers'), path.join(out, '_headers'));
 fs.copyFileSync(path.join(root, 'cloudflare/_redirects'), path.join(out, '_redirects'));
 fs.copyFileSync(path.join(root, 'cloudflare/404.html'), path.join(out, '404.html'));

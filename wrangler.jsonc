@@ -11,10 +11,11 @@
     "binding": "ASSETS",
     "html_handling": "force-trailing-slash",
     "not_found_handling": "404-page",
-    "run_worker_first": ["/.netlify/functions/*", "/api/*"]
+    "run_worker_first": ["/.netlify/functions/*", "/api/*", "/ops", "/ops/*"]
   },
   "vars": {
     "META_PIXEL_ID": "1075812884821288",
-    "META_GRAPH_API_VERSION": "v26.0"
+    "META_GRAPH_API_VERSION": "v26.0",
+    "LEAD_OPS_ENDPOINT": "https://script.google.com/macros/s/AKfycbzgNXyyMY9ZUP0Ypf064nXf9fzp45_uWstQenSiWpqVGzg-QuEZrEbcDaAR7X6he5hNTw/exec"
   }
 }

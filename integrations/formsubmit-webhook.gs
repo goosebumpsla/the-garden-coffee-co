@@ -12,9 +12,27 @@ const TRACKER = Object.freeze({
   firstDataRow: 9,
   lastTemplateRow: 208,
   webhookToken: '063dbdb533aaff7b85fa79e87fb6a7fd91022466205d5ce0',
+  opsTokenProperty: 'OPS_TOKEN',
 });
 
+function doGet(event) {
+  if (!isOpsAuthorized_(event) || String(event && event.parameter && event.parameter.action || '') !== 'leads') {
+    return jsonResponse_({ ok: false, error: 'Unauthorized' });
+  }
+
+  try {
+    return jsonResponse_(getLeadInboxData_());
+  } catch (error) {
+    console.error(error && error.stack ? error.stack : error);
+    return jsonResponse_({ ok: false, error: 'Unable to load leads' });
+  }
+}
+
 function doPost(event) {
+  if (String(event && event.parameter && event.parameter.action || '') === 'update') {
+    return handleOpsUpdate_(event);
+  }
+
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
 
@@ -93,6 +111,188 @@ function doPost(event) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function handleOpsUpdate_(event) {
+  if (!isOpsAuthorized_(event)) return jsonResponse_({ ok: false, error: 'Unauthorized' });
+
+  let body;
+  try {
+    body = JSON.parse(String(event && event.postData && event.postData.contents || ''));
+  } catch (error) {
+    return jsonResponse_({ ok: false, error: 'Invalid update' });
+  }
+
+  try {
+    return jsonResponse_(updateLeadInboxRecord_(body && body.leadId, body && body.action));
+  } catch (error) {
+    console.error(error && error.stack ? error.stack : error);
+    return jsonResponse_({ ok: false, error: error && error.message ? error.message : 'Unable to update lead' });
+  }
+}
+
+function isOpsAuthorized_(event) {
+  const expected = PropertiesService.getScriptProperties().getProperty(TRACKER.opsTokenProperty);
+  const supplied = String(event && event.parameter && event.parameter.ops_token || '');
+  return Boolean(expected) && supplied === expected;
+}
+
+function getLeadInboxData_() {
+  const spreadsheet = SpreadsheetApp.openById(TRACKER.spreadsheetId);
+  const sheet = spreadsheet.getSheetByName(TRACKER.sheetName);
+  if (!sheet) throw new Error('Lead Tracker sheet not found');
+
+  const height = TRACKER.lastTemplateRow - TRACKER.firstDataRow + 1;
+  const range = sheet.getRange(TRACKER.firstDataRow, 1, height, 26);
+  const values = range.getValues();
+  const display = range.getDisplayValues();
+  const timezone = spreadsheet.getSpreadsheetTimeZone();
+  const leads = [];
+
+  values.forEach(function(row, index) {
+    if (!String(row[1] || '').trim()) return;
+    const shown = display[index];
+    const lead = {
+      received: shown[0] || '',
+      receivedSort: row[0] instanceof Date ? row[0].getTime() : 0,
+      name: shown[1] || '',
+      email: shown[2] || '',
+      phone: shown[3] || '',
+      eventType: shown[4] || '',
+      eventDate: shown[5] || '',
+      guests: shown[6] || '',
+      location: shown[7] || '',
+      source: shown[8] || '',
+      owner: shown[9] || '',
+      stage: shown[10] || 'New',
+      response: shown[11] || '',
+      lastContact: shown[12] || '',
+      nextFollowUp: shown[13] || '',
+      nextFollowUpISO: toIsoDate_(row[13], timezone),
+      nextAction: shown[14] || '',
+      notes: shown[15] || '',
+      daysSinceLead: shown[16] || '',
+      followUpStatus: shown[17] || '',
+      id: shown[18] || '',
+      formSource: shown[19] || '',
+      channel: shown[20] || '',
+      campaign: shown[21] || '',
+      adSet: shown[22] || '',
+      creative: shown[23] || '',
+      landingPage: shown[24] || '',
+      campaignId: shown[25] || '',
+    };
+    lead.queue = classifyQueue_(lead);
+    leads.push(lead);
+  });
+
+  leads.sort(function(a, b) { return b.receivedSort - a.receivedSort; });
+  return {
+    ok: true,
+    leads: leads,
+    refreshedAt: Utilities.formatDate(new Date(), timezone, 'MMM d, h:mm a'),
+  };
+}
+
+function updateLeadInboxRecord_(leadId, action) {
+  if (!/^GCC-\d{4,}$/.test(String(leadId || ''))) throw new Error('Invalid lead number');
+  if (!action || typeof action !== 'object' || Array.isArray(action)) throw new Error('Invalid update');
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const spreadsheet = SpreadsheetApp.openById(TRACKER.spreadsheetId);
+    const sheet = spreadsheet.getSheetByName(TRACKER.sheetName);
+    if (!sheet) throw new Error('Lead Tracker sheet not found');
+
+    const height = TRACKER.lastTemplateRow - TRACKER.firstDataRow + 1;
+    const ids = sheet.getRange(TRACKER.firstDataRow, 19, height, 1).getDisplayValues();
+    const offset = ids.findIndex(function(row) { return row[0] === leadId; });
+    if (offset < 0) throw new Error('Lead not found');
+
+    const workflowRange = sheet.getRange(TRACKER.firstDataRow + offset, 10, 1, 6);
+    const workflow = workflowRange.getValues()[0];
+    const now = new Date();
+    const owner = 'Website ops';
+    const type = String(action.type || '');
+
+    if (type === 'contacted') {
+      workflow[0] = owner;
+      workflow[1] = 'Contacted';
+      workflow[2] = '';
+      workflow[3] = now;
+      workflow[4] = addDays_(now, 1);
+      workflow[5] = 'Follow up';
+    } else if (type === 'good-response') {
+      workflow[0] = owner;
+      workflow[1] = 'Replied';
+      workflow[2] = 'Good response';
+      workflow[3] = now;
+      workflow[4] = addDays_(now, 1);
+      workflow[5] = 'Follow up';
+    } else if (type === 'quote-sent') {
+      workflow[0] = owner;
+      workflow[1] = 'Quote sent';
+      workflow[3] = now;
+      workflow[4] = addDays_(now, 2);
+      workflow[5] = 'Follow up';
+    } else if (type === 'booked') {
+      workflow[0] = owner;
+      workflow[1] = 'Won';
+      workflow[3] = now;
+      workflow[4] = '';
+      workflow[5] = '';
+    } else if (type === 'closed') {
+      workflow[0] = owner;
+      workflow[1] = 'Lost';
+      workflow[3] = now;
+      workflow[4] = '';
+      workflow[5] = '';
+    } else if (type === 'follow-up') {
+      workflow[0] = workflow[0] || owner;
+      workflow[4] = parseIsoDate_(action.date);
+      workflow[5] = 'Follow up';
+    } else {
+      throw new Error('Unsupported update');
+    }
+
+    workflowRange.setValues([workflow]);
+    SpreadsheetApp.flush();
+    return getLeadInboxData_();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function classifyQueue_(lead) {
+  const stage = String(lead.stage || '').toLowerCase();
+  const response = String(lead.response || '').toLowerCase();
+  const follow = String(lead.followUpStatus || '').toLowerCase();
+
+  if (stage === 'lost' || stage === 'not a fit') return 'closed';
+  if (stage === 'won' || stage === 'consultation booked') return 'booked';
+  if (stage === 'quote sent') return 'quote';
+  if (response === 'good response') return 'good';
+  if (follow === 'overdue' || follow === 'due today') return 'followup';
+  if (stage === 'contacted' || stage === 'replied' || lead.lastContact) return 'responded';
+  return 'new';
+}
+
+function addDays_(date, days) {
+  const result = new Date(date.getTime());
+  result.setDate(result.getDate() + days);
+  result.setHours(12, 0, 0, 0);
+  return result;
+}
+
+function parseIsoDate_(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) throw new Error('Choose a valid follow-up date');
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12, 0, 0);
+}
+
+function toIsoDate_(value, timezone) {
+  return value instanceof Date ? Utilities.formatDate(value, timezone, 'yyyy-MM-dd') : '';
 }
 
 /**

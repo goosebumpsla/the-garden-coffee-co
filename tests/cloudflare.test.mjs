@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { metaLead, default as worker } from '../cloudflare/worker.mjs';
+import { metaLead, opsApi, default as worker } from '../cloudflare/worker.mjs';
 const payload = { advertisingConsent: true, eventId: 'garden_lead_test_123', email: ' TEST@example.com ', phone: '(818) 555-0100', eventSourceUrl: 'https://thegardencoffeecart.com/weddings/?private=omit' };
 const env = { META_CAPI_ACCESS_TOKEN: 'dummy-test-only' };
 const req = (body = payload, headers = {}) => new Request('https://thegardencoffeecart.com/.netlify/functions/meta-lead', { method: 'POST', headers: { Origin: 'https://thegardencoffeecart.com', 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) });
@@ -42,9 +42,65 @@ test('Cloudflare keeps static requests separate and API responses private', asyn
   assert.equal(failure.headers.get('Cache-Control'), 'no-store');
   assert.equal((await worker.fetch(new Request('https://example.com/api/missing'), {})).status, 404);
 });
+const auth = password => `Basic ${Buffer.from(`garden:${password}`).toString('base64')}`;
+const opsEnv = {
+  OPS_PASSWORD: 'test-secret',
+  LEAD_OPS_ENDPOINT: 'https://script.google.com/macros/s/test-deployment/exec',
+  LEAD_OPS_TOKEN: 'server-only-token',
+  ASSETS: { fetch: () => new Response('<h1>Lead inbox</h1>', { headers: { 'Content-Type': 'text/html' } }) },
+};
+test('Cloudflare requires server-side authentication for the lead inbox', async () => {
+  for (const request of [
+    new Request('https://thegardencoffeecart.com/ops/'),
+    new Request('https://thegardencoffeecart.com/ops/', { headers: { Authorization: auth('wrong') } }),
+    new Request('https://thegardencoffeecart.com/api/ops/leads'),
+  ]) {
+    const response = await worker.fetch(request, opsEnv);
+    assert.equal(response.status, 401);
+    assert.match(response.headers.get('WWW-Authenticate'), /Garden & Coffee Ops/);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  }
+  const allowed = await worker.fetch(new Request('https://thegardencoffeecart.com/ops/', { headers: { Authorization: auth('test-secret') } }), opsEnv);
+  assert.equal(allowed.status, 200);
+  assert.equal(allowed.headers.get('X-Robots-Tag'), 'noindex, nofollow');
+  assert.equal(allowed.headers.get('Cache-Control'), 'no-store');
+});
+test('Cloudflare proxies only validated lead operations and keeps the backend token private', async () => {
+  let sent;
+  const getResponse = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/leads'), opsEnv, async (url, options) => {
+    sent = { url, options };
+    return Response.json({ ok: true, leads: [] });
+  });
+  assert.equal(getResponse.status, 200);
+  assert.equal(new URL(sent.url).searchParams.get('ops_token'), 'server-only-token');
+  assert.equal(new URL(sent.url).searchParams.get('action'), 'leads');
+  assert(!JSON.stringify(await getResponse.json()).includes('server-only-token'));
+
+  const update = new Request('https://thegardencoffeecart.com/api/ops/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ leadId: 'GCC-0048', action: { type: 'follow-up', date: '2026-09-23', ignored: 'value' }, ignored: 'value' }),
+  });
+  const updateResponse = await opsApi(update, opsEnv, async (url, options) => {
+    sent = { url, options, body: JSON.parse(options.body) };
+    return Response.json({ ok: true, leads: [] });
+  });
+  assert.equal(updateResponse.status, 200);
+  assert.deepEqual(sent.body, { leadId: 'GCC-0048', action: { type: 'follow-up', date: '2026-09-23' } });
+  assert.equal(new URL(sent.url).searchParams.get('action'), 'update');
+
+  for (const body of [
+    { leadId: 'bad', action: { type: 'contacted' } },
+    { leadId: 'GCC-0048', action: { type: 'delete' } },
+    { leadId: 'GCC-0048', action: { type: 'follow-up', date: 'tomorrow' } },
+  ]) {
+    const response = await opsApi(new Request('https://thegardencoffeecart.com/api/ops/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }), opsEnv, () => { throw Error('Must not call backend'); });
+    assert.equal(response.status, 400);
+  }
+});
 test('Cloudflare serves static assets without Worker calls and protects the pinned preview', () => {
   const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
-  assert.deepEqual(config.assets.run_worker_first, ['/.netlify/functions/*', '/api/*']);
+  assert.deepEqual(config.assets.run_worker_first, ['/.netlify/functions/*', '/api/*', '/ops', '/ops/*']);
   assert.equal(config.preview_urls, false);
   assert.equal(config.account_id, 'fa8f38e8680cea78962368c580c63f6c');
   const headers = readFileSync(new URL('../cloudflare/_headers', import.meta.url), 'utf8');
